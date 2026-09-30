@@ -111,3 +111,89 @@ dialog h2 { margin: 10px 0 18px; font-size: 22px; line-height: 1.4; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+body { font-size: 18px; }
+.cockpit {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: "header header header" "nav main intel" "status status status";
+}
+.header { min-height: 88px; flex-wrap: wrap; gap: 14px; }
+.header-brand .sample-label { font-size: 16px; line-height: 1.5; }
+.header-stats .stat-label, .header-stats .stat-value { font-size: 14px; }
+.main-tabs .tab, .demo-button, .demo-link { font-size: 16px; line-height: 1.5; }
+.main-tabs { overflow: visible; }
+.panel-title { font-size: 18px; line-height: 1.5; }
+.panel-badge, .intel-card-title { font-size: 14px; line-height: 1.5; }
+.demo-filters label, .dialog-field { font-size: 16px; }
+.demo-filters select, .demo-filters input, .dialog-field select, textarea { font-size: 16px; line-height: 1.5; }
+.boundary, .view-note, .demo-hint, .detail-note { font: 18px/1.6 var(--font-sans); }
+.boundary, .view-note, .demo-hint, #research-content p { max-width: 70ch; }
+.nav .node-name, .nav .node-role { font-size: 16px; line-height: 1.5; }
+.nav .node-meta, .nav .node-session-age-row, .nav .node-host { font-size: 14px; line-height: 1.5; }
+.nav .node-meta { font-size: 16px; }
+.node-card { padding: 14px; flex-shrink: 0; }
+.nav .node-meta { flex-wrap: wrap; }
+.nav-nodes { min-height: 0; }
+.rail-caption { font-size: 14px; }
+.kanban-card-title, .card-detail-button, .kanban-col-title { font-size: 16px; line-height: 1.6; }
+.kanban-action-btn { font-size: 16px; padding: 5px 8px; }
+.kanban-card-actions { flex-wrap: wrap; gap: 8px; }
+.kanban-card .kanban-card-id, .kanban-card .kanban-card-meta, .kanban-card .comp-badge, .kanban-card span { font-size: 14px !important; line-height: 1.5; }
+.blocked-banner, .blocked-banner summary, .blocked-banner summary span { font-size: 16px !important; line-height: 1.6; }
+.summary-card strong { font-size: 16px; line-height: 1.6; }
+.summary-card span, #activity-log { font-size: 14px; line-height: 1.7; }
+.status-bar { font-size: 16px; line-height: 1.5; gap: 12px; padding: 12px; }
+.design-card strong, .design-column h3, .knowledge-article summary { font-size: 18px; line-height: 1.6; }
+.design-card p, .knowledge-article p, .health-observation { font-size: 18px; line-height: 1.6; }
+.design-card span, .knowledge-article summary span { font-size: 14px; }
+.health-observation h3 { font-size: 16px; line-height: 1.6; }
+dialog { font-size: 18px; line-height: 1.7; }
+.detail-facts { font-size: 16px; }
+.review-scroll { overflow-x: auto; max-width: 100%; }
+.sample-review-table { min-width: 780px; }
+.sample-review-table span { font-size: 16px !important; line-height: 1.6; }
+.sample-review-table span:first-child { white-space: normal !important; }
+#research-content > p, #research-content details p, #research-content li, #research-content dd { font-size: 18px; line-height: 1.65; max-width: 70ch; }
+#research-content h3 { font-size: 24px; line-height: 1.5; margin: 24px 0 16px; }
+#research-content h4 { font-size: 20px; line-height: 1.5; margin: 14px 0; }
+.research-steps, .research-controls { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+.research-controls { align-items: end; }
+.research-controls label { display: grid; gap: 8px; font-size: 16px; flex: 1 1 200px; }
+.research-controls input, .research-controls select, .dialog-field textarea { width: 100%; background: var(--bg-secondary); border: 1px solid var(--glass-border); color: var(--text-primary); padding: 9px; font: 16px/1.6 var(--font-sans); }
+.research-result { padding: 20px 0; border-top: 1px solid var(--glass-border); }
+.research-result p { font-size: 18px; line-height: 1.65; }
+.research-meta { font: 14px/1.6 var(--font-mono) !important; color: var(--text-secondary); }
+.stage-rail { display: flex; gap: 12px; flex-wrap: wrap; list-style: none; padding: 0; margin: 24px 0; }
+.stage-rail li { border: 1px dashed var(--text-secondary); padding: 8px 10px; font: 16px/1.6 var(--font-mono); }
+.stage-rail .current-stage { border-style: solid; font-weight: 700; }
+.proposal-sections { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 18px; }
+.proposal-sections dt { font: 16px/1.7 var(--font-mono); }
+.proposal-sections dd { margin: 0; }
+.sample-wave, .council-note, .legal-bases { padding: 18px 0; border-top: 1px solid var(--glass-border); }
+.sample-wave summary, .council-note summary, .legal-bases summary { font-size: 18px; line-height: 1.6; cursor: pointer; }
+.sample-wave p, .legal-bases p, .council-note p { margin: 16px 0; }
+.vote-tally, .decision-outcome { padding: 18px; border: 1px solid var(--glass-border); background: var(--bg-secondary); }
+.legal-bases ol, .governance-delivery { padding-left: 25px; }
+.legal-bases li, .governance-delivery li { margin: 16px 0; }
+@media (max-width: 1500px) {
+  .cockpit { grid-template-columns: 190px minmax(0, 1fr) 260px; }
+  .kanban { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .design-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 1100px) {
+  .cockpit {
+    grid-template-columns: 190px minmax(0, 1fr);
+    grid-template-areas: "header header" "nav main" "status status";
+  }
+}
+@media (max-width: 700px) {
+  body { height: auto; min-height: 100vh; overflow-y: auto; }
+  .cockpit { display: flex; height: auto; }
+  .main { min-height: 780px; }
+  .kanban, .design-grid, .proposal-sections { grid-template-columns: 1fr; }
+  .header-actions { flex-wrap: wrap; }
+  .nav { display: flex; max-height: 300px; }
+  .nav-nodes { display: flex; gap: 12px; overflow-x: auto; }
+  .node-card { width: 240px; }
+  .nav .nav-fleet-health { display: none; }
+}

@@ -2,7 +2,7 @@ var App = { currentTab: 'taskboard' };
 var sample = createSampleState();
 var selectedDomain = '';
 var requestedView = new URLSearchParams(window.location.search).get('view');
-if (['review', 'design', 'knowledge', 'health'].includes(requestedView)) App.currentTab = requestedView;
+if (['review', 'design', 'governance', 'knowledge', 'health'].includes(requestedView)) App.currentTab = requestedView;
 
 function escaped(value) { return Components.esc(String(value)); }
 function localActivity(message) {
@@ -73,7 +73,7 @@ function renderTasks() {
 }
 function renderReview() {
   var content = Components.setupPanel('Review Pipeline / sample deadlines', sample.reviews.length + ' synthetic claims');
-  content.innerHTML = '<p class="view-note">These countdowns are fixed examples of overdue, near-deadline and comfortable states. They are not ticking live claims.</p>' + ReviewPipeline._renderTable(sample.reviews);
+  content.innerHTML = '<p class="view-note">These countdowns are fixed examples of overdue, near-deadline and comfortable states. They are not ticking live claims.</p><div class="review-scroll" tabindex="0" aria-label="Review columns; scroll horizontally if needed"><div class="sample-review-table">' + ReviewPipeline._renderTable(sample.reviews) + '</div></div>';
 }
 function inspectDesign(id) {
   var design = sample.designs.find(function(item) { return item.id === id; });
@@ -143,7 +143,7 @@ function renderCurrent() {
     button.setAttribute('aria-selected', String(active));
   });
   document.getElementById('stat-tasks').textContent = sample.tasks.filter(function(task) { return task.status !== 'done'; }).length;
-  var render = { taskboard: renderTasks, review: renderReview, design: renderDesign, knowledge: renderKnowledge, health: renderHealth }[App.currentTab];
+  var render = { taskboard: renderTasks, review: renderReview, design: renderDesign, governance: Governance.render, knowledge: renderKnowledge, health: renderHealth }[App.currentTab];
   if (!render) throw new Error('Unknown sample view: ' + App.currentTab);
   render();
 }

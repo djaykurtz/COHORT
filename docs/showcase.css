@@ -54,3 +54,30 @@ summary { cursor:pointer; font:12px var(--mono); color:var(--ink-soft); }
 .page-footer span { flex:1; color:var(--ink-soft); }
 @media(max-width:800px) { .masthead { flex-wrap:wrap; gap:15px; }.masthead span { order:3; flex-basis:100%; }.opening { padding-top:50px; }.movement-layout { grid-template-columns:1fr; gap:24px; }.movement-nav { flex-direction:row; flex-wrap:wrap; gap:0 20px; }.movement-nav button { flex:1 1 220px; }.hero-frame { margin-bottom:60px; }figcaption { flex-direction:column; }.scope-grid { grid-template-columns:1fr; gap:20px; } }
 @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+
+body { font-size: 18px; }
+p { line-height: 1.75; }
+.masthead, .page-footer { font-size: 16px; line-height: 1.6; }
+.wordmark { font-size: 16px; }
+.masthead span, .page-footer span { font-size: 14px; }
+.eyebrow { font-size: 14px; line-height: 1.6; }
+.lede, .boundary { font-size: 18px; line-height: 1.75; max-width: 70ch; }
+.primary-link, .actions a { font-size: 18px; line-height: 1.6; }
+.origin-story { padding: 40px 0 55px; border-top: 1px solid var(--line); }
+.origin-story p { max-width: 70ch; font-size: 18px; color: var(--ink-soft); margin: 24px 0; }
+.origin-story a, .movement-panels a { font-size: 16px; line-height: 1.7; }
+.movement-layout { grid-template-columns: 330px minmax(0, 1fr); gap: 40px; }
+.movement-nav button { font-size: 18px; line-height: 1.5; }
+.movement-nav button span { font-size: 14px; }
+.movement-panels p, .scope p { font-size: 18px; line-height: 1.75; max-width: 70ch; }
+summary { font-size: 16px; line-height: 1.7; }
+figcaption { font-size: 14px; line-height: 1.7; }
+figcaption a { font-size: 16px; }
+.connection { gap: 15px; }
+.connection span, .connection i { font-size: 16px; line-height: 1.6; }
+.movement-links { display: flex; flex-wrap: wrap; gap: 16px 24px; }
+@media(max-width:1000px) {
+  .movement-layout { grid-template-columns: 1fr; gap: 24px; }
+  .movement-nav { flex-direction: row; flex-wrap: wrap; gap: 0 20px; }
+  .movement-nav button { flex: 1 1 250px; }
+}

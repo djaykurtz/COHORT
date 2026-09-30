@@ -551,3 +551,21 @@ var ReviewPipeline = {
   }
 };
 
+var Cairn = {
+  "STAGE_ORDER": ["seed","ideation","in_round","ratified","shipped"],
+  "normalizeStage": function(status) {
+    if (status === 'rfc') return 'ideation';
+    return status;
+  },
+  "renderWaveBadge": function(count) {
+    var n = Number(count) || 0;
+    if (n === 0) {
+      return '<span class="cairn-card-wave cairn-card-wave-zero" title="No waves opened">0</span>';
+    }
+    if (n <= 4) {
+      return '<span class="cairn-card-wave" title="' + n + ' wave' + (n === 1 ? '' : 's') + '">' + '🌊'.repeat(n) + '</span>';
+    }
+    return '<span class="cairn-card-wave" title="' + n + ' waves">🌊🌊🌊🌊<span class="cairn-card-wave-overflow">+' + (n - 4) + '</span></span>';
+  }
+};
+

@@ -15,69 +15,109 @@
     <section class="opening">
       <p class="eyebrow">AGENT COORDINATION / AN OPERATOR'S VIEW</p>
       <h1>Many agents.<br>One accountable system.</h1>
-      <p class="lede">Work ownership, artifact-bound review, durable context, and visible failure.
-        COHORT asks how autonomous coding agents can cooperate without treating activity as progress.</p>
-      <div class="actions"><a class="primary-link" href="demo/">Explore ZeroBrain <span aria-hidden="true">&#8599;</span></a><a href="#movements">Read the engineering story</a></div>
+      <p class="lede">David built COHORT to organize his own projects and tasks as a team of engineering
+        roles with distinct perspectives. Research and recorded decisions became a way to develop
+        and build ideas together, not just another task board.</p>
+      <div class="actions"><a class="primary-link" href="systems/">Explore the system atlas <span aria-hidden="true">&#8599;</span></a><a href="demo/?view=governance">Try research and decisions</a><a href="demo/">Explore ZeroBrain</a></div>
       <p class="boundary">The demo is functional, disconnected, and synthetic. No live fleet, account, or backend.</p>
     </section>
-    <figure class="hero-frame"><a href="demo/"><img src="assets/dashboard-tasks.png" width="1600" height="1000" alt="ZeroBrain offline sample dashboard: synthetic role rail, four-column work board, and local activity"></a><figcaption>ZEROBRAIN / SUPERDASH V2 <span>ACTUAL RENDERERS. INVENTED DATA. LOCAL INTERACTIONS.</span></figcaption></figure>
+    <section class="origin-story">
+      <p class="eyebrow">A TEAM OF PERSPECTIVES / NOT PAPERWORK FOR ITS OWN SAKE</p>
+      <h2>Keep the reason. Keep the responsibility.</h2>
+      <p>The architect asks what should own a fact. The PM asks how work is broken down and adopted.
+        Builders make the change; independent reviewers ask which revision was checked; an analyst
+        asks whether the operator can see what happened. Authored roles and personas make those
+        perspectives explicit.</p>
+      <p>The controls prevent concrete failures: two nodes taking the same work, an approval applied
+        to the wrong artifact, rationale disappearing after a handoff, or an unknown result reported
+        as done. A narrow defect may be a SWAT; work under an accepted design may be a task; a new
+        cross-system contract can require an RFC. Not every task needs a new design process.</p>
+      <p>Durable research and decision history can support reusable team conventions. More memory
+        or a larger context window does not itself establish authority, ownership or a reviewed
+        revision. This is continuity and retrieved context, not a claim of sentience or measured future learning.</p>
+      <a href="systems/#story-title">Follow one invented counter-freshness problem through the system</a>
+    </section>
+    <figure class="hero-frame"><a href="assets/dashboard-tasks.png"><img src="assets/dashboard-tasks.png" width="1600" height="1000" alt="Illustration of the disconnected ZeroBrain sample; readable interactive views are available in the demo"></a><figcaption>ZEROBRAIN / SUPERDASH V2 <span>ILLUSTRATIVE SAMPLE / <a href="assets/dashboard-tasks.png">OPEN FULL RESOLUTION</a></span></figcaption></figure>
 
     <section id="movements" class="movements">
-      <div class="section-heading"><p class="eyebrow">THE SYSTEM, IN MOVEMENTS</p><h2>Follow the boundaries.</h2></div>
+      <div class="section-heading"><p class="eyebrow">THE SYSTEM, IN MOVEMENTS</p><h2>From a goal to an accountable change.</h2></div>
       <div class="movement-layout">
         <nav class="movement-nav" aria-label="Engineering movements">
-          <button class="selected" data-movement="ownership" aria-pressed="true"><span>01</span> Work has an owner</button>
-          <button data-movement="review" aria-pressed="false"><span>02</span> Review has an artifact</button>
-          <button data-movement="memory" aria-pressed="false"><span>03</span> Context survives a process</button>
-          <button data-movement="failure" aria-pressed="false"><span>04</span> Failure stays visible</button>
-          <button data-movement="delivery" aria-pressed="false"><span>05</span> Delivery closes the loop</button>
+          <button class="selected" data-movement="research" aria-pressed="true"><span>01</span> Research keeps its source</button>
+          <button data-movement="governance" aria-pressed="false"><span>02</span> A round becomes a decision</button>
+          <button data-movement="ownership" aria-pressed="false"><span>03</span> Work has an owner</button>
+          <button data-movement="review" aria-pressed="false"><span>04</span> Review has an artifact</button>
+          <button data-movement="memory" aria-pressed="false"><span>05</span> Context survives a process</button>
+          <button data-movement="failure" aria-pressed="false"><span>06</span> Failure stays visible</button>
+          <button data-movement="delivery" aria-pressed="false"><span>07</span> Delivery closes the loop</button>
         </nav>
         <div class="movement-panels">
-          <article data-panel="ownership">
-            <p class="eyebrow">01 / AUTHORITY BEFORE ACTIVITY</p><h3>A message is not a claim.</h3>
+          <article data-panel="research">
+            <p class="eyebrow">01 / RETRIEVAL BEFORE REUSE</p><h3>Find the evidence. Inspect its owner.</h3>
+            <p>Spyglass makes research and knowledge searchable through a derived index. Cairn
+              preserves the source records, revisions and rationale. A retrieved snippet is a
+              starting point, not authority to change current guidance.</p>
+            <div class="connection"><span>Question</span><i class="storage">research retrieval</i><span>Spyglass</span><i class="storage">verify source</i><span>Cairn record</span></div>
+            <details><summary>Inspect the failure this prevents</summary><p>A useful but stale search result
+              must not overwrite a current contract. Index corruption can trigger a bounded rebuild,
+              not erase durable knowledge or block the coordinator.</p></details>
+            <p class="movement-links"><a href="demo/?view=governance">Search the invented research examples</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/systems/spyglass.md">Spyglass responsibility and boundary</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/systems/knowledge-lifecycle.md">Knowledge and research lifecycle</a></p>
+          </article>
+          <article data-panel="governance" hidden>
+            <p class="eyebrow">02 / A RECORDED ARGUMENT, THEN A CITABLE DECISION</p><h3>Votes are evidence. Synthesis matters.</h3>
+            <p>RFCs move through seed, ideation, in_round, ratified and shipped. Waves are deliberation
+              rounds: responses, dissent, signals and votes remain recorded. A PM closes a round
+              with non-empty synthesis; that latest synthesized wave is one ratification legal basis.</p>
+            <p>The reference does not use a numeric approve-vote threshold. Four citation/operator
+              bases are alternatives, and independent implementation review and delivery remain separate.</p>
+            <img class="movement-image" src="assets/dashboard-governance.png" width="1440" height="900" alt="Synthetic research and decision workflow, with a readable interactive version linked below" loading="lazy">
+            <p class="movement-links"><a href="assets/dashboard-governance.png">Open sample illustration at full resolution</a><a href="demo/?view=governance">Inspect waves, votes and a local decision example</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/rebuild/rnd-processes.md#3-waves-signals-votes-and-consensus">Exact wave/vote/ratification contract</a></p>
+          </article>
+          <article data-panel="ownership" hidden>
+            <p class="eyebrow">03 / AUTHORITY BEFORE ACTIVITY</p><h3>A message is not a claim.</h3>
             <p>Agents can announce the same work at the same time. COHORT's documented contract puts a
               single-winner compare-and-swap in the authoritative store. Losing a race must be free:
               no ownership, no work-in-progress charge, and an explicit loss result.</p>
             <div class="connection"><span>Agent</span><i class="orchestration">MCP / work routing</i><span>Coordinator</span><i class="storage">write-of-record</i><span>Operational records</span></div>
             <details><summary>Inspect the engineering decision</summary><p>Messages, dashboards and indexes are derived observations. None may outrank the record
               that owns a task's lifecycle. This is an architecture contract; the coordinator implementation is not included in this snapshot.</p></details>
-            <a href="demo/">Try task filtering and local transitions</a>
+            <p class="movement-links"><a href="demo/">Try task filtering and local transitions</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/systems/work-routing-and-evidence.md">Lane selection and completion evidence</a></p>
           </article>
           <article data-panel="review" hidden>
-            <p class="eyebrow">02 / EVIDENCE, NOT ASSERTION</p><h3>Approve the revision, not the intention.</h3>
+            <p class="eyebrow">04 / EVIDENCE, NOT ASSERTION</p><h3>Approve the revision, not the intention.</h3>
             <p>Review evidence needs an immutable artifact, a declared base-to-head relationship, and
               explicit authorship and recusal. A check-in or a statement of approval cannot replace those obligations.</p>
             <img class="movement-image" src="assets/dashboard-review.png" width="1600" height="1000" alt="Original ZeroBrain review table rendered with invented overdue and near-deadline claims" loading="lazy">
             <details><summary>Inspect what the UI demonstrates</summary><p>The original review table renderer distinguishes overdue, near-deadline and comfortable sample deadlines.
               The offline adapter supplies fixed examples; it does not claim to authorize reviewers or verify actual artifacts.</p></details>
-            <a href="demo/?view=review">Inspect the sample review layer</a>
+            <p class="movement-links"><a href="assets/dashboard-review.png">Open illustration at full resolution</a><a href="demo/?view=review">Inspect the sample review layer</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/systems/review.md">Artifact and reviewer contract</a></p>
           </article>
           <article data-panel="memory" hidden>
-            <p class="eyebrow">03 / CONTINUITY IS A CONTRACT</p><h3>A successor needs more than uptime.</h3>
+            <p class="eyebrow">05 / CONTINUITY IS A CONTRACT</p><h3>A successor needs more than uptime.</h3>
             <p>Identity, handoff, memory and the authoritative work claim must survive agent replacement.
               A process that keeps running can still lose the context or authority needed to finish its work.</p>
             <div class="connection"><span>Identity</span><i class="storage">durable context</i><span>Handoff</span><i class="orchestration">successor boot</i><span>Work continuity</span></div>
             <details><summary>Inspect the scope</summary><p>The rebuild guides describe ownership, lifecycle and continuity invariants. Persona templates preserve role
               character separately from operational identity. The Pages demo neither launches agents nor stores sessions.</p></details>
-            <a href="https://github.com/djaykurtz/COHORT/tree/main/cohort/docs/rebuild">Read the rebuild contracts</a>
+            <p class="movement-links"><a href="systems/#handoff">Inspect continuity in the system atlas</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/systems/identity-and-memory.md">Identity, memory and handoff ownership</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/personas/README.md">Authored role perspectives</a></p>
           </article>
           <article data-panel="failure" hidden>
-            <p class="eyebrow">04 / UNKNOWN IS NOT HEALTHY</p><h3>An open port can still be a dead end.</h3>
+            <p class="eyebrow">06 / UNKNOWN IS NOT HEALTHY</p><h3>An open port can still be a dead end.</h3>
             <p>The included health probe checks connection reachability and then an SSH identification banner.
               A silent listener is degraded, not green. The frontend's caches likewise keep freshness and uncertainty visible.</p>
             <div class="connection"><span>Dashboard</span><i class="network">observation</i><span>Probe</span><i class="control">verified response</i><span>Service state</span></div>
             <details><summary>Inspect the executable evidence</summary><p>A deterministic Python test creates local banner, silent and closed listeners.
               It verifies the three outcomes without real fleet infrastructure. The browser demo illustrates those outcomes but never opens a socket.</p></details>
-            <a href="demo/?view=health">Explore synthetic health states</a>
+            <p class="movement-links"><a href="demo/?view=health">Explore synthetic health states</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/systems/failure-episodes.md">Out-of-band failure evidence</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/zerobrain/superdash/tests/test_rfc599_w4_lane_probe.py">Executable two-tier probe check</a></p>
           </article>
           <article data-panel="delivery" hidden>
-            <p class="eyebrow">05 / SHIPPED MEANS SEEN</p><h3>A changed file is not a delivered interface.</h3>
+            <p class="eyebrow">07 / SHIPPED MEANS SEEN</p><h3>A changed file is not a delivered interface.</h3>
             <p>Versioned asset URLs, service-worker freshness, deploy provenance and verified receipts
               address the gap between editing source and the operator receiving it. Evidence lives at the relevant boundary.</p>
             <div class="connection"><span>Reviewed source</span><i class="work">promotion</i><span>Served bytes</span><i class="network">browser delivery</i><span>Operator view</span></div>
             <details><summary>Inspect the tradeoff</summary><p>Immutable versioned URLs reduce repeated transfers but require stamp changes when content changes.
               The included content-hash lint checks that obligation. This public demo avoids service-worker state and operational deployment tooling entirely.</p></details>
-            <a href="https://github.com/djaykurtz/COHORT/tree/main/cohort/zerobrain/superdash/scripts">Read the delivery tooling</a>
+            <p class="movement-links"><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/zerobrain/superdash/docs/SUPERDASH-DEPLOY-DISCIPLINE.md">Delivery discipline and failure boundary</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/zerobrain/superdash/scripts/Lint-CacheStamps.ps1">Included content-hash gate</a></p>
           </article>
         </div>
       </div>
@@ -88,6 +128,8 @@
         and this sample-only functional Pages demo. Filtering, drilldowns and simulations stay in browser memory.</p></div>
       <div><h3>Documented, not bundled</h3><p>The coordinator backend, relational write-of-record, knowledge store, agent boot/runtime,
         authorization and recovery system. Rebuild guides separate implementation references from intent and assessment.</p></div></div>
+      <p><a href="systems/">Browse the documented/exported systems and their runtime boundaries</a>.
+        Database-backed records and omitted runtime components are not reconstructed or claimed complete here.</p>
       <p>No benchmark or production-impact claim is made. David's architecture, operating-model and implementation work
         is presented alongside documented agent contributions and retained third-party assets.</p>
     </section>

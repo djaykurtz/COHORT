@@ -5,8 +5,8 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const source = path.join(root, 'cohort', 'zerobrain', 'superdash');
 const target = path.join(root, 'docs', 'demo', 'ui');
-const context = vm.createContext({ CONFIG: { NODE_COLORS: {} } });
-for (const file of ['components.js', 'nodes.js', 'taskboard.js', 'review-pipeline.js']) {
+const context = vm.createContext({ CONFIG: { NODE_COLORS: {} }, Cairn: {} });
+for (const file of ['components.js', 'nodes.js', 'taskboard.js', 'review-pipeline.js', 'cairn-board.js']) {
   vm.runInContext(fs.readFileSync(path.join(source, 'js', file), 'utf8'), context, { timeout: 1000 });
 }
 
@@ -18,6 +18,7 @@ const selections = {
   TaskBoard: ['COLUMNS', 'SWAT_COUNT_STAGES', 'SWAT_STAGE_ORDER', 'SWAT_SEVERITY_COLORS',
     'ENDPOINT', '_getSwats', '_getTasks', 'renderPanel', '_renderCard', '_renderSwatCard'],
   ReviewPipeline: ['_GRID', '_renderTable', '_renderRow'],
+  Cairn: ['STAGE_ORDER', 'normalizeStage', 'renderWaveBadge'],
 };
 let javascript = '// Generated read-only renderers. Run node scripts\\build-showcase.cjs to refresh.\n';
 for (const [name, keys] of Object.entries(selections)) {

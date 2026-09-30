@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="460" viewBox="0 0 1120 460" role="img" aria-labelledby="map-title map-desc">
+  <title id="map-title">COHORT work and evidence handoffs</title>
+  <desc id="map-desc">Operator authority bounds the coordinator. Research retrieves Cairn-backed context; proposals pass through deliberation into scoped work and independent review. Agent continuity supports execution. Superdash displays records without owning them. The textual handoff list below provides the same relationships.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"/></marker>
+  </defs>
+  <g fill="none" stroke-width="2" marker-end="url(#arrow)">
+    <path d="M255 190 H300" stroke="#fe6e00"/>
+    <path d="M145 150 V105 H690 V150" stroke="#fe6e00"/>
+    <path d="M530 190 H575" stroke="#fe6e00"/>
+    <path d="M805 190 H850" stroke="#fe6e00"/>
+    <path d="M145 240 V335" stroke="#a78bfa"/>
+    <path d="M420 240 V280 H145 V335" stroke="#a78bfa"/>
+    <path d="M420 335 V290 H690 V240" stroke="#00c758"/>
+    <path d="M690 335 V240" stroke="#00c758"/>
+    <path d="M850 370 H805" stroke="#35e0e8"/>
+    <path d="M690 65 V150" stroke="#edb200"/>
+    <path d="M805 390 H850" stroke="#35e0e8"/>
+  </g>
+  <g fill="#1b1b21" stroke="#949089" stroke-width="1.5" stroke-dasharray="6 4">
+    <rect x="575" y="10" width="230" height="55" rx="4"/>
+    <rect x="30" y="150" width="225" height="90" rx="4"/>
+    <rect x="300" y="150" width="230" height="90" rx="4"/>
+    <rect x="575" y="150" width="230" height="90" rx="4"/>
+    <rect x="850" y="150" width="230" height="90" rx="4"/>
+    <rect x="30" y="335" width="225" height="90" rx="4"/>
+    <rect x="300" y="335" width="230" height="90" rx="4"/>
+    <rect x="575" y="335" width="230" height="90" rx="4"/>
+  </g>
+  <g fill="#1b1b21" stroke="#ece8e1" stroke-width="2">
+    <rect x="850" y="335" width="230" height="90" rx="4"/>
+    <rect x="856" y="341" width="218" height="78" rx="2"/>
+  </g>
+  <g fill="#ece8e1" font-family="system-ui, sans-serif" font-size="20">
+    <text x="593" y="44">Operator + OPA</text>
+    <text x="48" y="184">Research / Spyglass</text><text x="48" y="215">Retrieve, then verify</text>
+    <text x="318" y="184">RFC deliberation</text><text x="318" y="215">Waves + decision</text>
+    <text x="593" y="184">Scoped work</text><text x="593" y="215">Tasks / SWATs</text>
+    <text x="868" y="184">Independent review</text><text x="868" y="215">Then closure / delivery</text>
+    <text x="48" y="369">Cairn records</text><text x="48" y="400">Rationale + revisions</text>
+    <text x="318" y="369">Agent continuity</text><text x="318" y="400">Identity / handoff</text>
+    <text x="593" y="369">Coordinator</text><text x="593" y="400">Operational records</text>
+    <text x="868" y="369">Superdash</text><text x="868" y="400">Included reference UI</text>
+  </g>
+  <g fill="#a9a29a" font-family="Consolas, monospace" font-size="16">
+    <text x="215" y="90">NARROW FIX / EXISTING DESIGN: TASK OR SWAT</text>
+    <text x="718" y="105">BOUNDED AUTHORITY</text>
+    <text x="30" y="310">DURABLE RESEARCH / DECISION CONTEXT</text>
+  </g>
+</svg>

@@ -17,7 +17,11 @@ disclosure. **Explore ZeroBrain** opens the functional demo.
 
 The demo supports work filtering, task/role/design drilldowns, local status/owner
 simulation, reset, a deadline-pressure review table, domain filters, expandable
-knowledge notes, and synthetic health-state exploration.
+knowledge notes, synthetic health-state exploration and a research/decision inspector.
+The [system atlas](systems/) starts with an invented work/failure story and maps the
+documented/exported boundaries, aliases, authority, handoffs, availability and exact
+evidence. It does not enumerate unseen private runtime components or recreate absent
+database-backed records.
 All fixture identities, tasks, proposals, timestamps and counts are invented.
 Interactions affect memory only; reset/reload discards changes.
 No assignment, claim, review, authorization, upload, agent launch or real probe is performed.
@@ -32,6 +36,8 @@ their CSS without the external font import. Generated assets are committed under
 ```powershell
 node scripts\build-showcase.cjs
 node scripts\build-showcase.cjs --check
+node scripts\build-atlas.cjs
+node scripts\build-atlas.cjs --check
 ```
 
 The sample adapter and fixtures are separate from the original application.
@@ -40,6 +46,19 @@ console or image service. The generator rejects operational APIs in selected fun
 and the page's Content Security Policy blocks network connections and workers.
 Browser checks additionally verify that no API/external requests or persistent
 storage are used during interaction.
+
+The research inspector also reuses the original Cairn stage order, legacy-stage
+normalizer and wave badge. Its invented-record filter is not Spyglass FTS5. Its local
+vote/synthesis/decision illustration is not backend authorization, production substance
+floor validation, cryptographic ratification binding or a complete governance harness.
+Votes never substitute for the latest closed/synthesized wave in the demonstrated
+`wave_quorum` path; the other four legal bases are explained but not executed.
+
+The atlas is generated from `systems\catalog.json`, with semantic HTML disclosures
+and a textual diagram fallback that remain available without JavaScript.
+Laptop checks measure effective rendered sizes at 100% zoom on 1280x720, 1366x768
+and 1440x900; prose is 18px+, essential controls/labels 16px+, with responsive reflow
+rather than whole-page scaling. Full-resolution illustration links accompany screenshots.
 
 The public demo intentionally does not expose the reference application's real
 message, file, credential, authorization or recovery controls. Its design/knowledge

@@ -6,6 +6,18 @@ An engineering portfolio project by **David Kurtz ([djaykurtz](https://github.co
 COHORT explores shared work routing, evidence-bound peer review, durable agent memory,
 and recovery under partial failure. **ZeroBrain / Superdash v2** is its operator dashboard.
 
+David built it to organize his own projects and tasks as a team of engineering roles
+with different perspectives. Research, proposals and recorded decisions became a way
+to develop and build ideas together. The boundaries prevent duplicate work, approval
+of the wrong revision, lost handoff/rationale and an unknown result reported as done;
+they are not paperwork for its own sake.
+
+**[System atlas](https://djaykurtz.github.io/COHORT/systems/):** follow one invented problem
+from goal/research through the applicable work lane, decisions, artifact review and
+continuity, then inspect the documented/exported components and exact evidence.
+The inventory does not reconstruct omitted database records or claim every component
+of the original runtime is bundled.
+
 ![ZeroBrain dashboard with synthetic sample data](docs/assets/dashboard-tasks.png)
 
 ## Featured: ZeroBrain
@@ -15,6 +27,17 @@ or [preview it locally](#quickstart). The showcase uses the dashboard's actual t
 node-navigation, and review-pipeline renderers with invented sample data.
 It has **no coordinator connection, credentials, agent sessions, or operator actions**.
 The screenshots show that sample UI, not operational results.
+
+The [research and decision inspector](https://djaykurtz.github.io/COHORT/demo/?view=governance)
+features Spyglass-style research retrieval, durable source inspection, substantive RFC
+sections, deliberation waves, recorded votes and a local `wave_quorum` example.
+Spyglass is derived search; Cairn owns the records. Waves are deliberation rounds,
+not delivery batches. Approve votes are audit evidence, **not** a numeric ratification
+gate. See the [actual legal-basis contract](cohort/docs/rebuild/rnd-processes.md#3-waves-signals-votes-and-consensus).
+
+Authored role/persona perspectives and durable context can support reusable team
+conventions. Larger model context does not itself establish authority or a reviewed
+revision; no sentience, guaranteed future intuition or measured learning is claimed.
 
 ## The problem
 

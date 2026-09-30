@@ -60,6 +60,32 @@ function createSampleState() {
       { title: 'Completion requires evidence', tag: 'governance', body: 'In this design, work completion, independent review, delivery and authority are separate obligations. A cheap check-in cannot stand in for all of them.' },
       { title: 'Continuity is a contract', tag: 'coordination', body: 'A successor needs identity, durable context and the authoritative work claim. Process survival is not proof that context was preserved.' }
     ],
+    governance: {
+      panel: 'research', query: '', kind: '', status: 'in_round',
+      title: 'Sample: a count must disclose its freshness',
+      author: 'ATLAS', priorVessel: 'BIRCH',
+      bodyRevision: 'SAMPLE-BODY-2', planRevision: 'SAMPLE-PLAN-1',
+      body: {
+        origin: 'An invented operator notices that a displayed count can look current after its source has changed.',
+        problem: 'A page-sized list and a durable total can disagree. An unqualified count would hide uncertainty.',
+        system: 'Keep the authoritative total and the freshness observation distinct. Surface an unavailable observation explicitly.',
+        improvement: 'An operator can tell the difference between a current total, a stale snapshot and an unknown result.'
+      },
+      solidplan: 'Use the boundary in the sample task counter. Keep an explicit unavailable state, test it with invented objects, then review the actual implementation revision before delivery.',
+      votes: { ATLAS: 'approve', BIRCH: 'approve', CEDAR: 'reject', DELTA: 'abstain' },
+      outcome: '',
+      research: [
+        { id: 'SAMPLE-KB-1', kind: 'kb', title: 'Freshness and authoritative totals', text: 'A cached view carries an age. The operational record carries the accepted task state. Neither fact should be silently substituted for the other.', tag: 'freshness', owner: 'Invented Cairn knowledge record' },
+        { id: 'SAMPLE-SCRATCH-1', kind: 'scratch', title: 'An observation worth investigating', text: 'In this invented scenario, the counter did not explain whether its source was current. This is a sample observation, not a recorded incident.', tag: 'observation', owner: 'Invented Cairn scratch record' },
+        { id: 'SAMPLE-RFC-1', kind: 'rfc', title: 'Proposal: make unknown count state explicit', text: 'The sample proposal connects a data-owner contract to the dashboard presentation. It is not historical work or a production result.', tag: 'freshness', owner: 'Invented Cairn design record' }
+      ],
+      waves: [
+        { number: 1, closed: true, synthesis: 'Keep the durable total distinct from the display snapshot. The sample dissent about stale cache behavior remains part of the record.',
+          responses: [{ node: 'ATLAS', stance: 'support', text: 'Identify the owner before choosing a cache strategy.' }, { node: 'CEDAR', stance: 'object', text: 'A positive-looking stale count could still mislead the operator.' }] },
+        { number: 2, closed: false, synthesis: '',
+          responses: [{ node: 'FABLE', stance: 'nuance', text: 'Show the age and explain an unavailable observation in words.' }, { node: 'DELTA', stance: 'support', text: 'Review the revision that implements those states, not the proposal alone.' }] }
+      ]
+    },
     activity: ['Sample state loaded. No coordinator or agent session exists.']
   };
 }

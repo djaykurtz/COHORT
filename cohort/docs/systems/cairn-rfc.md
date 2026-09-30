@@ -8,11 +8,21 @@ Cairn is the durable knowledge and RFC lifecycle layer associated with the coord
 
 The implementation defines separate Cairn persistence alongside coordinator state. RFCs have explicit lifecycle states:
 
-`seed -> rfc -> in_round -> ratified -> shipped`
+`seed -> ideation -> in_round -> ratified -> shipped`
+
+The rebuild guide and included frontend use `ideation`. An older MCP enum calls
+that state `rfc`; it is a stale alias, not a separate lifecycle stage.
 
 with additional `deferred`, `superseded`, and `archived` outcomes.
 
-RFC revisions are content-addressed with body hashes. Waves collect cohort responses and signals. Votes and lifecycle audits preserve the decision trail. Deployment records link an RFC to commit, host, actor, and rollback metadata.
+RFC revisions are content-addressed with body hashes. Waves are deliberation rounds that
+collect responses and signals, not delivery batches. Votes preserve approve/reject/abstain
+verdicts for audit; no numeric vote threshold authorizes ratification. The documented
+`wave_quorum` basis requires the latest wave to be closed with a non-empty synthesis;
+four explicit citation/operator bases are alternatives. See
+[waves and legal bases](../rebuild/rnd-processes.md#3-waves-signals-votes-and-consensus).
+Lifecycle audits preserve the decision trail. Deployment records link an RFC to commit,
+host, actor, and rollback metadata.
 
 ## Lifecycle boundary
 

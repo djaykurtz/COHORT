@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="demo.css">
   <script src="fixtures.js" defer></script>
   <script src="ui/renderers.js" defer></script>
+  <script src="governance.js" defer></script>
   <script src="demo.js" defer></script>
 </head>
 <body>
@@ -24,7 +25,7 @@
         <div class="stat"><span class="stat-label">Sample tasks</span><span class="stat-value" id="stat-tasks"></span></div>
         <div class="stat"><span class="stat-label">Sample nodes</span><span class="stat-value">6</span></div>
       </div>
-      <div class="header-actions"><button id="reset-demo" class="demo-button">Reset sample</button><a href="../" class="demo-link">Project story</a></div>
+      <div class="header-actions"><button id="reset-demo" class="demo-button">Reset sample</button><a href="../systems/" class="demo-link">System atlas</a><a href="../" class="demo-link">Project story</a></div>
     </header>
     <nav class="nav" id="node-nav" aria-label="Synthetic agent roles">
       <p class="rail-caption">SAMPLE ROLES / SELECT TO INSPECT</p>
@@ -39,6 +40,7 @@
         <button class="tab active" role="tab" aria-selected="true" data-tab="taskboard">Tasks</button>
         <button class="tab" role="tab" aria-selected="false" data-tab="review">Review</button>
         <button class="tab" role="tab" aria-selected="false" data-tab="design">Cairn / Design</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="governance">Research / Decisions</button>
         <button class="tab" role="tab" aria-selected="false" data-tab="knowledge">Knowledge</button>
         <button class="tab" role="tab" aria-selected="false" data-tab="health">Health states</button>
       </div>
@@ -49,7 +51,7 @@
       </div>
       <section class="glass-panel" id="main-panel" aria-label="Selected dashboard view">
         <div class="panel-header"><h2 class="panel-title" id="main-panel-title">Task Board</h2><span class="panel-badge" id="main-panel-badge"></span></div>
-        <div class="main-content" id="main-content"></div>
+        <div class="main-content" id="main-content" tabindex="0" aria-label="Scrollable dashboard content"></div>
       </section>
       <p class="demo-hint">Sample simulation only. Inspect cards, switch layers, filter work, and try a local status or owner change. No real work is dispatched.</p>
     </main>
