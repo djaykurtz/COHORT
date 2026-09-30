@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fleet Recovery Console -- ZEROBRAIN</title>
+  <link rel="stylesheet" href="css/base.css?v=portfolio-v1">
+  <link rel="stylesheet" href="css/recovery.css?v=portfolio-v1">
+</head>
+<body class="recovery-page">
+  <div class="ambient"></div>
+  <div class="grid-overlay"></div>
+
+  <!-- Header bar -- matches superdash .header -->
+  <div class="recovery-header">
+    <div class="brand">
+      <h1>FLEET RECOVERY</h1>
+    </div>
+    <span class="subtitle">Live infrastructure health · Observability mode</span>
+    <span class="cli-hint">Fleet-QA.ps1</span>
+  </div>
+
+  <div class="recovery-container" style="position:relative; z-index:1;">
+
+    <!-- System Health -- glass panel -->
+    <div class="section-title">System Health</div>
+    <div class="health-panel" id="health-panel">
+      <div class="health-row">
+        <span class="label"><span class="rc-indicator unknown"></span> Loading...</span>
+        <span class="value muted">connecting</span>
+      </div>
+    </div>
+
+    <!-- Infrastructure -- overview-card style -->
+    <div class="section-title">Infrastructure</div>
+    <div class="infra-grid" id="infra-cards"></div>
+    <div class="batch-row">
+      <button class="batch-btn" data-action="batch-restart-bb" data-target="all">⟳ Restart ALL Breathbus</button>
+      <button class="batch-btn danger" data-action="restart-all" data-target="everything">⟳ Restart EVERYTHING</button>
+    </div>
+
+    <!-- Node Revive -- node-card style with left color bar -->
+    <div class="section-title">Node Revive <span style="font-size:9px;color:var(--text-tertiary);text-transform:none;font-weight:400;letter-spacing:0"> -- kill + relaunch</span></div>
+    <div class="node-grid" id="node-cards"></div>
+    <div class="batch-row">
+      <button class="batch-btn" data-action="batch-revive" data-target="coord-host">⟳ ALL COORD_HOST</button>
+      <button class="batch-btn" data-action="batch-revive" data-target="worker-host">⟳ ALL WORKER_HOST</button>
+      <button class="batch-btn danger" data-action="batch-revive" data-target="all">⟳ ALL NODES</button>
+    </div>
+
+    <!-- Backend notice -->
+    <div class="backend-notice">
+      <span class="notice-icon">ℹ</span>
+      <span>Action buttons call <code>/api/recovery/*</code> endpoints on the coordinator. Fallback CLI: <code>Fleet-QA.ps1</code>. Destructive batch ops may require OPA elevation.</span>
+    </div>
+  </div>
+
+  <!-- Poll indicator -->
+  <div class="poll-indicator" id="poll-indicator">
+    <span class="poll-dot"></span>Connecting...
+  </div>
+
+  <script src="js/config.js?v=portfolio-v1"></script>
+  <script src="js/recovery.js?v=portfolio-v1"></script>
+</body>
+</html>

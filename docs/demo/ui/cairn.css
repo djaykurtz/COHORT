@@ -1,0 +1,1989 @@
+/* ZEROBRAIN Superdash v2 -- Cairn styles: filters, kanban, detail/forum, KB, deploy status */
+
+/* ───── Cairn RFC Panel (main content tab) ───── */
+.cairn-panel-section { margin-bottom: 16px; }
+.cairn-panel-section-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; font-size: 12px; font-weight: 600;
+  color: var(--text-secondary); text-transform: uppercase;
+  letter-spacing: 0.5px; user-select: none;
+}
+.cairn-panel-section-title { flex: 1; }
+.cairn-card {
+  background: var(--glass-2); border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm); padding: 12px 14px;
+  margin: 0 12px 8px; cursor: pointer; transition: border-color 0.2s, transform 0.15s;
+}
+.cairn-card:hover { border-color: var(--accent); transform: translateX(2px); }
+.cairn-card-seed { opacity: 0.7; }
+.cairn-card-seed:hover { opacity: 1; }
+.cairn-card-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+}
+.cairn-card-id {
+  font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
+}
+.cairn-card-status {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 1px 6px; border-radius: 4px; font-weight: 600; color: #000;
+}
+.cairn-card-title {
+  font-size: 13px; font-weight: 500; color: var(--text-primary);
+  line-height: 1.3; margin-bottom: 6px;
+}
+.cairn-card-meta {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  min-height: 18px;
+}
+.cairn-meta-item {
+  font-size: 11px; color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+}
+.cairn-meta-responders {
+  display: flex; gap: 4px; flex-wrap: wrap;
+}
+.cairn-responder {
+  font-size: 10px; font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+.cairn-card-loading {
+  font-size: 10px; color: var(--text-tertiary); font-style: italic;
+}
+.cairn-panel-shipped {
+  font-size: 11px; color: var(--text-tertiary); text-align: center;
+  padding: 8px; font-style: italic;
+}
+
+/* Filter chips */
+.cairn-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+.cairn-chip {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+  white-space: nowrap;
+}
+.cairn-chip:hover { border-color: var(--accent); color: var(--accent); }
+.cairn-chip.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 500;
+}
+.cairn-chip-clear { color: var(--text-tertiary); font-style: italic; }
+
+/* RFC578: doubled-width Ratified column (surfaces build-progress affordance with more
+   breathing room than the standard 1fr columns) */
+.cairn-column.cairn-column-wide {
+  flex: 2 1 0;
+  min-width: 320px;
+}
+
+/* RFC578: per-RFC task progress affordance (Ratified cards only) */
+.cairn-card-tasks {
+  margin-top: 8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+/* RFC578-PR2 thermometer (UXIA 2026-06-10, OPERATOR-spec'd):
+   Single full-width bar with text overlaid + semi-transparent backing
+   so text reads in front of both filled and unfilled track regions. */
+.cairn-card-tasks-thermo {
+  position: relative;
+  height: 22px;
+  background: var(--glass-3, rgba(255,255,255,0.06));
+  border-radius: 11px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.04);
+}
+.cairn-card-tasks-thermo-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 11px 0 0 11px;
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.5s ease;
+  /* SWAT-20260610-0037 item 2: amber→green color-shift via --prog-pct.
+     color-mix blends warning(amber) with success(green) by completion %. Inline
+     background-color from JS provides the domain-hue fallback; this overlay
+     layers the completion-energy tint on top via background-image + blend. */
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.12) 100%),
+    linear-gradient(0deg,
+      color-mix(in oklab, var(--warning) calc(100% - var(--prog-pct, 0%)), var(--success) var(--prog-pct, 0%)),
+      color-mix(in oklab, var(--warning) calc(100% - var(--prog-pct, 0%)), var(--success) var(--prog-pct, 0%))
+    );
+  background-blend-mode: overlay, soft-light;
+}
+/* SWAT-20260610-0037 item 1: shimmer on partially-filled bars (in-motion signal).
+   Class .is-shimmering attached by render code only when 0 < pct < 100.
+   Paused on card hover so OPERATOR scrutiny isn't distracted by motion. */
+.cairn-card-tasks-thermo-fill.is-shimmering::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.22) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: cairn-thermo-shimmer 2.6s linear infinite;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+.cairn-card:hover .cairn-card-tasks-thermo-fill.is-shimmering::after {
+  animation-play-state: paused;
+}
+@keyframes cairn-thermo-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cairn-card-tasks-thermo-fill.is-shimmering::after { animation: none; opacity: 0; }
+}
+.cairn-card-tasks-thermo-fill[data-pct="100"] {
+  border-radius: 11px;
+}
+.cairn-card-tasks-thermo-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #fff;
+  white-space: nowrap;
+  padding: 2px 9px;
+  border-radius: 9px;
+  background: rgba(8, 12, 20, 0.72);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 1;
+}
+.cairn-card-tasks-thermo-text .pct {
+  opacity: 0.85;
+  margin-left: 4px;
+}
+.cairn-card-tasks-thermo-text .pct::before {
+  content: '·';
+  margin-right: 4px;
+  opacity: 0.6;
+}
+/* SWAT-20260612-0013 (baoyu-design inspired): per-task discrete dots in the
+   overlay pill, rendered only when total<=8 (dot overflow risk above that --
+   render code falls back to "X of Y tasks" text). Filled dots = done tasks,
+   hollow dots = remaining. Complements 0037's color-shift + shimmer
+   (continuous-fill bar still drives those signals beneath the overlay). */
+.cairn-card-tasks-thermo-text .dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  vertical-align: middle;
+}
+.cairn-card-tasks-thermo-text .dots .dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+.cairn-card-tasks-thermo-text .dots .dot.is-done {
+  background: #fff;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.95);
+}
+/* Empty-state thermometer: same shape, faint track, italic label.
+   Keeps visual presence on cards with 0 tasks. */
+.cairn-card-tasks-thermo.is-empty {
+  background: rgba(255,255,255,0.025);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.2);
+}
+.cairn-card-tasks-thermo.is-empty .cairn-card-tasks-thermo-text {
+  background: rgba(8, 12, 20, 0.55);
+  color: rgba(255,255,255,0.65);
+  font-style: italic;
+  font-weight: 500;
+}
+/* Legacy 2-row classes kept for cairn-panel.js callsites (unchanged). */
+.cairn-card-tasks-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-bottom: 3px;
+}
+.cairn-card-tasks-label {
+  color: var(--text-secondary);
+}
+.cairn-card-tasks-pct {
+  font-weight: 600;
+  color: var(--text);
+}
+.cairn-card-tasks-bar {
+  height: 4px;
+  background: var(--glass-3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.cairn-card-tasks-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+.cairn-card-tasks-empty {
+  margin-top: 6px;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-style: italic;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* RFC578: Shipped tray accent (mirrors seed tray, green/shipped color) */
+.cairn-shipped-tray {
+  border-color: hsla(100, 50%, 45%, 0.25);
+}
+.cairn-shipped-chip {
+  border-left-color: hsl(100, 50%, 45%);
+}
+.cairn-shipped-chip:hover {
+  border-color: hsl(100, 50%, 45%);
+}
+
+/* Seeds Tray (collapsible, above kanban board) */
+.cairn-seeds-tray {
+  margin-bottom: 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background: var(--glass-1);
+  overflow: hidden;
+}
+.cairn-seeds-tray-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.cairn-seeds-tray-header:hover {
+  background: var(--glass-2);
+}
+.cairn-seeds-tray-toggle {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  width: 12px;
+}
+.cairn-seeds-tray-icon {
+  font-size: 14px;
+}
+.cairn-seeds-tray-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+.cairn-seeds-tray-count {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 1px 6px;
+  background: hsla(200, 70%, 55%, 0.15);
+  color: hsl(200, 70%, 55%);
+  border-radius: 4px;
+  font-weight: 600;
+}
+.cairn-seeds-tray-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 14px 12px;
+}
+.cairn-seed-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid hsl(200, 70%, 55%);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  max-width: 320px;
+}
+.cairn-seed-chip:hover {
+  border-color: hsl(200, 70%, 55%);
+  background: var(--glass-3);
+  transform: translateY(-1px);
+}
+.cairn-seed-chip-id {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  color: hsl(200, 70%, 55%);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.cairn-seed-chip-title {
+  font-size: 11px;
+  color: var(--text);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cairn-seed-chip-author {
+  font-size: 9px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+  flex-shrink: 0;
+}
+
+/* Seeds full view (when status filter = seed) */
+.cairn-seeds-full-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0 12px;
+}
+.cairn-seeds-full-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(308px, 1fr));
+  gap: 8px;
+}
+.cairn-card-responses {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-left: 5px;
+  white-space: nowrap;
+}
+
+/* Kanban Board (Layer 1) */
+.cairn-kanban {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  min-height: 300px;
+}
+.cairn-column {
+  flex: 1 1 0;
+  min-width: 242px;
+  display: flex;
+  flex-direction: column;
+}
+.cairn-col-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid var(--col-color, var(--glass-border));
+}
+.cairn-col-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+.cairn-col-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-secondary);
+}
+.cairn-col-count {
+  margin-left: auto;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 1px 5px;
+  background: var(--glass-3);
+  border-radius: 4px;
+  color: var(--text-tertiary);
+}
+
+/* Sparklines */
+.cairn-sparkline {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 22px;
+  margin-bottom: 10px;
+}
+.cairn-spark-bar {
+  flex: 1;
+  background: var(--glass-border);
+  border-radius: 1px;
+  min-width: 3px;
+  transition: height 0.3s ease;
+}
+
+.cairn-col-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  padding: 0 2px;
+}
+.cairn-empty {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-align: center;
+  padding: 12px 0;
+}
+
+/* RFC Cards */
+.cairn-card {
+  padding: 14px 16px;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.cairn-card:hover {
+  background: var(--glass-2);
+  border-color: rgba(88, 166, 255, 0.25);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.cairn-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.cairn-card-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  font-weight: 500;
+}
+.cairn-card-domain {
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: var(--glass-3);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+.cairn-card-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+.cairn-card-preview {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 6px 0 8px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.cairn-card-short-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 8px 0 10px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.cairn-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cairn-card-bottom:empty {
+  display: none;
+}
+.cairn-card-author {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+}
+.cairn-card-signals {
+  font-size: 11px;
+}
+.cairn-freshness {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 1px 5px;
+  border-radius: 4px;
+  margin-left: auto;
+}
+.cairn-freshness-fresh { color: hsl(150, 60%, 50%); }
+.cairn-freshness-aging { color: hsl(40, 80%, 58%); }
+.cairn-freshness-stale { color: hsl(0, 70%, 60%); background: hsla(0, 70%, 60%, 0.1); }
+
+/* Summary bar */
+.cairn-summary {
+  display: flex;
+  gap: 16px;
+  padding: 10px 0;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--glass-border);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  align-items: center;
+}
+.cairn-sort-select {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-3);
+  color: var(--text-secondary);
+  cursor: pointer;
+  outline: none;
+}
+.cairn-sort-select:hover { border-color: var(--accent); }
+.cairn-sort-select option { background: var(--bg-primary, #0d1117); color: var(--text); }
+
+/* ─── Layer 2: Detail/Forum View ─── */
+.cairn-detail {
+  display: flex;
+  flex-direction: column;
+}
+.cairn-detail-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+/* OPERATOR-direct 2026-06-14 (UXIA): pane-freeze RFC detail head (nav + archive banner + title/meta/tags)
+   while body+waves scroll. .cairn-body is the scroll container (overflow-y:auto, components.css:764). */
+.cairn-detail-sticky-head {
+  position: sticky;
+  top: -18px; /* cancel .cairn-body padding-top so head pins flush to drawer-header */
+  z-index: 5;
+  background: var(--bg-deep);
+  padding: 18px 0 12px;
+  margin: -18px 0 12px;
+  border-bottom: 1px solid var(--glass-border);
+}
+.cairn-detail-sticky-head .cairn-detail-nav { margin-bottom: 12px; }
+.cairn-detail-sticky-head .cairn-detail-header { margin-bottom: 0; }
+.cairn-btn-back {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-3);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  transition: var(--transition);
+}
+.cairn-btn-back:hover { background: var(--glass-2); color: var(--text); }
+/* KB edit controls */
+.cairn-kb-detail-nav { display: flex; align-items: center; gap: 8px; }
+.cairn-btn-edit, .cairn-btn-save, .cairn-btn-cancel, .cairn-btn-export {
+  font-size: 11px; padding: 4px 10px; border-radius: 6px;
+  border: 1px solid var(--glass-border); background: var(--glass-3);
+  color: var(--text-secondary); cursor: pointer; font-family: inherit; transition: var(--transition);
+}
+.cairn-btn-edit:hover, .cairn-btn-export:hover { background: var(--glass-2); color: var(--accent); }
+.cairn-btn-save { background: rgba(63,185,80,0.12); color: var(--accent); border-color: var(--accent); }
+.cairn-btn-save:hover { background: rgba(63,185,80,0.25); }
+.cairn-btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+.cairn-btn-cancel:hover { background: var(--glass-2); color: var(--text); }
+.cairn-kb-editor {
+  width: 100%; min-height: 400px; max-height: 70vh; resize: vertical;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.6;
+  background: var(--glass-1); color: var(--text-primary);
+  border: 1px solid var(--glass-border); border-radius: 6px;
+  padding: 12px; box-sizing: border-box; outline: none;
+}
+.cairn-kb-editor:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.cairn-kb-title-editor {
+  width: 100%; font-size: 18px; font-weight: 700; color: var(--text);
+  background: var(--glass-1); border: 1px solid var(--glass-border); border-radius: 6px;
+  padding: 8px 12px; margin: 0 0 8px 0; box-sizing: border-box; outline: none;
+  font-family: inherit; line-height: 1.3;
+}
+.cairn-kb-title-editor:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.cairn-kb-edit-actions { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.cairn-kb-edit-summary {
+  flex: 1; font-size: 11px; padding: 5px 10px; border-radius: 6px;
+  background: var(--glass-2); color: var(--text-secondary);
+  border: 1px solid var(--glass-border); font-family: inherit; outline: none;
+}
+.cairn-kb-edit-summary:focus { border-color: var(--accent); }
+.cairn-kb-edit-area { margin-top: 12px; }
+.cairn-detail-stage {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.cairn-detail-header { margin-bottom: 16px; }
+
+/* Archive Reason Banner */
+.cairn-archive-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  background: rgba(255, 100, 100, 0.08);
+  border: 1px solid rgba(255, 100, 100, 0.25);
+  border-left: 4px solid var(--error, #f85149);
+}
+.cairn-archive-banner-icon { font-size: 20px; line-height: 1; margin-top: 2px; }
+.cairn-archive-banner-content { flex: 1; min-width: 0; }
+.cairn-archive-banner-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--error, #f85149);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.cairn-archive-banner-reason {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+.cairn-archive-banner-superseded {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+.cairn-archive-banner-link {
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+.cairn-archive-banner-link:hover { color: var(--text-primary); }
+.cairn-archive-banner-meta {
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+.cairn-detail-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 8px 0;
+}
+.cairn-detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.cairn-tag-chip {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 500;
+}
+.cairn-meta-author {
+  font-size: 10px;
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+}
+.cairn-meta-date {
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+.cairn-detail-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.cairn-tag {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--glass-3);
+  color: var(--text-tertiary);
+}
+.cairn-detail-body {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 20px;
+}
+
+/* Solidplan */
+.cairn-solidplan {
+  margin-bottom: 24px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, rgba(88,166,255,0.06), rgba(210,168,255,0.06));
+  border: 1.5px solid rgba(88,166,255,0.25);
+  border-radius: 10px;
+}
+.cairn-solidplan-header {
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer; user-select: none;
+  padding: 4px 6px; margin: -4px -6px 10px -6px;
+  border-radius: 6px; transition: background 0.15s;
+}
+.cairn-solidplan-header:hover { background: var(--glass-2); }
+.cairn-solidplan-icon { font-size: 16px; }
+.cairn-solidplan-label {
+  font-size: 13px; font-weight: 700; color: var(--accent);
+  letter-spacing: 0.5px;
+}
+.cairn-solidplan-meta {
+  font-size: 10px; color: var(--text-tertiary); margin-left: auto;
+}
+.cairn-solidplan .cairn-wave-toggle {
+  font-size: 10px; color: var(--text-tertiary);
+  transition: transform 0.2s; display: inline-block; width: 12px; text-align: center;
+}
+.cairn-solidplan.collapsed .cairn-wave-toggle { transform: rotate(-90deg); }
+.cairn-solidplan.collapsed .cairn-solidplan-body { display: none; }
+
+/* Waves */
+.cairn-wave {
+  margin-bottom: 22px;
+  padding: 14px 16px;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+}
+.cairn-wave-active {
+  border-color: rgba(210, 168, 255, 0.3);
+  box-shadow: 0 0 20px rgba(210, 168, 255, 0.05);
+}
+.cairn-wave-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+  border-radius: 6px;
+  padding: 4px 6px;
+  margin: -4px -6px 8px -6px;
+}
+.cairn-wave-header:hover { background: var(--glass-2); }
+.cairn-wave-toggle {
+  font-size: 10px; color: var(--text-tertiary);
+  transition: transform 0.2s;
+  display: inline-block; width: 12px; text-align: center;
+}
+.cairn-wave.collapsed .cairn-wave-toggle { transform: rotate(-90deg); }
+.cairn-wave.collapsed .cairn-wave-body { display: none; }
+.cairn-wave-resp-count {
+  font-size: 9px; color: var(--text-tertiary);
+  margin-left: auto; font-family: 'JetBrains Mono', monospace;
+}
+.cairn-wave-num {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--purple);
+}
+.cairn-wave-mode {
+  font-size: 9px;
+  color: var(--text-tertiary);
+}
+.cairn-wave-live {
+  font-size: 9px;
+  color: var(--success);
+  font-weight: 600;
+  animation: pulse-live 2s infinite;
+}
+.cairn-wave-synthesized-badge {
+  font-size: 9px;
+  color: #00c8b4;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.cairn-wave-prompt {
+  margin-bottom: 14px;
+  padding-left: 12px;
+  border-left: 2px solid var(--purple);
+}
+
+/* Wave Synthesis */
+.cairn-wave-synthesis {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: rgba(0, 200, 180, 0.06);
+  border: 1px solid rgba(0, 200, 180, 0.2);
+  border-radius: 8px;
+}
+.cairn-wave-synthesis-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #00c8b4;
+  margin-bottom: 6px;
+}
+.cairn-wave-synthesis-content {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+/* Preview shown outside wave-body so it's visible when collapsed */
+.cairn-wave-synthesis-preview {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--glass-border);
+}
+.cairn-wave.collapsed .cairn-wave-synthesis-preview {
+  display: flex;
+}
+.cairn-wave.expanded .cairn-wave-synthesis-preview {
+  display: none;
+}
+.cairn-wave-synthesis-preview-icon {
+  flex-shrink: 0;
+}
+.cairn-wave-synthesis-preview-text {
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* SWAT-0007: closed+synthesized waves render as a compact stacked summary --
+   tighter vertical rhythm so every wave of a multi-wave RFC reads at a glance,
+   with the full synthesis surfaced always-visible (outside the collapsible body). */
+.cairn-wave-compact {
+  margin-bottom: 12px;
+  padding: 10px 14px;
+}
+.cairn-wave-compact .cairn-wave-header {
+  margin-bottom: 6px;
+}
+.cairn-wave-synthesis-always {
+  margin-top: 8px;
+}
+.cairn-wave-compact.collapsed .cairn-wave-synthesis-always {
+  display: none;
+}
+/* Nested: synthesis sub-frame is independently collapsible (its own toggle) */
+.cairn-wave-synthesis-always .cairn-wave-synthesis-label {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cairn-wave-synthesis-always.collapsed .cairn-wave-synthesis-label {
+  margin-bottom: 0;
+}
+.cairn-wave-synthesis-always.collapsed .cairn-wave-toggle {
+  transform: rotate(-90deg);
+}
+.cairn-wave-synthesis-always.collapsed .cairn-wave-synthesis-content {
+  display: none;
+}
+
+/* Responses */
+.cairn-response {
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  background: var(--bg-mid);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+}
+.cairn-resp-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.cairn-resp-author {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+}
+.cairn-resp-stance {
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.cairn-stance-support { background: rgba(63, 185, 80, 0.15); color: var(--success); }
+.cairn-stance-nuance { background: rgba(210, 168, 255, 0.15); color: var(--purple); }
+.cairn-stance-object { background: rgba(248, 81, 73, 0.15); color: var(--error); }
+.cairn-stance-defer { background: var(--glass-3); color: var(--text-tertiary); }
+.cairn-star { font-size: 12px; }
+.cairn-resp-signals {
+  margin-left: auto;
+  font-size: 10px;
+}
+.cairn-resp-body {
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* Comments (1-level) */
+.cairn-comment {
+  padding: 6px 12px 6px 16px;
+  margin-top: 8px;
+  color: var(--text-secondary);
+  border-left: 1px solid var(--glass-border);
+}
+.cairn-comment .cairn-markdown { font-size: 13px; }
+.cairn-comment.cairn-operator-frame {
+  border-left-color: var(--gold);
+  background: var(--gold-soft);
+  border-radius: 0 4px 4px 0;
+  padding: 6px 10px 6px 16px;
+}
+.cairn-comment-author {
+  font-weight: 600;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+}
+.cairn-operator-frame .cairn-comment-author { color: var(--gold); }
+
+/* Interaction buttons (Layer 3) */
+.cairn-resp-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--glass-border);
+}
+.cairn-action-btn {
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.cairn-action-btn:hover {
+  background: var(--glass-2);
+  border-color: var(--accent);
+  transform: scale(1.1);
+}
+
+/* Action bar -- transition button bar */
+.cairn-action-bar {
+  display: flex;
+  gap: 8px;
+  padding: 16px 0;
+  margin-top: 16px;
+  border-top: 1px solid var(--glass-border);
+  align-items: center;
+}
+.cairn-stage-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+  padding: 0 8px;
+}
+.cairn-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transition: var(--transition);
+}
+.cairn-dot-active {
+  background: var(--dot-color);
+  box-shadow: 0 0 6px var(--dot-color);
+  transform: scale(1.3);
+}
+.cairn-dot-done {
+  background: var(--dot-color);
+  opacity: 0.5;
+}
+.cairn-dot-future {
+  background: var(--glass-border);
+  opacity: 0.4;
+}
+.cairn-btn-demote {
+  font-size: 11px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-3);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  transition: var(--transition);
+  opacity: 0.7;
+}
+.cairn-btn-demote:hover { opacity: 1; color: var(--text); background: var(--glass-2); }
+.cairn-btn-promote {
+  white-space: nowrap;
+}
+.cairn-btn-archive {
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-3);
+  cursor: pointer;
+  transition: var(--transition);
+  margin-left: 4px;
+}
+.cairn-btn-archive:hover { background: rgba(200, 80, 80, 0.15); border-color: hsl(0, 60%, 55%); }
+.cairn-btn-restore {
+  font-size: 11px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid hsl(150, 60%, 40%);
+  background: rgba(60, 180, 100, 0.1);
+  color: hsl(150, 60%, 55%);
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  transition: var(--transition);
+}
+.cairn-btn-restore:hover { background: rgba(60, 180, 100, 0.2); }
+.cairn-btn-pending {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Title-first card layout (iter-2 OPERATOR 2026-05-29: max breathing room for title+desc) */
+.cairn-card-title-row {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}
+/* Three-segment meta row (iter-2 OPERATOR 2026-05-29):
+   grid columns = ID | center(author+waves) | tag. auto/1fr/auto keeps
+   the rails (ID, tag) compact while center expands. */
+.cairn-card-meta {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--glass-border);
+}
+.cairn-card-meta-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+}
+.cairn-card-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+/* Wave badge (iter-2 OPERATOR 2026-05-29): icon-repeat for 1-4 waves so
+   visual weight scales with deliberation depth; 5+ caps at 4 + overflow.
+   Zero waves shows a small dim blue "0" -- visible but de-emphasized so
+   ideation/seed cards don't read as broken. */
+.cairn-card-wave {
+  font-size: 10px;
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: -1px;
+  flex-shrink: 0;
+}
+.cairn-card-wave-zero {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 9px;
+  color: #58a6ff;
+  opacity: 0.5;
+  font-weight: 600;
+  letter-spacing: normal;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba(88, 166, 255, 0.08);
+}
+.cairn-card-wave-overflow {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 8px;
+  color: var(--text-muted);
+  margin-left: 2px;
+  letter-spacing: normal;
+  vertical-align: middle;
+}
+.cairn-card-category {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 9px;
+  color: var(--cat-color, var(--accent));
+  background: var(--cat-bg, var(--accent-soft));
+  border: 1px solid var(--cat-border, rgba(88, 166, 255, 0.25));
+  padding: 2px 7px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+/* Domain-specific category colors */
+.cairn-cat-tooling    { --cat-color: #3fb950; --cat-bg: rgba(63,185,80,0.12); --cat-border: rgba(63,185,80,0.35); }
+.cairn-cat-process    { --cat-color: #d29922; --cat-bg: rgba(210,153,34,0.12); --cat-border: rgba(210,153,34,0.35); }
+.cairn-cat-infrastructure { --cat-color: #58a6ff; --cat-bg: rgba(88,166,255,0.12); --cat-border: rgba(88,166,255,0.35); }
+.cairn-cat-architecture { --cat-color: #39d2c0; --cat-bg: rgba(57,210,192,0.12); --cat-border: rgba(57,210,192,0.35); }
+.cairn-cat-governance { --cat-color: #bc8cff; --cat-bg: rgba(188,140,255,0.12); --cat-border: rgba(188,140,255,0.35); }
+.cairn-cat-security   { --cat-color: #f85149; --cat-bg: rgba(248,81,73,0.12); --cat-border: rgba(248,81,73,0.35); }
+.cairn-cat-integration { --cat-color: #f778ba; --cat-bg: rgba(247,120,186,0.12); --cat-border: rgba(247,120,186,0.35); }
+.cairn-cat-automation { --cat-color: #79c0ff; --cat-bg: rgba(121,192,255,0.12); --cat-border: rgba(121,192,255,0.35); }
+.cairn-cat-breathbus  { --cat-color: #ff7b72; --cat-bg: rgba(255,123,114,0.12); --cat-border: rgba(255,123,114,0.35); }
+.cairn-card-id-badge {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  background: var(--glass-3);
+  padding: 1px 5px;
+  border-radius: 3px;
+  opacity: 0.7;
+}
+/* Dependency field (SWAT-20260701-0001): "per RFC603, RFC603x2" line, right
+   after the ID/author/tag meta row. Small + muted so it doesn't compete with
+   the title/description for attention, matching the id-badge tone. */
+.cairn-card-depends {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  opacity: 0.65;
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cairn-detail-id-badge {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 14px;
+  color: var(--text-muted);
+  background: var(--glass-3);
+  padding: 2px 8px;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-left: 6px;
+  opacity: 0.6;
+}
+
+/* OPERATOR notes section */
+.cairn-notes-section {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--glass-border);
+}
+.cairn-notes-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold);
+  margin: 0 0 12px 0;
+}
+.cairn-operator-note {
+  background: rgba(227, 179, 65, 0.05);
+  border-left: 3px solid var(--gold);
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+.cairn-note-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.cairn-note-author {
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 600;
+}
+.cairn-note-date {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+.cairn-note-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+.cairn-note-input {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.cairn-note-textarea {
+  flex: 1;
+  background: var(--glass-3);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 12px;
+  padding: 8px 10px;
+  resize: vertical;
+  min-height: 60px;
+}
+.cairn-note-textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+.cairn-btn {
+  font-size: 11px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-3);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  transition: var(--transition);
+}
+.cairn-btn:hover { background: var(--glass-2); color: var(--text); }
+.cairn-btn-primary {
+  background: var(--gold-soft);
+  border-color: var(--gold);
+  color: var(--gold);
+  font-weight: 600;
+}
+.cairn-btn-primary:hover {
+  background: rgba(227, 179, 65, 0.2);
+}
+
+/* Status bar trigger */
+.cairn-trigger {
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+.cairn-trigger:hover { background: var(--gold-soft); }
+.cairn-trigger .status-label {
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.cairn-trigger .status-value { color: var(--gold); }
+
+/* Toast notifications */
+.cairn-toast {
+  position: fixed;
+  bottom: 60px;
+  right: 24px;
+  padding: 10px 18px;
+  background: var(--glass-1);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 500;
+  z-index: 2000;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+.cairn-toast-show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* -- Animations -- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* -- Docs Browser (S3) -- */
+.docs-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 8px;
+}
+.docs-tab {
+  font-size: 11px;
+  padding: 5px 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.docs-tab:hover { color: var(--text); border-color: var(--accent); }
+.docs-tab.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+.docs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.docs-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--glass-3);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.docs-item:hover { border-color: var(--accent); background: var(--accent-soft); }
+.docs-item-name { font-size: 12px; color: var(--text); font-weight: 500; }
+.docs-item-meta { display: flex; gap: 12px; font-size: 10px; color: var(--text-tertiary); }
+.docs-back {
+  font-size: 11px;
+  padding: 4px 10px;
+  margin-bottom: 10px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+}
+.docs-back:hover { color: var(--text); border-color: var(--accent); }
+.docs-content {
+  overflow-y: auto;
+  max-height: calc(100vh - 280px);
+  padding: 12px;
+  background: var(--glass-1);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Guestbook / Authorization Panel */
+.opa-grants-section { padding: 12px; border-bottom: 1px solid var(--glass-border); }
+.opa-grants-header { display: flex; align-items: center; gap: 10px; margin: 0; padding: 0; }
+.opa-grants-title { font-size: 13px; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.5px; }
+.opa-grants-badge { font-size: 10px; color: var(--accent); background: var(--accent-soft); padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+.opa-grants-empty { font-size: 11px; color: var(--text-tertiary); padding: 8px 0; line-height: 1.5; }
+.opa-grants-empty code { font-family: 'JetBrains Mono', monospace; font-size: 10px; background: var(--glass-2); padding: 1px 4px; border-radius: 3px; }
+
+/* Collapsible auth sections */
+.auth-collapse-toggle { font-size: 10px; color: var(--text-tertiary); transition: transform 0.2s; display: inline-block; width: 12px; text-align: center; }
+/* Uniform header->body gap when a section is expanded (consistent across all 4 auth sub-sections) */
+.opa-grants-section:not(.collapsed) .opa-grants-header,
+.guestbook-audit-section:not(.collapsed) .guestbook-audit-header,
+.guestbook-authevents-section:not(.collapsed) .guestbook-authevents-header,
+.gate-registry-section:not(.collapsed) .gate-registry-header { margin-bottom: 10px; }
+.opa-grants-section.collapsed .opa-grants-body { display: none; }
+.opa-grants-section.collapsed .opa-grants-header { margin-bottom: 0; }
+.opa-grants-body { max-height: 380px; overflow-y: auto; padding-right: 4px; }
+.opa-grant-time { font-family: 'JetBrains Mono', monospace; color: var(--text-tertiary); }
+.guestbook-audit-section.collapsed .guestbook-audit-body { display: none; }
+
+.opa-grant-card { background: var(--glass-2); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 6px; }
+.opa-grant-active { border-left: 3px solid var(--warning); }
+.opa-grant-pending { border-left: 3px solid var(--accent); }
+.opa-grant-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.opa-grant-icon { font-size: 14px; }
+.opa-grant-node { font-weight: 600; font-size: 13px; }
+.opa-grant-scope { font-size: 11px; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; }
+.opa-grant-expires { margin-left: auto; font-size: 10px; color: var(--warning); font-family: 'JetBrains Mono', monospace; }
+.opa-grant-status-pending { margin-left: auto; font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; }
+.opa-grant-reason { font-size: 11px; color: var(--text-tertiary); margin-top: 4px; padding-left: 22px; }
+.opa-grant-meta { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; padding-left: 22px; font-family: 'JetBrains Mono', monospace; }
+.opa-grant-scope-detail { font-size: 10px; color: var(--text-secondary); font-family: 'JetBrains Mono', monospace; }
+.opa-grant-actions { display: flex; gap: 6px; margin-top: 6px; padding-left: 22px; }
+.opa-btn { font-size: 11px; font-weight: 500; border: none; border-radius: var(--radius-sm); padding: 4px 12px; cursor: pointer; transition: all 0.2s; }
+.opa-btn-approve { background: var(--success); color: #000; }
+.opa-btn-approve:hover { filter: brightness(1.2); }
+.opa-btn-deny { background: var(--danger, #e74c3c); color: #fff; }
+.opa-btn-deny:hover { filter: brightness(1.2); }
+.opa-btn-revoke { background: var(--glass-2); color: var(--warning); border: 1px solid var(--warning); }
+.opa-btn-revoke:hover { background: var(--warning); color: #000; }
+.opa-btn-confirm { background: var(--danger, #e74c3c) !important; color: #fff !important; border-color: var(--danger, #e74c3c) !important; animation: opa-pulse 0.6s ease; }
+.opa-btn-confirm:hover { filter: brightness(1.2); }
+@keyframes opa-pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+.opa-grants-expired-label { font-size: 10px; color: var(--text-tertiary); margin-top: 6px; }
+.guestbook-audit-section { padding: 12px; border-bottom: 1px solid var(--glass-border); }
+.guestbook-audit-header { display: flex; align-items: center; gap: 10px; margin: 0; padding: 0; }
+.guestbook-audit-title { font-size: 13px; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.5px; }
+.guestbook-filters { display: flex; gap: 16px; padding: 8px 12px; margin-bottom: 4px; border-bottom: 1px solid var(--glass-border); }
+.guestbook-filter-label { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-secondary); cursor: pointer; user-select: none; }
+.guestbook-filter-label input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; }
+.guestbook-list { display: flex; flex-direction: column; gap: 8px; padding: 12px; overflow-y: auto; }
+.guestbook-entry { background: var(--glass-2); border: 1px solid var(--glass-border); border-radius: var(--radius-sm); padding: 12px 14px; transition: border-color 0.2s; }
+.guestbook-entry:hover { border-color: var(--accent); }
+.guestbook-entry-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+.guestbook-status-icon { font-size: 14px; width: 18px; text-align: center; }
+.guestbook-target { font-weight: 600; font-size: 13px; }
+.guestbook-arrow { color: var(--text-tertiary); font-size: 11px; }
+.guestbook-requester { font-size: 12px; color: var(--text-secondary); }
+.guestbook-time { margin-left: auto; font-size: 10px; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace; }
+.guestbook-status { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 6px; border-radius: 4px; font-weight: 500; }
+.guestbook-status.status-success { color: var(--success); background: rgba(63, 185, 80, 0.1); }
+.guestbook-status.status-info { color: var(--accent); background: var(--accent-soft); }
+.guestbook-status.status-warning { color: var(--warning); background: rgba(210, 153, 34, 0.1); }
+.guestbook-status.status-error { color: var(--error); background: rgba(248, 81, 73, 0.1); }
+.guestbook-status.status-muted { color: var(--text-tertiary); background: rgba(72, 79, 88, 0.2); }
+.guestbook-entry-body { padding-left: 26px; }
+.guestbook-reason { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+.guestbook-meta { font-size: 10px; color: var(--text-tertiary); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+.guestbook-error { font-size: 10px; color: var(--error); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+.guestbook-self-tag { font-size: 9px; color: var(--warning, #d29922); background: rgba(210, 153, 34, 0.12); padding: 1px 6px; border-radius: 8px; margin-left: 6px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+.guestbook-auth-source { font-size: 10px; color: var(--accent, #58a6ff); margin-top: 3px; font-family: 'JetBrains Mono', monospace; }
+
+/* SWAT-20260612-0033: kind-badge (MOLT vs OPA) so OPERATOR can scan auth-trail source at a glance */
+.guestbook-kind-badge { font-size: 9px; padding: 1px 5px; border-radius: 3px; margin-right: 6px; font-weight: 600; letter-spacing: 0.5px; font-family: 'JetBrains Mono', monospace; }
+.gb-kind-molt { color: var(--text-tertiary); background: rgba(72, 79, 88, 0.3); }
+.gb-kind-opa { color: var(--accent, #58a6ff); background: var(--accent-soft, rgba(88, 166, 255, 0.15)); }
+
+/* Gate Registry */
+/* Gate Registry -- collapsible + categorized + expandable rows */
+.gate-registry-section { padding: 12px; }
+.gate-registry-section.collapsed .gate-registry-body { display: none; }
+.gate-registry-header { display: flex; align-items: center; gap: 10px; margin: 0; padding: 0; }
+.gate-registry-header:hover { opacity: 0.85; }
+.gate-registry-title { font-size: 13px; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.5px; }
+.gate-registry-badge { font-size: 10px; color: var(--purple, #d2a8ff); background: rgba(210, 168, 255, 0.08); padding: 2px 8px; border-radius: 10px; font-weight: 500; }
+.gate-registry-body { }
+.gate-registry-desc { font-size: 11px; color: var(--text-tertiary); margin-bottom: 12px; line-height: 1.5; }
+/* Category headers */
+.gate-category { margin-bottom: 16px; }
+.gate-category-header { display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: var(--glass-2); border-radius: 6px; margin-bottom: 4px; border: none; width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer; user-select: none; }
+.gate-category-header:hover { opacity: 0.85; }
+.gate-category-toggle { font-size: 10px; color: var(--text-tertiary); width: 12px; }
+.gate-category-icon { font-size: 14px; }
+.gate-category-name { font-size: 12px; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.4px; }
+.gate-category-count { font-size: 10px; color: var(--text-tertiary); background: rgba(255,255,255,0.05); padding: 1px 6px; border-radius: 8px; margin-left: auto; }
+/* Gate table */
+.gate-registry-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+.gate-registry-table thead th { text-align: left; font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 8px; border-bottom: 1px solid var(--glass-border); background: var(--glass-2); font-weight: 500; }
+.gate-registry-table tbody tr.gate-row { border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.15s; }
+.gate-registry-table tbody tr.gate-row:hover { background: var(--glass-2); }
+.gate-registry-table tbody tr.gate-row.expanded { background: rgba(210, 168, 255, 0.04); }
+.gate-registry-table td { padding: 5px 8px; vertical-align: top; line-height: 1.4; }
+.gate-registry-table td code { font-family: 'JetBrains Mono', monospace; font-size: 10px; background: var(--glass-2); padding: 1px 4px; border-radius: 3px; white-space: nowrap; }
+.gate-api code { color: var(--accent); }
+.gate-name code { color: var(--purple, #d2a8ff); }
+.gate-req { color: var(--text-tertiary); font-size: 10px; }
+/* Expandable description row */
+.gate-desc-row { border: none !important; }
+.gate-desc-row td { padding: 0 8px !important; }
+.gate-desc-expand { font-size: 11px; color: var(--text-secondary); padding: 4px 8px 10px; line-height: 1.5; border-left: 2px solid var(--purple, #d2a8ff); margin-left: 4px; margin-bottom: 4px; background: rgba(210, 168, 255, 0.03); border-radius: 0 4px 4px 0; }
+
+/* -- Cairn U3: Interactions + Auth -- */
+.cairn-status-chips { margin-top: 4px; }
+.cairn-chip-status { border-color: var(--chip-color, var(--glass-border)); }
+.cairn-chip-status.active { background: var(--chip-color, var(--accent)); color: var(--bg); }
+.cairn-loading { display: flex; align-items: center; gap: 8px; padding: 24px; color: var(--text-secondary); font-size: 12px; }
+.cairn-spinner { width: 14px; height: 14px; border: 2px solid var(--glass-border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.cairn-error { padding: 16px; color: var(--error); font-size: 12px; }
+.cairn-toast-error { background: var(--error); }
+.cairn-resp-actions { display: flex; gap: 4px; margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--glass-border); }
+.cairn-action-btn { font-size: 14px; padding: 3px 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: transparent; cursor: pointer; transition: all 0.15s; }
+.cairn-action-btn:hover { background: var(--accent-soft); border-color: var(--accent); transform: scale(1.1); }
+.cairn-signal-support:hover { border-color: hsl(150, 60%, 50%); }
+.cairn-signal-object:hover { border-color: hsl(0, 70%, 55%); }
+.cairn-signal-nuance:hover { border-color: hsl(40, 80%, 58%); }
+.cairn-signal-defer:hover { border-color: hsl(200, 50%, 60%); }
+.cairn-signal-star:hover { border-color: hsl(45, 90%, 55%); }
+.cairn-search-results { padding: 12px; }
+.cairn-search-results .cairn-card { margin-bottom: 8px; }
+
+/* -- Cairn 3-Tier: Tabs, Scratch, KB -- */
+.cairn-tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--glass-3);
+  border-radius: 6px;
+  padding: 2px;
+  margin: 0 12px;
+  flex-shrink: 0;
+}
+.cairn-tab {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.cairn-tab:hover { color: var(--text-secondary); background: var(--glass-2); }
+.cairn-tab.active {
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+}
+
+/* Scratch Feed */
+.cairn-scratch { padding: 4px 0; }
+.cairn-scratch-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 0 12px;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 12px;
+}
+.cairn-scratch-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.cairn-scratch-count { font-size: 11px; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace; }
+.cairn-scratch-live {
+  font-size: 10px;
+  color: hsl(150, 70%, 55%);
+  animation: pulse-live 2s ease-in-out infinite;
+  margin-left: auto;
+}
+@keyframes pulse-live { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.cairn-scratch-feed { display: flex; flex-direction: column; gap: 10px; }
+.cairn-scratch-entry {
+  padding: 10px 12px;
+  background: var(--glass-3);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.cairn-scratch-entry:hover { border-color: var(--accent); background: var(--glass-2); }
+.cairn-scratch-entry.cairn-expiring { border-left: 3px solid hsl(40, 80%, 58%); }
+
+.cairn-scratch-entry-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.cairn-scratch-author { font-size: 11px; font-weight: 600; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+.cairn-scratch-time { font-size: 10px; color: var(--text-tertiary); }
+.cairn-scratch-ttl { font-size: 10px; color: var(--text-secondary); margin-left: auto; font-family: 'JetBrains Mono', monospace; }
+.cairn-scratch-ttl.cairn-ttl-warn { color: hsl(40, 80%, 58%); font-weight: 600; }
+
+.cairn-scratch-content { color: var(--text); line-height: 1.6; }
+.cairn-scratch-content .cairn-markdown { font-size: 13px; }
+.cairn-scratch-collapsed .cairn-scratch-content {
+  max-height: 80px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 50%, transparent 100%);
+}
+.cairn-scratch-expand-hint {
+  font-size: 9px; color: var(--text-tertiary); font-style: italic; margin-left: auto;
+}
+.cairn-scratch-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.cairn-scratch-detail-view { padding: 8px 12px; }
+.cairn-scratch-detail-toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.cairn-scratch-detail-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.cairn-scratch-ref { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
+.cairn-scratch-ref code { background: var(--glass-3); padding: 1px 4px; border-radius: 3px; }
+.cairn-scratch-pinned { font-size: 10px; color: hsl(40, 80%, 58%); }
+.cairn-scratch-full-content { color: var(--text); line-height: 1.7; font-size: 13px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--glass-border); }
+.cairn-scratch-full-content h1, .cairn-scratch-full-content h2, .cairn-scratch-full-content h3 { margin-top: 14px; margin-bottom: 6px; }
+.cairn-scratch-full-content pre { background: var(--glass-2); padding: 8px 10px; border-radius: 6px; overflow-x: auto; font-size: 12px; }
+.cairn-scratch-full-content code { background: var(--glass-3); padding: 1px 4px; border-radius: 3px; font-size: 12px; }
+.cairn-scratch-full-content pre code { background: none; padding: 0; }
+.cairn-scratch-footer { font-size: 10px; color: var(--text-tertiary); margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--glass-border); }
+.cairn-scratch-edit-area { margin-top: 10px; }
+.cairn-scratch-edit-area textarea { width: 100%; min-height: 400px; }
+.cairn-scratch-edit-actions { display: flex; gap: 8px; margin-top: 8px; }
+.cairn-scratch-task-badge { font-size: 9px; background: rgba(56,139,66,0.2); color: #6fdd8b; padding: 1px 6px; border-radius: 4px; }
+.cairn-scratch-preview { font-size: 12px; color: var(--text-secondary); }
+
+/* KB Browser */
+.cairn-kb { padding: 4px 0; }
+.cairn-kb-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 0 12px;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 12px;
+}
+.cairn-kb-search-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.cairn-kb-search {
+  flex: 1;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: var(--transition);
+}
+.cairn-kb-search:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.cairn-kb-search::placeholder { color: var(--text-tertiary); }
+.cairn-kb-clear {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-3);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 12px;
+  transition: var(--transition);
+  font-family: inherit;
+  flex-shrink: 0;
+}
+.cairn-kb-clear:hover { background: var(--glass-2); color: var(--text); }
+.cairn-kb-count { font-size: 11px; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace; }
+
+.cairn-kb-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
+.cairn-kb-filters { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px; }
+.cairn-kb-chip { font-size: 10px; padding: 2px 8px; }
+.cairn-chip-count { font-size: 9px; opacity: 0.6; margin-left: 2px; }
+
+.cairn-kb-list { display: flex; flex-direction: column; gap: 10px; }
+.cairn-kb-article {
+  padding: 12px;
+  background: var(--glass-3);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.cairn-kb-article:hover { border-color: var(--accent); }
+.cairn-kb-article.cairn-kb-flagged { border-left: 3px solid hsl(0, 70%, 55%); }
+
+.cairn-kb-article-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.cairn-kb-article-title { font-size: 12px; font-weight: 600; color: var(--text); flex: 1; min-width: 0; }
+.cairn-kb-rank { font-size: 10px; color: var(--accent); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+.cairn-kb-flag-badge { font-size: 10px; white-space: nowrap; }
+.cairn-kb-readonly-badge {
+  font-size: 9px; color: var(--text-tertiary); background: var(--glass-2);
+  padding: 1px 6px; border-radius: 3px; font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap; flex-shrink: 0;
+}
+
+.cairn-kb-article-body { font-size: 11px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px; }
+.cairn-kb-article-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cairn-kb-author { font-size: 10px; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace; }
+.cairn-kb-date { font-size: 10px; color: var(--text-tertiary); opacity: 0.7; font-style: italic; }
+.cairn-kb-flag-btn {
+  font-size: 10px;
+  padding: 2px 8px;
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  margin-left: auto;
+  transition: all 0.15s;
+}
+.cairn-kb-flag-btn:hover { border-color: hsl(0, 70%, 55%); color: hsl(0, 70%, 55%); background: hsla(0, 70%, 55%, 0.1); }
+
+/* KB Section Layout */
+.cairn-kb-section { margin-bottom: 20px; }
+.cairn-kb-section-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 4px; margin-bottom: 8px;
+  border-bottom: 1px solid var(--glass-border);
+  cursor: pointer; user-select: none;
+  transition: background 0.15s;
+}
+.cairn-kb-section-header:hover { background: var(--glass-1); border-radius: 4px 4px 0 0; }
+.cairn-kb-section-toggle {
+  font-size: 10px; color: var(--text-tertiary);
+  transition: transform 0.2s;
+  display: inline-block; width: 12px; text-align: center;
+}
+.cairn-kb-section.collapsed .cairn-kb-section-toggle { transform: rotate(-90deg); }
+.cairn-kb-section.collapsed .cairn-kb-list,
+.cairn-kb-section.collapsed .cairn-kb-section-empty,
+.cairn-kb-section.collapsed .cairn-kb-filters { display: none; }
+.cairn-kb-section-icon { font-size: 14px; }
+.cairn-kb-section-label { font-size: 12px; font-weight: 700; color: var(--text); letter-spacing: 0.5px; }
+.cairn-kb-section-count {
+  font-size: 10px; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace;
+  background: var(--glass-3); padding: 1px 6px; border-radius: 8px;
+}
+.cairn-kb-section-empty { font-size: 11px; color: var(--text-tertiary); padding: 8px 12px; font-style: italic; }
+
+/* Read-only styling for published/archived articles */
+.cairn-kb-readonly { }
+.cairn-kb-readonly:hover { border-color: var(--glass-border); cursor: default; }
+.cairn-kb-flag-badge { font-size: 10px; color: hsl(0, 70%, 55%); font-weight: 500; }
+
+/* ─── Archive Browser ─── */
+.cairn-archive { padding: 12px 16px; }
+.cairn-archive-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.cairn-archive-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.cairn-archive-count { font-size: 11px; color: var(--text-tertiary); }
+.cairn-archive-filters {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.cairn-chip-archive {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 5px;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.cairn-chip-archive:hover { background: var(--glass-3); color: var(--text); }
+.cairn-chip-archive.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.cairn-archive-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cairn-archive-item {
+  padding: 10px 14px;
+  border-radius: 7px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-1);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.cairn-archive-item:hover {
+  background: var(--glass-3);
+  border-color: var(--accent);
+}
+.cairn-archive-item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.cairn-archive-item-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+.cairn-archive-item-status {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.cairn-badge-archived { background: rgba(139, 148, 158, 0.15); color: #8b949e; }
+.cairn-badge-deferred { background: rgba(210, 153, 34, 0.12); color: #d29922; }
+.cairn-badge-superseded { background: rgba(163, 113, 247, 0.12); color: #a371f7; }
+.cairn-badge-cancelled { background: rgba(248, 81, 73, 0.1); color: #f85149; }
+.cairn-archive-item-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+}
+.cairn-archive-item-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.cairn-archive-item-author { }
+.cairn-archive-item-date { }
+
+/* ── Deploy Status Widget (4C-E3) ── */
+.deploy-widget {
+  padding: 14px; background: var(--glass-3); border: 1px solid var(--glass-border);
+  border-radius: 10px; transition: all 0.2s;
+}
+.deploy-widget.deploy-pass { border-left: 3px solid hsl(142, 60%, 45%); }
+.deploy-widget.deploy-fail { border-left: 3px solid hsl(0, 70%, 55%); }
+.deploy-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.deploy-icon { font-size: 14px; }
+.deploy-title { font-size: 12px; font-weight: 600; color: var(--text); flex: 1; }
+.deploy-status-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace; letter-spacing: 0.5px;
+}
+.deploy-status-badge.deploy-pass { background: hsla(142, 60%, 45%, 0.15); color: hsl(142, 60%, 45%); }
+.deploy-status-badge.deploy-fail { background: hsla(0, 70%, 55%, 0.15); color: hsl(0, 70%, 55%); }
+.deploy-meta {
+  display: flex; gap: 12px; margin-bottom: 10px;
+  font-size: 10px; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace;
+}
+.deploy-commit { background: var(--glass-2); padding: 1px 6px; border-radius: 3px; }
+.deploy-checks { display: flex; flex-wrap: wrap; gap: 6px; }
+.deploy-check {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 10px; padding: 3px 8px; border-radius: 4px;
+  background: var(--glass-2); font-family: 'JetBrains Mono', monospace;
+}
+.deploy-check-icon { font-weight: 700; }
+.deploy-check-label { color: var(--text-secondary); }
+.deploy-check-value.check-ok { color: hsl(142, 60%, 45%); }
+.deploy-check-value.check-fail { color: hsl(0, 70%, 55%); }
+.deploy-empty { font-size: 11px; color: var(--text-tertiary); font-style: italic; }
+
+
+/* === Cairn RFC body: legacy synthesis-heading collapse (UXIA cycle 22) === */
+/* Wraps pre-2026-06-01-fix auto-appended ## Wave N Synthesis sections.
+   Always-collapsed by default (per DRAGON CONCUR, no per-RFC persist). */
+.cairn-body-synthesis-section {
+  margin: 12px 0;
+  border: 1px solid var(--bg-3, #2a2a2a);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.02);
+}
+.cairn-body-synthesis-header {
+  padding: 8px 12px;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid var(--bg-3, #2a2a2a);
+}
+.cairn-body-synthesis-section.collapsed .cairn-body-synthesis-header {
+  border-bottom: none;
+}
+.cairn-body-synthesis-section.collapsed .cairn-wave-toggle {
+  transform: rotate(-90deg);
+}
+.cairn-body-synthesis-section.collapsed .cairn-body-synthesis-body {
+  display: none;
+}
+.cairn-body-synthesis-body {
+  padding: 12px 16px;
+}
+.cairn-body-synthesis-label {
+  font-weight: 600;
+  color: var(--text-2, #c8c8c8);
+}
+.cairn-body-synthesis-legacy-tag {
+  font-style: italic;
+  font-weight: normal;
+  opacity: 0.7;
+  font-size: 0.85em;
+}
+
+/* ============================================================
+ * Scrollbar polish (UXIA RFC578-followup 2026-06-10, OPERATOR-direct):
+ * Replace chunky default scrollbars with thin dark-glass treatment that
+ * matches the superdash aesthetic. Cross-browser (Firefox + Webkit).
+ * Existing per-element overrides (.kanban-col-body, .nav, etc.) still win
+ * because they're more specific than the bare-pseudo selectors below.
+ * ============================================================ */
+
+/* Firefox: inherited by all scroll containers unless overridden */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.16) transparent;
+}
+
+/* Webkit/Blink baseline for any scroll container not already customized */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.08));
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.04);
+  background-clip: padding-box;
+  transition: background 0.18s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(255,255,255,0.34), rgba(255,255,255,0.18));
+}
+::-webkit-scrollbar-thumb:active {
+  background: linear-gradient(180deg, rgba(180, 200, 255, 0.45), rgba(120, 150, 220, 0.28));
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Explicitly cover the cairn kanban column-items container (was unstyled,
+ * defaulting to chunky native scrollbars per OPERATOR screenshot 2026-06-10). */
+.cairn-col-items::-webkit-scrollbar {
+  width: 6px;
+}
+.cairn-col-items::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(255,255,255,0.20), rgba(255,255,255,0.08));
+  border-radius: 999px;
+}
+.cairn-col-items::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(255,255,255,0.38), rgba(255,255,255,0.20));
+}
+.cairn-col-items {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.18) transparent;
+}

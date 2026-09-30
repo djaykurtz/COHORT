@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; worker-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="description" content="Explore ZeroBrain with synthetic tasks, review claims, design records and local-only simulation. No live agents or coordinator.">
+  <title>ZeroBrain | Offline functional demo</title>
+  <link rel="stylesheet" href="ui/base.css">
+  <link rel="stylesheet" href="ui/components.css">
+  <link rel="stylesheet" href="ui/cairn.css">
+  <link rel="stylesheet" href="ui/responsive.css">
+  <link rel="stylesheet" href="ui/overrides.css">
+  <link rel="stylesheet" href="demo.css">
+  <script src="fixtures.js" defer></script>
+  <script src="ui/renderers.js" defer></script>
+  <script src="demo.js" defer></script>
+</head>
+<body>
+  <div class="cockpit">
+    <header class="header">
+      <div class="header-brand"><h1>ZEROBRAIN</h1><span class="sample-label">OFFLINE / SYNTHETIC</span></div>
+      <div class="header-stats">
+        <div class="stat"><span class="stat-label">Sample tasks</span><span class="stat-value" id="stat-tasks"></span></div>
+        <div class="stat"><span class="stat-label">Sample nodes</span><span class="stat-value">6</span></div>
+      </div>
+      <div class="header-actions"><button id="reset-demo" class="demo-button">Reset sample</button><a href="../" class="demo-link">Project story</a></div>
+    </header>
+    <nav class="nav" id="node-nav" aria-label="Synthetic agent roles">
+      <p class="rail-caption">SAMPLE ROLES / SELECT TO INSPECT</p>
+      <div id="node-nav-list" class="nav-nodes"></div>
+      <div class="intel-card nav-fleet-health">
+        <div class="intel-card-title">Connection boundary</div>
+        <p class="boundary">No backend attached.<br>All state stays in this page.<br>Reset or reload discards changes.</p>
+      </div>
+    </nav>
+    <main class="main">
+      <div class="main-tabs" id="main-tabs" role="tablist" aria-label="Dashboard views">
+        <button class="tab active" role="tab" aria-selected="true" data-tab="taskboard">Tasks</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="review">Review</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="design">Cairn / Design</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="knowledge">Knowledge</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="health">Health states</button>
+      </div>
+      <div class="demo-filters" id="task-filters">
+        <label>Owner <select id="owner-filter"><option value="">All sample nodes</option></select></label>
+        <label>Priority <select id="priority-filter"><option value="">All priorities</option><option value="1">P1</option><option value="2">P2</option><option value="3">P3</option></select></label>
+        <label class="search-label">Find work <input id="task-search" type="search" placeholder="Search sample titles"></label>
+      </div>
+      <section class="glass-panel" id="main-panel" aria-label="Selected dashboard view">
+        <div class="panel-header"><h2 class="panel-title" id="main-panel-title">Task Board</h2><span class="panel-badge" id="main-panel-badge"></span></div>
+        <div class="main-content" id="main-content"></div>
+      </section>
+      <p class="demo-hint">Sample simulation only. Inspect cards, switch layers, filter work, and try a local status or owner change. No real work is dispatched.</p>
+    </main>
+    <aside class="intel" aria-label="Sample design and activity">
+      <section class="intel-card"><h2 class="intel-card-title">Sample design pipeline</h2><div id="design-summary"></div></section>
+      <section class="intel-card"><h2 class="intel-card-title">Local activity</h2><ol id="activity-log" aria-live="polite"></ol></section>
+      <section class="intel-card"><h2 class="intel-card-title">What is real here?</h2><p class="boundary">The task cards, node rail and review table use selected original Superdash renderers. Data and interactions are a separate sample adapter.</p></section>
+    </aside>
+    <footer class="status-bar"><span>MODE: OFFLINE DEMO</span><span>DATA: INVENTED FIXTURES</span><span>NETWORK: NO API CALLS</span><span>STATE: MEMORY ONLY</span></footer>
+  </div>
+  <dialog id="detail-dialog" aria-labelledby="detail-title">
+    <button class="dialog-close demo-button" id="close-dialog" aria-label="Close detail">Close</button>
+    <p class="eyebrow">SYNTHETIC DETAIL / LOCAL SIMULATION</p>
+    <h2 id="detail-title"></h2>
+    <div id="detail-body"></div>
+  </dialog>
+  <noscript>This functional sample requires JavaScript. No backend or account is required.</noscript>
+</body>
+</html>

@@ -1,0 +1,229 @@
+/* Gary Status Panel (RFC588) -- Project Crash Test Dummy "Gary" */
+
+.gary-panel {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Header */
+.gary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--surface-2, #1a1a2e);
+  border-radius: 8px;
+  border: 1px solid var(--border, #2a2a3e);
+}
+
+.gary-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gary-header-icon {
+  font-size: 24px;
+}
+
+.gary-header-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--text-primary, #e0e0e0);
+}
+
+.gary-header-subtitle {
+  font-size: 11px;
+  color: var(--text-tertiary, #888);
+  margin-top: 2px;
+}
+
+.gary-refresh-btn {
+  background: var(--surface-3, #22223a);
+  border: 1px solid var(--border, #2a2a3e);
+  color: var(--text-primary, #e0e0e0);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.gary-refresh-btn:hover {
+  background: var(--surface-4, #2a2a45);
+}
+
+.gary-error-banner {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(248, 81, 73, 0.12);
+  border: 1px solid rgba(248, 81, 73, 0.35);
+  color: #f87171;
+  font-size: 12px;
+}
+
+/* Active session card */
+.gary-active-card {
+  padding: 14px 16px;
+  background: var(--surface-2, #1a1a2e);
+  border-radius: 8px;
+  border: 1px solid var(--border, #2a2a3e);
+}
+
+.gary-active-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gary-active-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary, #e0e0e0);
+}
+
+.gary-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.gary-status-dot.gary-status-active { background: #fbbf24; box-shadow: 0 0 6px #fbbf2466; }
+.gary-status-dot.gary-status-idle { background: #4ade80; box-shadow: 0 0 6px #4ade8066; }
+
+.gary-active-detail {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gary-detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.gary-detail-row .label {
+  color: var(--text-tertiary, #888);
+}
+
+.gary-detail-row .value {
+  color: var(--text-primary, #e0e0e0);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.gary-lease-warning {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  color: #fbbf24;
+  font-size: 11px;
+}
+
+/* Recent sessions */
+.gary-recent-section {
+  background: var(--surface-2, #1a1a2e);
+  border-radius: 8px;
+  border: 1px solid var(--border, #2a2a3e);
+  padding: 14px 16px;
+}
+
+.gary-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary, #aaa);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.gary-empty {
+  font-size: 12px;
+  color: var(--text-tertiary, #888);
+}
+
+.gary-recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gary-recent-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: var(--surface-3, #22223a);
+  font-size: 11px;
+}
+
+.gary-verdict-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.gary-verdict-dot.verdict-pass { background: #4ade80; }
+.gary-verdict-dot.verdict-fail { background: #f87171; }
+.gary-verdict-dot.verdict-neutral { background: #58a6ff; }
+.gary-verdict-dot.verdict-unknown { background: #888; }
+
+.gary-recent-id {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  color: var(--text-primary, #e0e0e0);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gary-recent-kind {
+  color: var(--text-tertiary, #888);
+}
+
+.gary-recent-verdict {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+.gary-recent-verdict.verdict-pass { color: #4ade80; }
+.gary-recent-verdict.verdict-fail { color: #f87171; }
+.gary-recent-verdict.verdict-neutral { color: #58a6ff; }
+.gary-recent-verdict.verdict-unknown { color: #888; }
+
+.gary-recent-spawner,
+.gary-recent-time {
+  color: var(--text-tertiary, #888);
+  white-space: nowrap;
+}
+
+/* Reaper stats */
+.gary-reaper-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: var(--surface-2, #1a1a2e);
+  border-radius: 8px;
+  border: 1px solid var(--border, #2a2a3e);
+  font-size: 12px;
+}
+
+.gary-reaper-card .label {
+  color: var(--text-tertiary, #888);
+}
+
+.gary-reaper-card .value {
+  color: var(--text-primary, #e0e0e0);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-weight: 700;
+}

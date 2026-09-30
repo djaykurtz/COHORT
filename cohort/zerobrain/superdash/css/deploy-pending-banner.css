@@ -1,0 +1,9 @@
+/* SWAT-20260604-0017 deploy-status styles.
+ * The top-of-page .deploy-pending-banner was removed 2026-06-22 (OPERATOR:
+ * deploy state lives in the footer "Deploy:" pill, not a page-spanning banner).
+ * Only the #status-deploy footer-pill colorings remain. */
+
+/* Footer pill colorings used by deploy-pending-banner.js render(). */
+#status-deploy.status-ok      { color: #6fd16f; }
+#status-deploy.status-warn    { color: #ffb84d; font-weight: 600; }
+#status-deploy.status-unknown { color: #888; }

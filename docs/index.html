@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; worker-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="description" content="David Kurtz's COHORT: multi-agent coordination architecture and the functional, disconnected ZeroBrain dashboard portfolio demo.">
+  <title>COHORT / David Kurtz</title>
+  <link rel="stylesheet" href="showcase.css">
+  <script src="showcase.js" defer></script>
+</head>
+<body>
+  <header class="masthead"><a class="wordmark" href="./">COHORT</a><span>DAVID KURTZ / ENGINEERING SYSTEMS</span><a href="https://github.com/djaykurtz/COHORT">Source</a></header>
+  <main>
+    <section class="opening">
+      <p class="eyebrow">AGENT COORDINATION / AN OPERATOR'S VIEW</p>
+      <h1>Many agents.<br>One accountable system.</h1>
+      <p class="lede">Work ownership, artifact-bound review, durable context, and visible failure.
+        COHORT asks how autonomous coding agents can cooperate without treating activity as progress.</p>
+      <div class="actions"><a class="primary-link" href="demo/">Explore ZeroBrain <span aria-hidden="true">&#8599;</span></a><a href="#movements">Read the engineering story</a></div>
+      <p class="boundary">The demo is functional, disconnected, and synthetic. No live fleet, account, or backend.</p>
+    </section>
+    <figure class="hero-frame"><a href="demo/"><img src="assets/dashboard-tasks.png" width="1600" height="1000" alt="ZeroBrain offline sample dashboard: synthetic role rail, four-column work board, and local activity"></a><figcaption>ZEROBRAIN / SUPERDASH V2 <span>ACTUAL RENDERERS. INVENTED DATA. LOCAL INTERACTIONS.</span></figcaption></figure>
+
+    <section id="movements" class="movements">
+      <div class="section-heading"><p class="eyebrow">THE SYSTEM, IN MOVEMENTS</p><h2>Follow the boundaries.</h2></div>
+      <div class="movement-layout">
+        <nav class="movement-nav" aria-label="Engineering movements">
+          <button class="selected" data-movement="ownership" aria-pressed="true"><span>01</span> Work has an owner</button>
+          <button data-movement="review" aria-pressed="false"><span>02</span> Review has an artifact</button>
+          <button data-movement="memory" aria-pressed="false"><span>03</span> Context survives a process</button>
+          <button data-movement="failure" aria-pressed="false"><span>04</span> Failure stays visible</button>
+          <button data-movement="delivery" aria-pressed="false"><span>05</span> Delivery closes the loop</button>
+        </nav>
+        <div class="movement-panels">
+          <article data-panel="ownership">
+            <p class="eyebrow">01 / AUTHORITY BEFORE ACTIVITY</p><h3>A message is not a claim.</h3>
+            <p>Agents can announce the same work at the same time. COHORT's documented contract puts a
+              single-winner compare-and-swap in the authoritative store. Losing a race must be free:
+              no ownership, no work-in-progress charge, and an explicit loss result.</p>
+            <div class="connection"><span>Agent</span><i class="orchestration">MCP / work routing</i><span>Coordinator</span><i class="storage">write-of-record</i><span>Operational records</span></div>
+            <details><summary>Inspect the engineering decision</summary><p>Messages, dashboards and indexes are derived observations. None may outrank the record
+              that owns a task's lifecycle. This is an architecture contract; the coordinator implementation is not included in this snapshot.</p></details>
+            <a href="demo/">Try task filtering and local transitions</a>
+          </article>
+          <article data-panel="review" hidden>
+            <p class="eyebrow">02 / EVIDENCE, NOT ASSERTION</p><h3>Approve the revision, not the intention.</h3>
+            <p>Review evidence needs an immutable artifact, a declared base-to-head relationship, and
+              explicit authorship and recusal. A check-in or a statement of approval cannot replace those obligations.</p>
+            <img class="movement-image" src="assets/dashboard-review.png" width="1600" height="1000" alt="Original ZeroBrain review table rendered with invented overdue and near-deadline claims" loading="lazy">
+            <details><summary>Inspect what the UI demonstrates</summary><p>The original review table renderer distinguishes overdue, near-deadline and comfortable sample deadlines.
+              The offline adapter supplies fixed examples; it does not claim to authorize reviewers or verify actual artifacts.</p></details>
+            <a href="demo/?view=review">Inspect the sample review layer</a>
+          </article>
+          <article data-panel="memory" hidden>
+            <p class="eyebrow">03 / CONTINUITY IS A CONTRACT</p><h3>A successor needs more than uptime.</h3>
+            <p>Identity, handoff, memory and the authoritative work claim must survive agent replacement.
+              A process that keeps running can still lose the context or authority needed to finish its work.</p>
+            <div class="connection"><span>Identity</span><i class="storage">durable context</i><span>Handoff</span><i class="orchestration">successor boot</i><span>Work continuity</span></div>
+            <details><summary>Inspect the scope</summary><p>The rebuild guides describe ownership, lifecycle and continuity invariants. Persona templates preserve role
+              character separately from operational identity. The Pages demo neither launches agents nor stores sessions.</p></details>
+            <a href="https://github.com/djaykurtz/COHORT/tree/main/cohort/docs/rebuild">Read the rebuild contracts</a>
+          </article>
+          <article data-panel="failure" hidden>
+            <p class="eyebrow">04 / UNKNOWN IS NOT HEALTHY</p><h3>An open port can still be a dead end.</h3>
+            <p>The included health probe checks connection reachability and then an SSH identification banner.
+              A silent listener is degraded, not green. The frontend's caches likewise keep freshness and uncertainty visible.</p>
+            <div class="connection"><span>Dashboard</span><i class="network">observation</i><span>Probe</span><i class="control">verified response</i><span>Service state</span></div>
+            <details><summary>Inspect the executable evidence</summary><p>A deterministic Python test creates local banner, silent and closed listeners.
+              It verifies the three outcomes without real fleet infrastructure. The browser demo illustrates those outcomes but never opens a socket.</p></details>
+            <a href="demo/?view=health">Explore synthetic health states</a>
+          </article>
+          <article data-panel="delivery" hidden>
+            <p class="eyebrow">05 / SHIPPED MEANS SEEN</p><h3>A changed file is not a delivered interface.</h3>
+            <p>Versioned asset URLs, service-worker freshness, deploy provenance and verified receipts
+              address the gap between editing source and the operator receiving it. Evidence lives at the relevant boundary.</p>
+            <div class="connection"><span>Reviewed source</span><i class="work">promotion</i><span>Served bytes</span><i class="network">browser delivery</i><span>Operator view</span></div>
+            <details><summary>Inspect the tradeoff</summary><p>Immutable versioned URLs reduce repeated transfers but require stamp changes when content changes.
+              The included content-hash lint checks that obligation. This public demo avoids service-worker state and operational deployment tooling entirely.</p></details>
+            <a href="https://github.com/djaykurtz/COHORT/tree/main/cohort/zerobrain/superdash/scripts">Read the delivery tooling</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="scope"><p class="eyebrow">WHAT YOU CAN RUN / WHAT IS A CONTRACT</p><h2>A precise portfolio boundary.</h2>
+      <div class="scope-grid"><div><h3>Runnable here</h3><p>A plain JavaScript/CSS dashboard, its small Python HTTP server, regression tests,
+        and this sample-only functional Pages demo. Filtering, drilldowns and simulations stay in browser memory.</p></div>
+      <div><h3>Documented, not bundled</h3><p>The coordinator backend, relational write-of-record, knowledge store, agent boot/runtime,
+        authorization and recovery system. Rebuild guides separate implementation references from intent and assessment.</p></div></div>
+      <p>No benchmark or production-impact claim is made. David's architecture, operating-model and implementation work
+        is presented alongside documented agent contributions and retained third-party assets.</p>
+    </section>
+  </main>
+  <footer class="page-footer"><span>DAVID KURTZ / COHORT</span><a href="https://github.com/djaykurtz">GitHub profile</a><a href="https://github.com/djaykurtz/COHORT">Implementation and design record</a></footer>
+</body>
+</html>

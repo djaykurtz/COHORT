@@ -1,0 +1,394 @@
+/* Fleet Recovery Console — recovery-specific styles */
+/* Reuses base.css variables, glass-panel, node-card, overview-card patterns */
+
+body.recovery-page {
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+/* -- Header: matches superdash .header glass bar -- */
+.recovery-header {
+  background: var(--glass-1);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-glass);
+  padding: 16px 24px;
+  margin: 12px 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.recovery-header .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.recovery-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, var(--accent), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.recovery-header .subtitle {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-left: auto;
+}
+.recovery-header .cli-hint {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+  padding: 3px 8px;
+  background: var(--glass-3);
+  border-radius: 9999px;
+}
+
+/* -- Layout container -- */
+.recovery-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 12px 48px;
+}
+
+/* -- Section titles -- */
+.section-title {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin: 24px 0 12px;
+  padding-left: 4px;
+}
+
+/* -- Health panel: glass-panel style -- */
+.health-panel {
+  background: var(--glass-1);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-glass);
+  padding: 20px;
+  transition: var(--transition);
+}
+.health-panel:hover {
+  border-color: rgba(88, 166, 255, 0.2);
+}
+.health-panel .health-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  padding: 5px 0;
+}
+.health-panel .health-row + .health-row {
+  border-top: 1px solid rgba(255,255,255,0.025);
+}
+.health-panel .health-row .label {
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.health-panel .health-row .value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+.health-panel .health-row .value.ok { color: var(--success); }
+.health-panel .health-row .value.warn { color: var(--warning); }
+.health-panel .health-row .value.bad { color: var(--error); }
+.health-panel .health-row .value.muted { color: var(--text-tertiary); }
+
+/* -- Indicator dots (reuse superdash node-indicator pattern) -- */
+.rc-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 6px rgba(63, 185, 80, 0.5);
+  display: inline-block;
+  flex-shrink: 0;
+}
+.rc-indicator.stale { background: var(--warning); box-shadow: 0 0 6px rgba(210, 153, 34, 0.5); }
+.rc-indicator.offline { background: var(--error); box-shadow: 0 0 6px rgba(248, 81, 73, 0.5); }
+.rc-indicator.unknown { background: var(--text-tertiary); box-shadow: none; }
+
+/* -- Infrastructure cards: overview-card style with top color bar -- */
+.infra-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.infra-card {
+  padding: 16px;
+  background: var(--glass-2);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.infra-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+  background: var(--accent);
+  opacity: 0.6;
+}
+.infra-card.down::before { background: var(--error); opacity: 0.8; }
+.infra-card.stale::before { background: var(--warning); opacity: 0.8; }
+.infra-card:hover {
+  border-color: rgba(88, 166, 255, 0.25);
+  transform: translateY(-2px);
+}
+.infra-card-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.infra-card-host {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.infra-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  padding: 3px 0;
+}
+.infra-card-row .label { color: var(--text-tertiary); }
+.infra-card-row .value {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-secondary);
+}
+.infra-card-row .value.ok { color: var(--success); }
+.infra-card-row .value.bad { color: var(--error); }
+
+/* -- Node cards: reuse .node-card pattern from base.css but in grid -- */
+.node-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+/* Recovery-specific node cards — use same ::before left-bar as superdash */
+.rc-node-card {
+  padding: 14px 16px;
+  background: var(--glass-1);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-glass);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.rc-node-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: var(--node-color, var(--accent));
+  opacity: 0.6;
+  transition: var(--transition);
+}
+.rc-node-card:hover {
+  background: var(--glass-2);
+  border-color: rgba(88, 166, 255, 0.25);
+  transform: translateX(4px);
+}
+.rc-node-card:hover::before {
+  opacity: 1;
+  width: 4px;
+}
+.rc-node-card .rc-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.rc-node-card .rc-node-name {
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+.rc-node-card .rc-node-role {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.rc-node-card .rc-node-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+.rc-node-card .rc-node-age {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+  margin-left: auto;
+}
+
+/* -- Action button -- */
+.rc-action-btn {
+  background: rgba(255,255,255,0.04);
+  color: var(--text-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  transition: all var(--transition);
+}
+.rc-action-btn:hover {
+  background: rgba(88, 166, 255, 0.08);
+  border-color: rgba(88, 166, 255, 0.3);
+  color: var(--accent);
+}
+.rc-action-btn:disabled, .rc-action-btn.acting {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.rc-action-btn.acting {
+  background: rgba(88, 166, 255, 0.06);
+  border-color: rgba(88, 166, 255, 0.2);
+  color: var(--accent);
+  animation: rc-pulse 1.5s infinite;
+}
+.rc-action-btn.done {
+  background: rgba(63, 185, 80, 0.08);
+  border-color: rgba(63, 185, 80, 0.3);
+  color: var(--success);
+  cursor: default;
+}
+.rc-action-btn.errored {
+  background: rgba(248, 81, 73, 0.08);
+  border-color: rgba(248, 81, 73, 0.3);
+  color: var(--error);
+  cursor: default;
+}
+
+/* -- Batch action row -- */
+.batch-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.batch-btn {
+  background: var(--glass-3);
+  color: var(--text-secondary);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
+}
+.batch-btn:hover {
+  background: rgba(88, 166, 255, 0.08);
+  border-color: rgba(88, 166, 255, 0.3);
+  color: var(--accent);
+}
+.batch-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.batch-btn.danger {
+  border-color: rgba(248, 81, 73, 0.15);
+}
+
+/* -- Backend notice -- */
+.backend-notice {
+  background: var(--glass-2);
+  border: 1px solid rgba(210, 153, 34, 0.12);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.backend-notice .notice-icon {
+  color: var(--warning);
+  flex-shrink: 0;
+}
+.backend-notice code {
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+/* -- Poll indicator (bottom-right) -- */
+.poll-indicator {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--glass-1);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  z-index: 100;
+}
+.poll-indicator .poll-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--success);
+  margin-right: 6px;
+  animation: rc-pulse 2s infinite;
+}
+@keyframes rc-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* -- Readiness stages -- */
+.readiness-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+.readiness-tag {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 9999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+.readiness-tag.pass {
+  background: rgba(63, 185, 80, 0.1);
+  color: var(--success);
+}
+.readiness-tag.fail {
+  background: rgba(248, 81, 73, 0.1);
+  color: var(--error);
+}

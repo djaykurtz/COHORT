@@ -1,0 +1,356 @@
+/* ZEROBRAIN Superdash v2 -- Merit System Styles */
+/* Design: UXIA | Professional credential display, NOT badge wall */
+
+/* ═══ LEVEL COLORS ═══ */
+:root {
+  --merit-novice: #6e7681;
+  --merit-competent: #cd7f32;
+  --merit-proficient: #c0c0c0;
+  --merit-expert: #e3b341;
+  --merit-master: #d2a8ff;
+}
+
+/* ═══ MERIT TAB LAYOUT ═══ */
+.merit-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 16px;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+.merit-section {
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+}
+
+.merit-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.merit-section-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+/* ═══ NODE MERIT CARDS ═══ */
+.merit-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.merit-card {
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.merit-card:hover {
+  border-color: rgba(88, 166, 255, 0.25);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.merit-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.merit-card-node {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.merit-card-identity {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-left: auto;
+  max-width: 160px;
+  text-align: right;
+  line-height: 1.3;
+}
+
+/* Primary role — prominent display */
+.merit-primary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  background: var(--glass-3);
+  border-radius: var(--radius-sm);
+}
+
+.merit-primary .merit-pip {
+  width: 14px;
+  height: 14px;
+}
+
+.merit-primary .merit-role-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.merit-primary .merit-level-tag {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: auto;
+}
+
+/* Secondary/tertiary roles — smaller */
+.merit-secondary-roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.merit-role-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.merit-role-chip.aspiration {
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.12);
+  opacity: 0.7;
+}
+
+/* ═══ BADGE PIPS ═══ */
+.merit-pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.merit-pip.L1 { background: var(--merit-novice); }
+.merit-pip.L2 { background: var(--merit-competent); }
+.merit-pip.L3 { background: var(--merit-proficient); }
+.merit-pip.L4 { background: var(--merit-expert); box-shadow: 0 0 6px rgba(227, 179, 65, 0.4); }
+.merit-pip.L5 { background: var(--merit-master); box-shadow: 0 0 8px rgba(210, 168, 255, 0.4); }
+
+.merit-pip.aspiration {
+  background: transparent;
+  border: 1.5px dashed var(--text-dim);
+}
+
+/* Level tag colors */
+.merit-level-tag.L1 { background: rgba(110, 118, 129, 0.2); color: var(--merit-novice); }
+.merit-level-tag.L2 { background: rgba(205, 127, 50, 0.15); color: var(--merit-competent); }
+.merit-level-tag.L3 { background: rgba(192, 192, 192, 0.15); color: var(--merit-proficient); }
+.merit-level-tag.L4 { background: rgba(227, 179, 65, 0.15); color: var(--merit-expert); }
+.merit-level-tag.L5 { background: rgba(210, 168, 255, 0.15); color: var(--merit-master); }
+
+/* ═══ MERIT MATRIX TABLE ═══ */
+.merit-matrix-wrap {
+  overflow-x: auto;
+}
+
+.merit-matrix {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12px;
+}
+
+.merit-matrix th {
+  padding: 8px 10px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-align: center;
+  border-bottom: 1px solid var(--glass-border);
+  position: sticky;
+  top: 0;
+  background: var(--glass-1);
+}
+
+.merit-matrix th:first-child {
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.merit-matrix td {
+  padding: 8px 10px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.merit-matrix td:first-child {
+  text-align: left;
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.merit-matrix tr:hover td {
+  background: rgba(88, 166, 255, 0.04);
+}
+
+.merit-matrix .gap-cell {
+  background: rgba(248, 81, 73, 0.06);
+  border: 1px dashed rgba(248, 81, 73, 0.2);
+  border-radius: 4px;
+}
+
+.merit-matrix .gap-cell::after {
+  content: '—';
+  color: var(--text-tertiary);
+}
+
+/* ═══ TOOLTIP ═══ */
+.merit-tooltip {
+  position: absolute;
+  z-index: 500;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  box-shadow: var(--shadow-elevated);
+  font-size: 12px;
+  line-height: 1.5;
+  max-width: 260px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.merit-tooltip.visible {
+  opacity: 1;
+}
+
+.merit-tooltip-role {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.merit-tooltip-level {
+  font-size: 11px;
+  margin-bottom: 4px;
+}
+
+.merit-tooltip-date {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.merit-tooltip-evidence {
+  margin-top: 6px;
+  font-size: 10px;
+  color: var(--accent);
+}
+
+/* ═══ LEGEND ═══ */
+.merit-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 10px 0;
+  border-top: 1px solid var(--glass-border);
+  margin-top: 16px;
+}
+
+.merit-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* ═══ API BLOCKED NOTICE ═══ */
+.merit-blocked-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(210, 153, 34, 0.08);
+  border: 1px solid rgba(210, 153, 34, 0.2);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--warning);
+  margin-bottom: 16px;
+}
+
+.merit-blocked-notice .notice-icon {
+  font-size: 16px;
+}
+
+/* ═══ LAST UPDATED FOOTER ═══ */
+.merit-last-updated {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: right;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  margin-top: 8px;
+}
+
+/* ═══ NOMINATIONS PLACEHOLDER ═══ */
+.merit-nominations-placeholder {
+  border-style: dashed;
+  border-color: rgba(88, 166, 255, 0.15);
+  background: rgba(88, 166, 255, 0.03);
+}
+
+.merit-nominations-body {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 4px;
+}
+
+.merit-nominations-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.merit-nominations-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.merit-nominations-text strong {
+  color: var(--text-primary);
+}
+
+.merit-nominations-desc {
+  font-size: 11px;
+  color: var(--text-dim);
+}

@@ -1,0 +1,23 @@
+# Build and tooling artifacts
+*.bundle
+*.tmp
+*.bak
+*.bak-*
+.DS_Store
+Thumbs.db
+
+# Local runtime state and validation output
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+!.env.example
+logs/
+uploads/
+*.db
+*.db-*
+playwright-report/
+test-results/
+deploy-receipts/

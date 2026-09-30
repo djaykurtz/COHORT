@@ -1,0 +1,654 @@
+/* Superdash v2 -- Messaging UX (OPERATOR-first design)
+   Replaces flat message feed with a proper communication center. */
+
+/* ─── Layout ─── */
+.msg-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+.msg-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--glass-border);
+  flex-shrink: 0;
+}
+.msg-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.msg-toolbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─── View Tabs ─── */
+.msg-view-tabs {
+  display: flex;
+  gap: 2px;
+}
+.msg-view-tab {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.msg-view-tab:hover {
+  background: var(--glass-3);
+  color: var(--text);
+}
+.msg-view-tab.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.msg-view-tab .tab-badge {
+  display: inline-block;
+  background: var(--accent);
+  color: #000;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 8px;
+  margin-left: 5px;
+}
+
+/* ─── Filters ─── */
+.msg-filter {
+  padding: 3px 8px;
+  font-size: 11px;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  color: var(--text);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.msg-filter:focus {
+  outline: 1px solid var(--accent);
+}
+
+/* ─── Message List ─── */
+.msg-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px;
+}
+.msg-list::-webkit-scrollbar {
+  width: 6px;
+}
+.msg-list::-webkit-scrollbar-thumb {
+  background: var(--glass-border);
+  border-radius: 3px;
+}
+
+/* ─── Message Card ─── */
+.msg-card {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-1);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+}
+.msg-card:hover {
+  background: var(--glass-3);
+  border-color: var(--glass-border);
+}
+.msg-card.unread {
+  border-left: 3px solid var(--accent);
+  background: rgba(88, 166, 255, 0.03);
+}
+.msg-card.expanded {
+  background: var(--glass-2);
+  border-color: var(--accent);
+}
+.msg-card.priority-high {
+  border-left: 3px solid var(--warning, #d29922);
+}
+.msg-card.priority-high.unread {
+  border-left: 3px solid var(--error, #f85149);
+}
+.msg-card.attention {
+  animation: msg-pulse 2s infinite;
+}
+@keyframes msg-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(88, 166, 255, 0); }
+  50% { box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15); }
+}
+
+/* ─── Card Header ─── */
+.msg-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.msg-card-from {
+  font-weight: 600;
+  font-size: 13px;
+}
+.msg-card-arrow {
+  color: var(--text-tertiary);
+  font-size: 11px;
+}
+.msg-card-to {
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.msg-card-meta {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.msg-card-type {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--glass-3);
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.msg-card-type.status_update { background: rgba(56, 139, 253, 0.12); color: #58a6ff; }
+.msg-card-type.ack { background: rgba(63, 185, 80, 0.12); color: #3fb950; }
+.msg-card-type.request { background: rgba(210, 153, 34, 0.12); color: #d29922; }
+.msg-card-type.help_request { background: rgba(248, 81, 73, 0.12); color: #f85149; }
+.msg-card-type.directive { background: rgba(248, 81, 73, 0.15); color: #f85149; font-weight: 700; }
+.msg-card-time {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ─── Card Subject & Preview ─── */
+.msg-card-subject {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 3px;
+  line-height: 1.4;
+}
+.msg-card-preview {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-height: 40px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Expanded Body ─── */
+.msg-card-body {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--glass-border);
+}
+.msg-card-body .cairn-markdown {
+  font-size: 13px;
+  max-width: 680px;
+}
+.msg-card-body .cairn-markdown h1 { font-size: 18px; }
+.msg-card-body .cairn-markdown h2 { font-size: 16px; }
+.msg-card-body .cairn-markdown h3 { font-size: 14px; }
+
+/* ─── Card Actions ─── */
+.msg-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--glass-border);
+}
+.msg-action-btn {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.msg-action-btn:hover {
+  background: var(--glass-3);
+  color: var(--text);
+}
+.msg-action-btn.primary {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.msg-action-btn.primary:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+/* ─── Status Indicators ─── */
+.msg-ack-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(210, 153, 34, 0.12);
+  color: #d29922;
+  font-weight: 600;
+}
+.msg-ack-badge.acked {
+  background: rgba(63, 185, 80, 0.12);
+  color: #3fb950;
+}
+
+/* ─── Compose Panel ─── */
+.msg-compose {
+  padding: 10px 16px;
+  max-width: 720px;
+}
+.msg-compose-header {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.msg-compose .form-group {
+  margin-bottom: 6px;
+}
+.msg-compose .form-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+.msg-compose .form-row {
+  display: flex;
+  gap: 8px;
+}
+.msg-compose .form-row .form-group {
+  flex: 1;
+}
+.msg-compose .form-select,
+.msg-compose .form-input {
+  width: 100%;
+  padding: 5px 8px;
+  font-size: 12px;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  color: var(--text);
+  transition: border-color 0.15s ease;
+}
+.msg-compose .form-select:focus,
+.msg-compose .form-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.msg-compose .form-textarea {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  color: var(--text);
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.5;
+}
+.msg-compose .form-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.msg-compose .form-options {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-top: 4px;
+}
+.msg-compose .form-check {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.msg-compose .form-check input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+.msg-compose .form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.msg-compose .btn {
+  padding: 5px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid var(--glass-border);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.msg-compose .btn-send {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+}
+.msg-compose .btn-send:hover {
+  opacity: 0.85;
+}
+.msg-compose .btn-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+}
+.msg-compose .btn-secondary:hover {
+  background: var(--glass-3);
+  color: var(--text);
+}
+.msg-compose-result {
+  margin-top: 6px;
+  font-size: 11px;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+.msg-compose-result.success {
+  background: rgba(63, 185, 80, 0.1);
+  color: #3fb950;
+  border: 1px solid rgba(63, 185, 80, 0.2);
+}
+.msg-compose-result.error {
+  background: rgba(248, 81, 73, 0.1);
+  color: #f85149;
+  border: 1px solid rgba(248, 81, 73, 0.2);
+}
+
+/* ─── Empty State ─── */
+.msg-empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+.msg-empty-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+/* ─── Thread Grouping ─── */
+.msg-thread-group {
+  margin-bottom: 12px;
+}
+.msg-thread-label {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 16px;
+  font-weight: 500;
+}
+.msg-thread-group .msg-card {
+  margin-left: 8px;
+  border-left: 2px solid var(--glass-border);
+}
+.msg-thread-group .msg-card:first-child {
+  margin-left: 0;
+  border-left: 1px solid var(--glass-border);
+}
+
+/* ─── Responsive adjustments for small main panel ─── */
+@media (max-width: 900px) {
+  .msg-toolbar {
+    flex-wrap: wrap;
+  }
+  .msg-compose .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+/* ─── MOTD Panel ─── */
+.motd-panel {
+  padding: 10px 16px;
+  max-width: 720px;
+}
+.motd-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.motd-create {
+  padding: 10px 14px;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.motd-create .form-group {
+  margin-bottom: 6px;
+}
+.motd-create .form-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+.motd-create .form-row {
+  display: flex;
+  gap: 8px;
+}
+.motd-create .form-row .form-group {
+  flex: 1;
+}
+.motd-create .form-input,
+.motd-create .form-select {
+  width: 100%;
+  padding: 5px 8px;
+  font-size: 12px;
+  background: var(--bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  color: var(--text);
+}
+.motd-create .form-textarea {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  color: var(--text);
+  resize: vertical;
+  min-height: 60px;
+  line-height: 1.5;
+}
+.motd-create .form-actions {
+  margin-top: 6px;
+}
+.motd-create .btn-send {
+  padding: 5px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #000;
+  cursor: pointer;
+}
+.motd-create .btn-send:hover {
+  opacity: 0.85;
+}
+.btn-cancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.btn-cancel:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-primary);
+}
+.motd-result {
+  margin-top: 6px;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+.motd-result.success {
+  background: rgba(63, 185, 80, 0.1);
+  color: #3fb950;
+  border: 1px solid rgba(63, 185, 80, 0.2);
+}
+.motd-result.error {
+  background: rgba(248, 81, 73, 0.1);
+  color: #f85149;
+  border: 1px solid rgba(248, 81, 73, 0.2);
+}
+.motd-result.sending {
+  color: var(--text-secondary);
+}
+.motd-empty {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+.motd-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.motd-card {
+  padding: 8px 12px;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+}
+.motd-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.motd-card-subject {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.motd-card-meta {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-left: auto;
+}
+.motd-edit {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  margin-right: 2px;
+}
+.motd-edit:hover {
+  background: rgba(56, 139, 253, 0.15);
+  color: #388bfd;
+}
+.motd-delete {
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+.motd-delete:hover {
+  background: rgba(248, 81, 73, 0.15);
+  color: #f85149;
+}
+.motd-card-content {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 4px;
+  white-space: pre-wrap;
+  max-height: 60px;
+  overflow: hidden;
+}
+.motd-card-timing {
+  display: flex;
+  gap: 16px;
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+/* ─── Loading Bar ─── */
+.msg-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 20px;
+  flex: 1;
+}
+.msg-loading-bar {
+  width: min(280px, 60%);
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.msg-loading-fill {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--purple));
+  border-radius: 2px;
+  transition: width 0.4s ease-out;
+  box-shadow: 0 0 6px var(--accent);
+}
+.msg-loading-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.5px;
+  transition: opacity 0.3s;
+}
+.msg-loading.done .msg-loading-bar {
+  opacity: 0;
+  transition: opacity 0.5s ease 0.3s;
+}
+.msg-loading.done .msg-loading-label {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}

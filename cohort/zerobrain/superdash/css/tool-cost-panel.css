@@ -1,0 +1,107 @@
+/* Superdash v2 -- Tool Cost Intel Panel (RFC017-P5)
+ * 5-tier dot colors + heatmap-bar + banner styles.
+ * Hidden by default; activated by feature-flag (tool-cost-panel.js).
+ */
+
+#tool-cost-card .intel-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tool-cost-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FF8C42; /* orange default */
+  flex-shrink: 0;
+}
+.tool-cost-dot--loading  { background: #888; opacity: 0.5; }
+.tool-cost-dot--error    { background: #D9534F; }
+.tool-cost-dot--degraded { background: #F0AD4E; }
+.tool-cost-dot--healthy-0,
+.tool-cost-dot--warming,
+.tool-cost-dot--normal   { background: #FF8C42; }
+
+#tool-cost-card .intel-card-badge {
+  margin-left: auto;
+  font-size: 11px;
+  font-family: var(--mono, monospace);
+  opacity: 0.8;
+}
+
+.tool-cost-body {
+  font-size: 12px;
+}
+
+.tool-cost-banner {
+  padding: 6px 8px;
+  margin-bottom: 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.tool-cost-banner--error    { background: rgba(217, 83, 79, 0.15);  color: #D9534F; border: 1px solid rgba(217, 83, 79, 0.4); }
+.tool-cost-banner--degraded { background: rgba(240, 173, 78, 0.15); color: #C7873B; border: 1px solid rgba(240, 173, 78, 0.4); }
+.tool-cost-banner--warming  { background: rgba(255, 140, 66, 0.10); color: #B86E2E; border: 1px solid rgba(255, 140, 66, 0.3); }
+
+.tool-cost-retry {
+  margin-left: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  background: transparent;
+  border: 1px solid currentColor;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 2px;
+}
+.tool-cost-retry:hover { background: rgba(0, 0, 0, 0.05); }
+
+.tool-cost-message {
+  padding: 12px 8px;
+  font-size: 11px;
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.tool-cost-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  font-family: var(--mono, monospace);
+}
+.tool-cost-table th {
+  text-align: left;
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.tool-cost-table td {
+  padding: 3px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  vertical-align: middle;
+}
+.tool-cost-table .tc-rank  { width: 24px; text-align: right; opacity: 0.6; }
+.tool-cost-table .tc-tool  { font-weight: 500; overflow: hidden; text-overflow: ellipsis; max-width: 180px; white-space: nowrap; }
+.tool-cost-table .tc-spend { position: relative; width: 90px; }
+.tool-cost-table .tc-stats { font-size: 10px; opacity: 0.7; }
+
+.tc-spend-bar {
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 14px;
+  background: linear-gradient(90deg, rgba(255, 140, 66, 0.25), rgba(255, 140, 66, 0.10));
+  border-radius: 2px;
+  z-index: 0;
+}
+.tc-spend-val {
+  position: relative;
+  z-index: 1;
+  font-weight: 600;
+}

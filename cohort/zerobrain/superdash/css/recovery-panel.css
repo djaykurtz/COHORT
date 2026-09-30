@@ -1,0 +1,281 @@
+/* Recovery Status Panel — Project Grid */
+
+.recovery-panel {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Header */
+.recovery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--surface-2, #1a1a2e);
+  border-radius: 8px;
+  border: 1px solid var(--border, #2a2a3e);
+}
+
+.recovery-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.recovery-header-icon {
+  font-size: 24px;
+}
+
+.recovery-header-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--text-primary, #e0e0e0);
+}
+
+.recovery-header-subtitle {
+  font-size: 11px;
+  color: var(--text-tertiary, #888);
+  margin-top: 2px;
+}
+
+.recovery-header-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recovery-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.recovery-status-dot.status-ok { background: #4ade80; box-shadow: 0 0 6px #4ade8066; }
+.recovery-status-dot.status-warn { background: #fbbf24; box-shadow: 0 0 6px #fbbf2466; }
+.recovery-status-dot.status-error { background: #f87171; box-shadow: 0 0 6px #f8717166; }
+
+.recovery-status-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.recovery-status-label.status-ok { color: #4ade80; }
+.recovery-status-label.status-warn { color: #fbbf24; }
+.recovery-status-label.status-error { color: #f87171; }
+
+/* Recovery mode banner */
+.recovery-mode-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #fbbf2415;
+  border: 1px solid #fbbf2440;
+  border-radius: 6px;
+  color: #fbbf24;
+  font-size: 12px;
+  font-weight: 500;
+  animation: pulse-border 2s ease-in-out infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% { border-color: #fbbf2440; }
+  50% { border-color: #fbbf24aa; }
+}
+
+.recovery-mode-icon { font-size: 16px; }
+
+/* Error banner */
+.recovery-error-banner {
+  padding: 8px 12px;
+  background: #f8717115;
+  border: 1px solid #f8717140;
+  border-radius: 6px;
+  color: #f87171;
+  font-size: 11px;
+}
+
+/* Host cards */
+.recovery-hosts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.recovery-host-card {
+  background: var(--surface-2, #1a1a2e);
+  border: 1px solid var(--border, #2a2a3e);
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recovery-host-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recovery-host-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary, #e0e0e0);
+  letter-spacing: 0.5px;
+}
+
+.recovery-host-hostname {
+  font-size: 10px;
+  color: var(--text-tertiary, #888);
+}
+
+.recovery-host-local-badge {
+  font-size: 9px;
+  padding: 1px 5px;
+  background: #4ade8020;
+  color: #4ade80;
+  border-radius: 3px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Services grid */
+.recovery-services {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 6px;
+}
+
+.recovery-service-card {
+  padding: 8px;
+  border-radius: 6px;
+  background: var(--surface-3, #12121e);
+  border: 1px solid transparent;
+  text-align: center;
+}
+
+.recovery-service-card.svc-ok { border-color: #4ade8030; }
+.recovery-service-card.svc-error { border-color: #f8717130; }
+.recovery-service-card.svc-unreachable { border-color: #64748b30; }
+
+.recovery-service-name {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary, #aaa);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.recovery-service-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 10px;
+}
+
+.recovery-svc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.recovery-svc-dot.svc-ok { background: #4ade80; }
+.recovery-svc-dot.svc-error { background: #f87171; }
+.recovery-svc-dot.svc-unreachable { background: #64748b; }
+
+.recovery-service-port {
+  font-size: 9px;
+  color: var(--text-tertiary, #666);
+  margin-top: 2px;
+}
+
+/* Node chips */
+.recovery-host-nodes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border, #2a2a3e);
+}
+
+.recovery-node-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: var(--surface-3, #12121e);
+  border: 1px solid var(--border, #2a2a3e);
+  font-size: 10px;
+}
+
+.recovery-node-chip.node-online { border-color: #4ade8030; }
+.recovery-node-chip.node-stale { border-color: #fbbf2430; }
+.recovery-node-chip.node-offline { border-color: #f8717130; }
+
+.recovery-node-id {
+  font-weight: 700;
+  color: var(--text-primary, #e0e0e0);
+}
+
+.recovery-node-lifecycle {
+  color: var(--text-tertiary, #888);
+}
+
+.recovery-node-seen {
+  color: var(--text-tertiary, #666);
+  font-size: 9px;
+}
+
+/* Manifest section */
+.recovery-manifest {
+  background: var(--surface-2, #1a1a2e);
+  border: 1px solid var(--border, #2a2a3e);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.recovery-manifest-header {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary, #aaa);
+  margin-bottom: 8px;
+}
+
+.recovery-manifest-unavailable {
+  font-size: 11px;
+  color: var(--text-tertiary, #888);
+  font-style: italic;
+}
+
+.recovery-manifest-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  padding: 3px 0;
+}
+
+.recovery-manifest-row .label { color: var(--text-tertiary, #888); }
+.recovery-manifest-row .value { color: var(--text-primary, #e0e0e0); font-weight: 500; }
+.recovery-manifest-row .value.status-ok { color: #4ade80; }
+.recovery-manifest-row .value.status-warn { color: #fbbf24; }
+.recovery-manifest-row .value.status-error { color: #f87171; }
+
+/* Timestamp */
+.recovery-timestamp {
+  font-size: 10px;
+  color: var(--text-tertiary, #666);
+  text-align: right;
+}

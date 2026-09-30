@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAIRN — OPERATOR Console</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #080b12;
+  --surface: #0f1520;
+  --surface-2: #161d2a;
+  --border: rgba(88, 166, 255, 0.12);
+  --border-hover: rgba(88, 166, 255, 0.3);
+  --accent: #58a6ff;
+  --accent-soft: rgba(88, 166, 255, 0.08);
+  --gold: #e3b341;
+  --gold-soft: rgba(227, 179, 65, 0.1);
+  --success: #3fb950;
+  --warning: #d29922;
+  --error: #f85149;
+  --purple: #d2a8ff;
+  --text: #e6edf3;
+  --text-2: #8b949e;
+  --text-3: #484f58;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Auth gate */
+.auth-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  gap: 16px;
+}
+.auth-gate h1 {
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  color: var(--gold);
+}
+.auth-gate p { color: var(--text-2); font-size: 13px; }
+.auth-input {
+  width: 320px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.auth-input:focus { border-color: var(--gold); }
+.auth-btn {
+  padding: 10px 24px;
+  background: var(--gold-soft);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-sm);
+  color: var(--gold);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.auth-btn:hover { background: var(--gold); color: var(--bg); }
+.auth-error { color: var(--error); font-size: 12px; display: none; }
+
+/* Main layout */
+.op-shell { display: none; }
+.op-shell.active { display: block; }
+
+.op-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+}
+.op-brand {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--gold);
+}
+.op-brand span { color: var(--text-2); font-weight: 300; }
+.op-status {
+  margin-left: auto;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--success);
+}
+.op-refresh {
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+.op-refresh:hover { border-color: var(--accent); color: var(--accent); }
+
+/* RFC list */
+.rfc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.rfc-item {
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rfc-item:hover { border-color: var(--border-hover); background: var(--surface-2); }
+.rfc-item-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.rfc-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+}
+.rfc-status {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.rfc-status.seed { background: rgba(88,166,255,0.1); color: #58a6ff; }
+.rfc-status.ideation { background: rgba(0,200,180,0.1); color: #00c8b4; }
+.rfc-status.rfc { background: rgba(210,153,34,0.1); color: #d29922; }
+.rfc-status.in_round { background: rgba(210,168,255,0.1); color: #d2a8ff; }
+.rfc-status.ratified { background: rgba(63,185,80,0.1); color: #3fb950; }
+.rfc-status.shipped { background: rgba(63,185,80,0.15); color: #3fb950; }
+.rfc-title { font-size: 14px; font-weight: 500; }
+.rfc-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+/* RFC detail */
+.rfc-detail { display: none; }
+.rfc-detail.active { display: block; }
+.rfc-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  cursor: pointer;
+  font-size: 12px;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+.rfc-back:hover { border-color: var(--accent); color: var(--accent); }
+
+.detail-header {
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+}
+.detail-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.detail-body {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* Action bar */
+.action-bar {
+  display: flex;
+  gap: 8px;
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.action-bar-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--gold);
+  width: 100%;
+  margin-bottom: 4px;
+}
+.op-btn {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.op-btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+.op-btn.gold { border-color: var(--gold); color: var(--gold); }
+.op-btn.gold:hover { background: var(--gold); color: var(--bg); }
+.op-btn.success { border-color: var(--success); color: var(--success); }
+.op-btn.success:hover { background: var(--success); color: var(--bg); }
+.op-btn.purple { border-color: var(--purple); color: var(--purple); }
+.op-btn.purple:hover { background: var(--purple); color: var(--bg); }
+/* RFC414 P3 hardening (UXIA 2026-06-06): disabled + in-flight states */
+.op-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  filter: grayscale(0.6);
+  background: transparent !important;
+  color: var(--text-3, #8b949e) !important;
+  border-color: var(--text-3, #8b949e) !important;
+}
+.op-btn:disabled:hover {
+  background: transparent !important;
+  color: var(--text-3, #8b949e) !important;
+}
+.op-btn-in-flight {
+  position: relative;
+  pointer-events: none;
+}
+.op-btn-in-flight::after {
+  content: '...';
+  margin-left: 4px;
+  animation: opBtnInFlightDots 1s steps(3, end) infinite;
+}
+@keyframes opBtnInFlightDots {
+  0% { content: ''; }
+  33% { content: '.'; }
+  66% { content: '..'; }
+  100% { content: '...'; }
+}
+
+/* Waves */
+.wave-section {
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+}
+.wave-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.wave-live { color: var(--success); font-size: 10px; }
+.wave-prompt {
+  font-size: 12px;
+  color: var(--text-2);
+  font-style: italic;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+}
+.response-card {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  transition: border-color 0.2s;
+}
+.response-card:hover { border-color: var(--border-hover); }
+.resp-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 11px;
+}
+.resp-author { font-weight: 600; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+.resp-stance { font-size: 10px; padding: 1px 6px; border-radius: 4px; }
+.resp-stance.support { background: rgba(63,185,80,0.1); color: var(--success); }
+.resp-stance.object { background: rgba(248,81,73,0.1); color: var(--error); }
+.resp-stance.nuance { background: rgba(210,153,34,0.1); color: var(--warning); }
+.resp-stance.defer { background: rgba(88,166,255,0.1); color: var(--accent); }
+.resp-body { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+.resp-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.resp-action-btn {
+  font-size: 14px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.resp-action-btn:hover { background: var(--accent-soft); border-color: var(--accent); transform: scale(1.1); }
+
+/* Frame/comment input */
+.input-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.op-input {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.op-input:focus { border-color: var(--gold); }
+
+/* Toast */
+.op-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  background: var(--surface);
+  border: 1px solid var(--gold);
+  border-radius: var(--radius-sm);
+  color: var(--gold);
+  font-size: 12px;
+  z-index: 9000;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+}
+.op-toast.show { opacity: 1; transform: translateY(0); }
+
+/* Feedback Box */
+.feedback-box {
+  margin: 0 0 16px 0;
+  padding: 14px;
+  background: var(--surface-2);
+  border: 1px solid rgba(227, 179, 65, 0.15);
+  border-radius: var(--radius);
+}
+.feedback-box:hover { border-color: rgba(227, 179, 65, 0.3); }
+.feedback-header { font-size: 12px; font-weight: 600; color: var(--gold); margin-bottom: 8px; letter-spacing: 0.5px; }
+.fb-textarea {
+  width: 100%; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text); padding: 8px 10px; font-size: 12px;
+  font-family: inherit; resize: vertical; min-height: 48px; max-height: 120px; line-height: 1.5;
+}
+.fb-textarea:focus { border-color: var(--gold); outline: none; }
+.fb-textarea::placeholder { color: var(--text-3); }
+.fb-controls { display: flex; gap: 6px; align-items: center; margin-top: 6px; }
+.fb-title {
+  flex: 1; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 4px; color: var(--text); padding: 5px 8px; font-size: 11px; font-family: inherit;
+}
+.fb-title:focus { border-color: var(--gold); outline: none; }
+.fb-title::placeholder { color: var(--text-3); }
+.fb-submit {
+  padding: 5px 12px; background: rgba(227,179,65,0.1); border: 1px solid var(--gold);
+  border-radius: 4px; color: var(--gold); font-size: 11px; font-weight: 600;
+  cursor: pointer; white-space: nowrap; transition: all 0.2s;
+}
+.fb-submit:hover { background: var(--gold); color: var(--bg); }
+.fb-status { font-size: 11px; margin-top: 4px; min-height: 14px; }
+.fb-status.success { color: var(--success); }
+.fb-status.error { color: var(--error); }
+.fb-status.pending { color: var(--text-2); }
+
+/* Responsive */
+@media (max-width: 640px) {
+  body { padding: 10px; }
+  .op-header { flex-wrap: wrap; padding: 12px; }
+  .detail-header { padding: 14px; }
+  .action-bar { padding: 10px; }
+  .rfc-item { padding: 10px 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Auth Gate -->
+<div class="auth-gate" id="auth-gate">
+  <h1>⬡ CAIRN</h1>
+  <p>OPERATOR Console — Token Required</p>
+  <input class="auth-input" id="token-input" type="password" placeholder="Enter session token..." autocomplete="off">
+  <button class="auth-btn" onclick="OpConsole.authenticate()">Authenticate</button>
+  <div class="auth-error" id="auth-error">Authentication failed</div>
+</div>
+
+<!-- Main Shell -->
+<div class="op-shell" id="op-shell">
+  <div class="op-header">
+    <span class="op-brand">⬡ CAIRN <span>OPERATOR Console</span></span>
+    <span class="op-status" id="op-status">● connected</span>
+    <button class="op-refresh" onclick="OpConsole.loadTrail()">↻ Refresh</button>
+  </div>
+
+  <!-- RFC List -->
+  <div id="rfc-list-view">
+    <!-- Feedback Box -->
+    <div class="feedback-box" id="feedback-box">
+      <div class="feedback-header">💬 Quick Feedback</div>
+      <textarea id="fb-body" class="fb-textarea" placeholder="Share feedback, ideas, or suggestions..." rows="2"></textarea>
+      <div class="fb-controls">
+        <input id="fb-title" class="fb-title" type="text" placeholder="Title (optional)">
+        <button class="fb-submit" onclick="OpConsole.submitFeedback()">Submit → Cairn</button>
+      </div>
+      <div id="fb-status" class="fb-status"></div>
+    </div>
+    <div class="rfc-list" id="rfc-list"></div>
+  </div>
+
+  <!-- RFC Detail -->
+  <div class="rfc-detail" id="rfc-detail-view">
+    <button class="rfc-back" onclick="OpConsole.showList()">← Back to list</button>
+    <div id="rfc-detail-content"></div>
+  </div>
+</div>
+
+<div class="op-toast" id="op-toast"></div>
+
+<script>
+var OpConsole = {
+  token: null,
+  baseUrl: '',
+  trailData: null,
+  currentRfc: null,
+
+  init: function() {
+    // Check URL hash for token
+    var hash = window.location.hash;
+    if (hash && hash.length > 1) {
+      OpConsole.token = hash.slice(1);
+      window.location.hash = ''; // clear from URL
+      OpConsole.tryAuth();
+      return;
+    }
+    // Check localStorage
+    var saved = localStorage.getItem('op_cairn_token');
+    if (saved) {
+      OpConsole.token = saved;
+      OpConsole.tryAuth();
+      return;
+    }
+    // Show auth gate
+    document.getElementById('token-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') OpConsole.authenticate();
+    });
+  },
+
+  authenticate: function() {
+    var input = document.getElementById('token-input');
+    OpConsole.token = input.value.trim();
+    if (!OpConsole.token) return;
+    OpConsole.tryAuth();
+  },
+
+  async tryAuth() {
+    try {
+      var resp = await fetch(OpConsole.baseUrl + '/api/health', {
+        headers: { 'X-Node-Token': OpConsole.token }
+      });
+      if (resp.ok) {
+        localStorage.setItem('op_cairn_token', OpConsole.token);
+        document.getElementById('auth-gate').style.display = 'none';
+        document.getElementById('op-shell').classList.add('active');
+        OpConsole.loadTrail();
+      } else {
+        throw new Error('Invalid token');
+      }
+    } catch (e) {
+      document.getElementById('auth-error').style.display = 'block';
+      document.getElementById('auth-error').textContent = 'Auth failed: ' + e.message;
+    }
+  },
+
+  async api(method, endpoint, body, useOperatorToken) {
+    var headers = { 'Content-Type': 'application/json' };
+    if (useOperatorToken) {
+      headers['X-Operator-Token'] = OpConsole.token;
+    }
+    headers['X-Node-Token'] = OpConsole.token;
+    var opts = {
+      method: method,
+      headers: headers
+    };
+    if (body) opts.body = JSON.stringify(body);
+    var resp;
+    try {
+      resp = await fetch(OpConsole.baseUrl + endpoint, opts);
+    } catch (e) {
+      return { error: 'Network error: ' + e.message, _status: 0 };
+    }
+    var parsed;
+    try {
+      parsed = await resp.json();
+    } catch (e) {
+      parsed = null;
+    }
+    if (!resp.ok) {
+      var errMsg = (parsed && parsed.error) ? parsed.error : ('HTTP ' + resp.status + ' ' + (resp.statusText || ''));
+      return { error: errMsg, _status: resp.status, _raw: parsed };
+    }
+    if (parsed === null) {
+      return { error: 'Server returned non-JSON response', _status: resp.status };
+    }
+    return parsed;
+  },
+
+  async loadTrail() {
+    var data = await OpConsole.api('GET', '/api/cairn/trail');
+    if (!data || data.error) {
+      OpConsole.toast('Failed to load: ' + (data ? data.error : 'network'), true);
+      return;
+    }
+    OpConsole.trailData = data;
+    OpConsole.renderList();
+  },
+
+  renderList: function() {
+    document.getElementById('rfc-list-view').style.display = 'block';
+    document.getElementById('rfc-detail-view').classList.remove('active');
+
+    var rfcs = [];
+    var trail = OpConsole.trailData;
+    if (trail.columns) {
+      Object.keys(trail.columns).forEach(function(stage) {
+        (trail.columns[stage] || []).forEach(function(rfc) {
+          rfc.rfc_id = rfc.rfc_id || rfc.id;
+          rfc._stage = stage;
+          rfcs.push(rfc);
+        });
+      });
+    } else if (trail.trail) {
+      rfcs = trail.trail.map(function(r) { r.rfc_id = r.rfc_id || r.id; r._stage = r.status; return r; });
+    }
+
+    // Sort: in_round first, then by date
+    rfcs.sort(function(a, b) {
+      if (a._stage === 'in_round' && b._stage !== 'in_round') return -1;
+      if (b._stage === 'in_round' && a._stage !== 'in_round') return 1;
+      return 0;
+    });
+
+    var html = '';
+    rfcs.forEach(function(rfc) {
+      html += '<div class="rfc-item" onclick="OpConsole.loadDetail(\'' + OpConsole.esc(rfc.rfc_id) + '\')">';
+      html += '<div class="rfc-item-header">';
+      html += '<span class="rfc-id">' + OpConsole.esc(rfc.rfc_id) + '</span>';
+      html += '<span class="rfc-status ' + (rfc._stage || '') + '">' + OpConsole.esc(rfc._stage || rfc.status || '') + '</span>';
+      html += '</div>';
+      html += '<div class="rfc-title">' + OpConsole.esc(rfc.title) + '</div>';
+      html += '<div class="rfc-meta"><span>@' + OpConsole.esc(rfc.author_id || rfc.author || '') + '</span>';
+      html += '<span>' + OpConsole.esc(rfc.domain || '') + '</span></div>';
+      html += '</div>';
+    });
+
+    if (!rfcs.length) html = '<p style="color:var(--text-3);padding:20px">No RFCs found</p>';
+    document.getElementById('rfc-list').innerHTML = html;
+  },
+
+  async loadDetail(rfcId) {
+    var data = await OpConsole.api('GET', '/api/cairn/rfc/' + encodeURIComponent(rfcId) + '/forum');
+    if (!data || data.error) {
+      OpConsole.toast('Failed: ' + (data ? data.error : 'network'), true);
+      return;
+    }
+    var rfc = data.rfc || data;
+    rfc.rfc_id = rfc.rfc_id || rfc.id || rfcId;
+    rfc.waves = data.waves || rfc.waves || [];
+    rfc.votes = data.votes || rfc.votes || {};
+    OpConsole.currentRfc = rfc;
+    OpConsole.renderDetail(rfc);
+  },
+
+  renderDetail: function(rfc) {
+    document.getElementById('rfc-list-view').style.display = 'none';
+    document.getElementById('rfc-detail-view').classList.add('active');
+
+    var html = '<div class="detail-header">';
+    html += '<div class="rfc-item-header"><span class="rfc-id">' + OpConsole.esc(rfc.rfc_id) + '</span>';
+    html += '<span class="rfc-status ' + (rfc.status || '') + '">' + OpConsole.esc(rfc.status || '') + '</span></div>';
+    html += '<div class="detail-title">' + OpConsole.esc(rfc.title) + '</div>';
+    html += '<div class="rfc-meta"><span>by @' + OpConsole.esc(rfc.author_id || rfc.author || '') + '</span>';
+    html += '<span>' + OpConsole.esc(rfc.domain || '') + '</span></div>';
+    if (rfc.body || rfc.problem) {
+      html += '<div class="detail-body">' + OpConsole.esc(rfc.body || rfc.problem) + '</div>';
+    }
+    html += '</div>';
+
+    // OPERATOR action bar
+    html += '<div class="action-bar">';
+    html += '<div class="action-bar-label">★ OPERATOR Actions</div>';
+    html += '<button class="op-btn gold" onclick="OpConsole.vote(\'' + OpConsole.esc(rfc.rfc_id) + '\',\'approve\')">✓ Approve</button>';
+    html += '<button class="op-btn" onclick="OpConsole.vote(\'' + OpConsole.esc(rfc.rfc_id) + '\',\'reject\')">✗ Reject</button>';
+    html += '<button class="op-btn purple" onclick="OpConsole.promptFrame()">★ Frame</button>';
+    var rGate = OpConsole._canRatify(rfc);
+    html += '<button class="op-btn success" data-action="ratify" data-rfc-id="' +
+            OpConsole.esc(rfc.rfc_id) + '"' +
+            (rGate.ok ? '' : ' disabled') +
+            ' title="' + OpConsole.esc(rGate.ok ? 'Ratify ' + rfc.rfc_id : rGate.reason) + '"' +
+            ' onclick="OpConsole.ratify(\'' + OpConsole.esc(rfc.rfc_id) + '\', this)">⬡ Ratify</button>';
+    html += '</div>';
+
+    // Waves + responses
+    var waves = rfc.waves || [];
+    waves.forEach(function(wave) {
+      var isOpen = !wave.closed_at;
+      html += '<div class="wave-section">';
+      html += '<div class="wave-header">Wave ' + wave.round_num + ' [' + OpConsole.esc(wave.mode || 'standard') + ']';
+      if (isOpen) html += ' <span class="wave-live">● LIVE</span>';
+      html += '</div>';
+      if (wave.prompt) html += '<div class="wave-prompt">' + OpConsole.esc(wave.prompt) + '</div>';
+
+      var responses = wave.responses || [];
+      responses.forEach(function(resp) {
+        var respId = resp.id || resp.response_id || 0;
+        html += '<div class="response-card">';
+        html += '<div class="resp-header">';
+        html += '<span class="resp-author">@' + OpConsole.esc(resp.author_id || '') + '</span>';
+        html += '<span class="resp-stance ' + (resp.stance || '') + '">' + OpConsole.esc(resp.stance || '') + '</span>';
+        if (resp.is_starred) html += ' ⭐';
+        html += '</div>';
+        html += '<div class="resp-body">' + OpConsole.esc(resp.body || '') + '</div>';
+
+        // Per-response actions
+        if (respId) {
+          html += '<div class="resp-actions">';
+          html += '<button class="resp-action-btn" onclick="OpConsole.star(\'response\',' + respId + ')" title="Star">⭐</button>';
+          html += '<button class="resp-action-btn" onclick="OpConsole.signal(' + respId + ',\'support\')" title="Support">👍</button>';
+          html += '<button class="resp-action-btn" onclick="OpConsole.signal(' + respId + ',\'nuance\')" title="Nuance">🤔</button>';
+          html += '<button class="resp-action-btn" onclick="OpConsole.signal(' + respId + ',\'object\')" title="Object">👎</button>';
+          html += '<button class="resp-action-btn" onclick="OpConsole.promptFrameOnResp(' + respId + ')" title="Frame">★</button>';
+          html += '</div>';
+        }
+
+        // Show existing frames
+        if (resp.comments && resp.comments.length) {
+          resp.comments.forEach(function(c) {
+            if (c.is_operator_frame) {
+              html += '<div style="margin-top:6px;padding:6px 10px;border-left:2px solid var(--gold);font-size:11px;color:var(--gold)">';
+              html += '★ FRAME: ' + OpConsole.esc(c.body) + '</div>';
+            }
+          });
+        }
+        html += '</div>';
+      });
+
+      if (!responses.length) html += '<p style="color:var(--text-3);font-size:12px">No responses yet</p>';
+      html += '</div>';
+    });
+
+    if (!waves.length) {
+      html += '<div class="wave-section"><p style="color:var(--text-3);font-size:12px">No waves opened yet</p></div>';
+    }
+
+    document.getElementById('rfc-detail-content').innerHTML = html;
+  },
+
+  showList: function() {
+    document.getElementById('rfc-detail-view').classList.remove('active');
+    document.getElementById('rfc-list-view').style.display = 'block';
+    OpConsole.currentRfc = null;
+  },
+
+  // ── OPERATOR ACTIONS ──
+  async star(targetType, targetId) {
+    var result = await OpConsole.api('POST', '/api/cairn/star', { target_type: targetType, target_id: String(targetId) });
+    if (result && !result.error) {
+      OpConsole.toast('⭐ Starred');
+      if (OpConsole.currentRfc) OpConsole.loadDetail(OpConsole.currentRfc.rfc_id);
+    } else {
+      OpConsole.toast('Error: ' + (result ? result.error : 'failed'), true);
+    }
+  },
+
+  async signal(responseId, stance) {
+    var result = await OpConsole.api('POST', '/api/cairn/signal', { response_id: responseId, signal: stance });
+    if (result && !result.error) {
+      OpConsole.toast(stance + ' signal recorded');
+    } else {
+      OpConsole.toast('Error: ' + (result ? result.error : 'failed'), true);
+    }
+  },
+
+  async vote(rfcId, verdict) {
+    var justification = prompt('Justification (optional):');
+    if (justification === null) return;
+    var result = await OpConsole.api('POST', '/api/cairn/vote', { rfc_id: rfcId, verdict: verdict, justification: justification || null });
+    if (result && !result.error) {
+      OpConsole.toast('Vote: ' + verdict);
+    } else {
+      OpConsole.toast('Error: ' + (result ? result.error : 'failed'), true);
+    }
+  },
+
+  async ratify(rfcId, btn) {
+    if (!confirm('Ratify ' + rfcId + '? This is final.')) return;
+    // RFC414 P3 hardening: in-flight disable (defense-in-depth against double-click race).
+    if (btn) { btn.disabled = true; btn.classList.add('op-btn-in-flight'); }
+    var result;
+    try {
+      try {
+        result = await OpConsole.api('POST', '/api/cairn/rfc/' + encodeURIComponent(rfcId) + '/ratify', {});
+      } catch (e) {
+        OpConsole.toast('Ratify threw: ' + e.message, true);
+        return;
+      }
+      if (result && !result.error) {
+        OpConsole.toast('⬡ Ratified!');
+        OpConsole.loadDetail(rfcId);
+      } else {
+        OpConsole.toast('Ratify failed: ' + (result ? result.error : 'unknown'), true);
+      }
+    } finally {
+      if (btn) { btn.disabled = false; btn.classList.remove('op-btn-in-flight'); }
+    }
+  },
+
+  /* RFC414 P3 hardening: UI pre-gate symmetry with backend cairn_ratify
+   * precondition. Returns {ok: bool, reason: str}. */
+  _canRatify: function(rfc) {
+    if (!rfc) return { ok: false, reason: 'RFC not loaded' };
+    if (rfc.status !== 'in_round') {
+      return { ok: false, reason: 'RFC must be in_round to ratify (current: ' +
+                                   (rfc.status || 'unknown') + ')' };
+    }
+    var hasSolidplan = !!(rfc.solidplan && String(rfc.solidplan).trim().length > 0);
+    if (!hasSolidplan) {
+      return { ok: false, reason: 'RFC must have a solidplan attached to ratify' };
+    }
+    return { ok: true, reason: 'Ready to ratify' };
+  },
+
+  promptFrame: function() {
+    // Frame the whole RFC — find first response to attach to
+    if (!OpConsole.currentRfc) return;
+    var waves = OpConsole.currentRfc.waves || [];
+    var firstResp = null;
+    for (var i = 0; i < waves.length; i++) {
+      var resps = waves[i].responses || [];
+      if (resps.length) { firstResp = resps[0]; break; }
+    }
+    if (!firstResp) { OpConsole.toast('No responses to frame', true); return; }
+    OpConsole.promptFrameOnResp(firstResp.id || firstResp.response_id);
+  },
+
+  async promptFrameOnResp(responseId) {
+    var body = prompt('OPERATOR frame comment:');
+    if (!body) return;
+    var result = await OpConsole.api('POST', '/api/cairn/frame', { response_id: responseId, body: body });
+    if (result && !result.error) {
+      OpConsole.toast('★ Frame added');
+      if (OpConsole.currentRfc) OpConsole.loadDetail(OpConsole.currentRfc.rfc_id);
+    } else {
+      OpConsole.toast('Error: ' + (result ? result.error : 'failed'), true);
+    }
+  },
+
+  toast: function(msg, isError) {
+    var el = document.getElementById('op-toast');
+    el.textContent = msg;
+    el.style.borderColor = isError ? 'var(--error)' : 'var(--gold)';
+    el.style.color = isError ? 'var(--error)' : 'var(--gold)';
+    el.classList.add('show');
+    setTimeout(function() { el.classList.remove('show'); }, 3000);
+  },
+
+  async submitFeedback() {
+    var bodyEl = document.getElementById('fb-body');
+    var titleEl = document.getElementById('fb-title');
+    var statusEl = document.getElementById('fb-status');
+    var body = (bodyEl.value || '').trim();
+    if (!body) {
+      statusEl.textContent = 'Please enter some feedback.';
+      statusEl.className = 'fb-status error';
+      bodyEl.focus();
+      return;
+    }
+    statusEl.textContent = 'Submitting...';
+    statusEl.className = 'fb-status pending';
+    try {
+      var title = (titleEl.value || '').trim();
+      var result = await OpConsole.api('POST', '/api/cairn/operator/seed', {
+        title: title, body: body, tags: ['operator-feedback']
+      }, true);
+      if (result && !result.error) {
+        var seedId = result.seed_id || result.id || '?';
+        statusEl.textContent = '✓ Seed created: ' + seedId;
+        statusEl.className = 'fb-status success';
+        bodyEl.value = '';
+        titleEl.value = '';
+        setTimeout(function() {
+          if (statusEl.classList.contains('success')) {
+            statusEl.textContent = '';
+            statusEl.className = 'fb-status';
+          }
+        }, 5000);
+      } else {
+        statusEl.textContent = '✗ ' + ((result && result.error) || 'Failed');
+        statusEl.className = 'fb-status error';
+      }
+    } catch (e) {
+      statusEl.textContent = '✗ ' + e.message;
+      statusEl.className = 'fb-status error';
+    }
+  },
+
+  esc: function(str) {
+    if (!str) return '';
+    var d = document.createElement('div');
+    d.textContent = String(str);
+    return d.innerHTML;
+  }
+};
+
+// Boot
+OpConsole.init();
+</script>
+</body>
+</html>

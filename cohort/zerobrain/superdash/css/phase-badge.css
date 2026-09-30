@@ -1,0 +1,93 @@
+/* RFC587-B4 phase-badge styling
+ *
+ * AC-B4.4  Border-convention: RED-solid / YELLOW-dashed / GREEN-dotted
+ *          Tier mapping is single-source-of-truth in js/phase-vocab.js
+ *          (window.PhaseVocab.PHASE_TIER); CSS classes here mirror that.
+ * AC-B4.9  .phase-badge--molt-aborted dedicated render for MOLT_FAILED
+ *          (extends --red tier with molt-glyph + retry-molt action button).
+ *
+ * Design ref: cairn scratch 06110606UXIA-rfc587-b4-design-v (v2.2 §G)
+ *             cairn scratch 06110552UXIA-rfc587-b4-design-v2-1-tri-axis (v2.1 §C)
+ */
+
+.phase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border-radius: 4px;
+  background: var(--surface-3, #12121e);
+  color: var(--text-primary, #e0e0e0);
+  border: 2px solid transparent;
+}
+
+/* B4.4: border-convention tier mapping (mirrors PHASE_TIER in js/phase-vocab.js) */
+.phase-badge--red {
+  border-style: solid;
+  border-color: var(--error, #f87171);
+  color: var(--error, #f87171);
+}
+
+.phase-badge--yellow {
+  border-style: dashed;
+  border-color: var(--warning, #fbbf24);
+  color: var(--warning, #fbbf24);
+}
+
+.phase-badge--green {
+  border-style: dotted;
+  border-color: var(--success, #4ade80);
+  color: var(--success, #4ade80);
+}
+
+/* B4.9: MOLT-ABORTED dedicated render extends --red with glyph + action */
+.phase-badge--molt-aborted {
+  gap: 6px;
+  padding: 4px 8px 4px 10px;
+}
+
+.phase-badge--molt-aborted .phase-badge-glyph {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.phase-badge--molt-aborted .phase-retry-action {
+  margin-left: 6px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  border-radius: 3px;
+  border: 1px solid var(--error, #f87171);
+  background: transparent;
+  color: var(--error, #f87171);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.phase-badge--molt-aborted .phase-retry-action:hover {
+  background: var(--error, #f87171);
+  color: var(--surface-2, #1a1a2e);
+}
+
+.phase-badge--molt-aborted .phase-retry-action:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Phase-chain (multi-badge inline) */
+.phase-chain {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.phase-chain-arrow {
+  color: var(--text-tertiary, #666);
+  font-size: 10px;
+  margin: 0 1px;
+}

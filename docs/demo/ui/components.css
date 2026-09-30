@@ -1,0 +1,1004 @@
+/* ZEROBRAIN Superdash v2 -- Component styles: tasks, health, MOLT, drawers, general UI */
+
+/* Task items */
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  font-size: 12px;
+  transition: var(--transition);
+}
+.task-item:hover { background: var(--glass-3); }
+.task-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.task-dot.ready { background: var(--accent); }
+.task-dot.in_progress, .task-dot.in-progress { background: var(--warning); }
+.task-dot.blocked { background: var(--error); }
+.task-dot.done { background: var(--success); }
+.task-dot.review { background: var(--purple); }
+.task-dot.backlog { background: var(--text-tertiary); }
+.task-title { color: var(--text-secondary); flex: 1; }
+.task-assignee {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Health rows */
+.health-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 3px 0;
+}
+.health-row .label { color: var(--text-secondary); }
+.health-row .value { font-family: 'JetBrains Mono', monospace; }
+.health-row .value.ok { color: var(--success); }
+.health-row .value.warn { color: var(--warning); }
+.health-row .value.bad { color: var(--error); }
+.health-row .value.muted { color: var(--text-tertiary); }
+
+/* MOLT grid */
+.molt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.molt-host {
+  padding: 8px;
+  background: var(--glass-3);
+  border-radius: 6px;
+  text-align: center;
+}
+.molt-host-name {
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+.molt-host-status {
+  font-size: 12px;
+  margin-top: 2px;
+}
+.molt-host.wide { grid-column: span 2; }
+
+/* -- Status bar -- */
+.status-bar {
+  grid-area: status;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 8px 20px;
+  background: var(--glass-1);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-glass);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+}
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.status-label { color: var(--text-tertiary); }
+.status-value { color: var(--text-secondary); }
+.status-live {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--warning);
+  transition: var(--transition);
+}
+.live-dot.connected {
+  background: var(--success);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* -- Utility -- */
+.loading-text {
+  color: var(--text-tertiary);
+  font-size: 11px;
+  text-align: center;
+  padding: 8px;
+}
+.empty-text {
+  color: var(--text-tertiary);
+  font-size: 11px;
+  text-align: center;
+  padding: 16px;
+  font-style: italic;
+}
+
+/* -- Message enhancements -- */
+.message-unread {
+  border-left: 2px solid var(--accent);
+  background: rgba(88, 166, 255, 0.04);
+}
+.message-arrow {
+  color: var(--text-tertiary);
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.message-to {
+  font-weight: 500;
+  font-size: 11px;
+}
+.message-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* -- Event feed -- */
+.event-item {
+  padding: 8px 12px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--glass-border);
+  transition: var(--transition);
+}
+.event-item:hover { background: var(--glass-3); }
+.event-time {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-tertiary);
+  font-size: 10px;
+  margin-right: 8px;
+}
+.event-node {
+  font-weight: 500;
+  margin-right: 4px;
+}
+
+/* -- Main Tabs (S3) -- */
+.main-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+  padding: 4px;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  backdrop-filter: blur(16px);
+}
+.tab {
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+.tab:hover {
+  color: var(--text-secondary);
+  background: var(--glass-3);
+}
+.tab.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--glass-border);
+}
+
+/* -- Scripts Portal (S3) -- */
+.scripts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.script-card {
+  padding: 14px 16px;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.script-card:hover {
+  background: var(--glass-3);
+  border-color: rgba(88, 166, 255, 0.25);
+  transform: translateX(4px);
+}
+.script-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.script-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+}
+.script-lang {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 6px;
+  background: var(--accent-soft);
+  border-radius: 4px;
+  color: var(--accent);
+}
+.script-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+.script-author { font-weight: 500; }
+.script-host {
+  padding: 1px 5px;
+  background: var(--glass-3);
+  border-radius: 3px;
+}
+.script-time { font-family: 'JetBrains Mono', monospace; }
+.script-desc {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Script detail */
+.script-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.script-detail-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+.script-detail-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--glass-border);
+}
+.script-detail-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+.script-code-wrap {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  overflow: auto;
+  max-height: 400px;
+}
+.script-code {
+  padding: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.btn-back {
+  padding: 4px 10px;
+  font-size: 11px;
+  background: var(--glass-3);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+.btn-back:hover {
+  background: var(--glass-2);
+  color: var(--text);
+}
+
+/* -- Kanban Board (S3) --
+ * UXIA 2026-06-06 iter3 (OPERATOR-direct): 5 → 4 columns. The 'done' column
+ * was removed from TaskBoard.COLUMNS because /api/tasks?include_completed=false
+ * never returns done tasks, so it was always empty -- wasted real estate.
+ * Remaining 4 columns now share the row width 25% each (was 20% each). */
+.kanban {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  height: 100%;
+  min-height: 300px;
+}
+.kanban-col {
+  display: flex;
+  flex-direction: column;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.kanban-col-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--glass-border);
+}
+.kanban-col-title {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-tertiary);
+}
+.kanban-col-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 2px 6px;
+  background: var(--glass-3);
+  border-radius: 4px;
+  color: var(--text-secondary);
+}
+.kanban-col-body {
+  flex: 1;
+  padding: 8px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.kanban-col-body::-webkit-scrollbar { width: 6px; }
+.kanban-col-body::-webkit-scrollbar-track { background: transparent; }
+.kanban-col-body::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 6px; border: 1px solid transparent; background-clip: padding-box; transition: background var(--transition); }
+.kanban-col-body::-webkit-scrollbar-thumb:hover { background: var(--accent-glow); background-clip: padding-box; }
+.kanban-col-body { scrollbar-width: thin; scrollbar-color: var(--glass-border) transparent; }
+.kanban-card {
+  padding: 10px 12px;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  transition: var(--transition);
+  /* BUG FIX (OPERATOR-reported, 2026-08): defense-in-depth clip for the
+   * horizontal text-overflow fix below (.kanban-card-meta's children).
+   *
+   * SECOND BUG this same change caused, caught by OPERATOR via a real
+   * screenshot + live Playwright inspection (not synthetic test data):
+   * .kanban-card is a flex ITEM inside .kanban-col-body (display:flex;
+   * flex-direction:column). Flex items default to flex-shrink:1, so when
+   * many cards (e.g. 36 in the SWATS column) collectively exceed the
+   * column's available height, the browser was silently SHRINKING cards
+   * below their own content's natural height instead of letting
+   * .kanban-col-body's own overflow-y:auto handle it via scrolling. This
+   * pre-existing shrink was invisible before this fix (overflow:visible let
+   * the "clipped" second line of a wrapped title spill out and still
+   * render), but adding overflow:hidden here for the horizontal fix made
+   * the SAME pre-existing shrink ACTIVELY clip title text vertically with
+   * no ellipsis at all -- worse than the original bug. flex-shrink:0 is the
+   * real fix: cards are never compressed below their content's natural
+   * height again, and the column scrolls instead, as it always should have. */
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.kanban-card:hover {
+  border-color: rgba(88, 166, 255, 0.25);
+  transform: translateY(-1px);
+}
+.kanban-card.pri-high { border-left: 2px solid var(--error); }
+.kanban-card.pri-med { border-left: 2px solid var(--warning); }
+.kanban-card-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+.kanban-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  /* BUG FIX (OPERATOR-reported, 2026-08, 3 confirmed screenshots): long
+   * task_id/swat_id slugs (e.g. "fleet-tracking-vs-reality-reconciliation-
+   * pass") and/or long assignee names overflowed this row's box entirely --
+   * flex items default to min-width:auto (never shrink below their own
+   * content's intrinsic width), so when combined content exceeded the card's
+   * width, the text rendered PAST the card's right edge into whatever sat
+   * beside it, which in turn forced an unwanted page-level horizontal
+   * scrollbar. min-width:0 here (belt-and-suspenders with the same rule on
+   * the children below) lets this row actually shrink to fit. */
+  min-width: 0;
+}
+.kanban-card-id {
+  font-family: 'JetBrains Mono', monospace;
+  /* Truncate with an ellipsis instead of overflowing the card boundary --
+   * min-width:0 is required for a flex item to shrink below its content's
+   * natural width at all; without it, overflow/text-overflow are silently
+   * ineffective (the item just refuses to shrink in the first place). */
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kanban-card-assignee {
+  font-weight: 500;
+  /* Assignee/author is short + important (who owns this) -- never truncate
+   * it; let the id/slug give up space first. Still gets the same ellipsis
+   * safety net in case an unusually long node name ever appears. */
+  flex-shrink: 0;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kanban-card-acks { color: var(--success); font-weight: 600; margin-left: auto; padding-left: 6px; }
+.kanban-card-ack { font-size: 0.72rem; font-weight: 600; padding: 1px 5px; border-radius: 3px; margin-left: 3px; }
+.ack-cross-host { color: #3fb950; background: rgba(63,185,80,0.12); }
+.ack-same-host { color: #f85149; background: rgba(248,81,73,0.12); }
+.kanban-card-artifacts { color: var(--warning); margin-left: 4px; }
+
+/* ── Task Board v2 actions (RFC-FDDB12) ── */
+.kanban-card-actions {
+  display: none;
+  gap: 4px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--glass-border);
+}
+.kanban-card:hover .kanban-card-actions { display: flex; }
+.kanban-action-btn {
+  padding: 3px 8px;
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--glass-3);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.kanban-action-btn:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: rgba(88, 166, 255, 0.25);
+}
+.kanban-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.kanban-modal {
+  background: var(--bg-mid);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  min-width: 320px;
+  max-width: 420px;
+  box-shadow: var(--shadow-elevated);
+}
+.kanban-modal-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+.kanban-modal-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  justify-content: flex-end;
+}
+.kanban-card.stale { border-left: 2px solid var(--warning); }
+.kanban-card-stale-tag {
+  font-size: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--warning);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.kanban-col.col-done .kanban-card { opacity: 0.6; }
+.kanban-col.col-done .kanban-card:hover { opacity: 0.85; }
+.kanban-col-header .col-indicator {
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+@media (max-width: 1100px) {
+  .kanban { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 700px) {
+  .kanban { grid-template-columns: 1fr; }
+}
+
+/* -- Boomerang Work Queue (RFC-BDD71A) -- */
+.boom-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.boom-tab {
+  padding: 6px 14px;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-tertiary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+.boom-tab:hover { color: var(--text-secondary); background: var(--glass-3); }
+.boom-tab.active { color: var(--accent); background: var(--accent-soft); border-color: var(--glass-border); }
+
+.boom-wip-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  flex-wrap: wrap;
+}
+.boom-wip-node {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+}
+.boom-wip-name { font-weight: 500; font-size: 10px; }
+.boom-wip-gauge {
+  width: 40px;
+  height: 4px;
+  background: var(--glass-3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.boom-wip-fill { height: 100%; border-radius: 2px; transition: width 0.3s ease; }
+.boom-wip-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-secondary);
+}
+.boom-wip-full .boom-wip-count { color: var(--error); }
+.boom-wip-warn .boom-wip-count { color: var(--warning); }
+
+.boom-list { display: flex; flex-direction: column; gap: 6px; }
+.boom-section-header {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 12px 0 6px;
+}
+.boom-countdown {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+}
+.boom-countdown.ok { color: var(--success); }
+.boom-countdown.warn { color: var(--warning); }
+.boom-countdown.error { color: var(--error); }
+
+.boom-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 800px) {
+  .boom-metrics-grid { grid-template-columns: 1fr; }
+}
+
+/* -- Broadcast Form (S3) -- */
+.broadcast-form {
+  max-width: 560px;
+}
+.form-group {
+  margin-bottom: 14px;
+}
+.form-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  outline: none;
+  transition: var(--transition);
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b949e'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+.form-select option {
+  background: var(--bg-mid);
+  color: var(--text);
+}
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.form-check input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.btn {
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg-deep);
+  border-color: var(--accent);
+}
+.btn-primary:hover {
+  background: #79b8ff;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+.btn-secondary {
+  background: var(--glass-2);
+  color: var(--text-secondary);
+}
+.btn-secondary:hover {
+  background: var(--glass-3);
+  color: var(--text);
+}
+.form-result {
+  font-size: 12px;
+  padding: 8px 0;
+}
+.form-result .success { color: var(--success); }
+.form-result .error { color: var(--error); }
+.form-result .sending { color: var(--warning); }
+
+.broadcast-direct {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--glass-border);
+}
+
+/* -- CAIRN Drawer (Knowledge & RFC Engine) -- */
+.cairn-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 900;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.cairn-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cairn-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(96vw, 1630px);
+  height: 100vh;
+  background: var(--bg-deep);
+  border-left: 1px solid var(--glass-border);
+  box-shadow: -12px 0 60px rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+.cairn-drawer.open {
+  transform: translateX(0);
+}
+
+.cairn-drawer-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--glass-border);
+  background: var(--glass-1);
+}
+.cairn-drawer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.cairn-icon { color: var(--gold); font-size: 18px; }
+.cairn-drawer-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: var(--gold);
+}
+.cairn-drawer-subtitle {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.cairn-filter-bar {
+  flex: 1;
+  overflow-x: auto;
+}
+.cairn-close {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-3);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 14px;
+  transition: var(--transition);
+  font-family: inherit;
+  flex-shrink: 0;
+}
+.cairn-close:hover { background: var(--glass-2); color: var(--text); }
+
+.cairn-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px;
+}
+.cairn-body::-webkit-scrollbar { width: 4px; }
+.cairn-body::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+
+/* ═══ Components Helper (RFC-FDDB12 Phase 2) ═══ */
+
+/* Badges */
+.comp-badge {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--glass-3);
+  color: var(--text-secondary);
+}
+.comp-badge.ok { background: rgba(63, 185, 80, 0.15); color: var(--success); }
+.comp-badge.warn { background: rgba(210, 153, 34, 0.15); color: var(--warning); }
+.comp-badge.error { background: rgba(248, 81, 73, 0.15); color: var(--error); }
+.comp-badge.info { background: var(--accent-soft); color: var(--accent); }
+
+.comp-count-badge {
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 6px;
+  background: var(--glass-3);
+  border-radius: 4px;
+  color: var(--text-secondary);
+}
+.comp-count-badge.highlighted {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* Stale data badge */
+.comp-stale-badge {
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(210, 153, 34, 0.15);
+  color: var(--warning);
+  margin-left: 6px;
+}
+
+/* Error banner */
+.comp-error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  background: rgba(248, 81, 73, 0.08);
+  border: 1px solid rgba(248, 81, 73, 0.25);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--error);
+}
+.comp-error-icon { font-size: 14px; flex-shrink: 0; }
+.comp-error-text { flex: 1; }
+.comp-error-detail {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Cards */
+.comp-card {
+  padding: 10px 12px;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  transition: var(--transition);
+  margin-bottom: 6px;
+}
+.comp-card:hover {
+  border-color: rgba(88, 166, 255, 0.2);
+}
+.comp-card-highlight {
+  background: var(--glass-3);
+}
+.comp-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.comp-card-icon { font-size: 13px; flex-shrink: 0; }
+.comp-card-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  flex: 1;
+}
+.comp-card-header-right {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+}
+.comp-card-body {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Key-value rows */
+.comp-kv-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 3px 0;
+}
+.comp-kv-label { color: var(--text-secondary); }
+.comp-kv-value { font-family: 'JetBrains Mono', monospace; color: var(--text-secondary); }
+.comp-kv-value.ok { color: var(--success); }
+.comp-kv-value.warn { color: var(--warning); }
+.comp-kv-value.error { color: var(--error); }
+.comp-kv-value.muted { color: var(--text-tertiary); }
+
+/* Status dot colors (reusable) */
+.status-dot.ready { background: var(--accent); }
+.status-dot.in_progress, .status-dot.in-progress { background: var(--warning); }
+.status-dot.blocked { background: var(--error); }
+.status-dot.done { background: var(--success); }
+.status-dot.review { background: var(--purple); }
+.status-dot.offline { background: var(--text-tertiary); }
+.status-dot.healthy { background: var(--success); }
+.status-dot.overdue { background: var(--error); }
+
+/* Cairn/RFC Recent Panel */
+.cairn-recent-item {
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  transition: var(--transition);
+}
+.cairn-recent-item:hover { background: var(--glass-3); }
+.cairn-recent-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+.cairn-recent-stage {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.cairn-recent-id {
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-tertiary);
+}
+.cairn-recent-title {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+.cairn-recent-meta {
+  display: flex;
+  gap: 8px;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+}
+.cairn-recent-pending {
+  color: var(--warning);
+  font-weight: 500;
+}
+.cairn-recent-author { margin-left: auto; }
+
+/* Collapsible blocked banner (OPERATOR request 2026-06-25): native <details>,
+   collapsed by default. Hide the default disclosure marker; rotate our own
+   caret on open. */
+details.blocked-banner > summary { list-style: none; }
+details.blocked-banner > summary::-webkit-details-marker { display: none; }
+details.blocked-banner > summary .blocked-caret {
+  display: inline-block;
+  font-size: 9px;
+  transition: transform 0.15s ease;
+}
+details.blocked-banner[open] > summary .blocked-caret { transform: rotate(90deg); }
+

@@ -1,0 +1,23 @@
+{
+  "name": "superdash-v2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "marked.min.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:dirty-cache": "playwright test --grep @swat-0604-0016",
+    "test:showcase": "playwright test --config=playwright.showcase.config.js",
+    "test:portable": "node --test tests/portable-time.test.cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  }
+}

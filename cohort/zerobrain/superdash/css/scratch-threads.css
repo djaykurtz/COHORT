@@ -1,0 +1,218 @@
+/* Scratch Threads — thread view, pin indicators, ref chips
+ * Part of RFC-FEF0A7 superdash implementation
+ */
+
+/* ─── Thread View Toggle ─── */
+.scratch-view-toggle {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  padding: 3px;
+}
+.scratch-view-btn {
+  padding: 5px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.scratch-view-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+.scratch-view-btn.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ─── Thread Groups ─── */
+.scratch-threads {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px 0;
+}
+.scratch-thread-group {
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+.scratch-thread-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--glass-border);
+  cursor: pointer;
+}
+.scratch-thread-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+.scratch-thread-ref {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.scratch-thread-count {
+  font-size: 11px;
+  color: var(--text-dim);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+.scratch-thread-entries {
+  display: flex;
+  flex-direction: column;
+}
+.scratch-thread-entry {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  position: relative;
+}
+.scratch-thread-entry:last-child {
+  border-bottom: none;
+}
+.scratch-thread-entry:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+.scratch-thread-entry-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.scratch-thread-entry .cairn-scratch-content {
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+/* ─── Unlinked entries (no ref) ─── */
+.scratch-thread-group.unlinked .scratch-thread-header {
+  border-left: 3px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ─── Pin Indicator ─── */
+.scratch-pin {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: hsl(45, 90%, 65%);
+  background: rgba(255, 200, 50, 0.08);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.scratch-pin::before {
+  content: '📌';
+  font-size: 10px;
+}
+.scratch-pin-permanent {
+  color: hsl(45, 90%, 55%);
+}
+
+/* TTL badge on pinned items */
+.scratch-ttl-pinned {
+  color: hsl(45, 70%, 60%);
+  font-style: italic;
+}
+
+/* ─── Ref Chips ─── */
+.ref-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.ref-chip:hover {
+  filter: brightness(1.2);
+  transform: translateY(-1px);
+}
+
+/* Task ref chip */
+.ref-chip-task {
+  background: rgba(100, 180, 255, 0.12);
+  color: hsl(210, 80%, 70%);
+  border: 1px solid rgba(100, 180, 255, 0.2);
+}
+.ref-chip-task::before {
+  content: '📋';
+  font-size: 10px;
+}
+
+/* RFC ref chip */
+.ref-chip-rfc {
+  background: rgba(200, 150, 255, 0.12);
+  color: hsl(270, 70%, 75%);
+  border: 1px solid rgba(200, 150, 255, 0.2);
+}
+.ref-chip-rfc::before {
+  content: '⬡';
+  font-size: 10px;
+}
+
+/* Seed ref chip */
+.ref-chip-seed {
+  background: rgba(100, 220, 180, 0.12);
+  color: hsl(160, 60%, 65%);
+  border: 1px solid rgba(100, 220, 180, 0.2);
+}
+.ref-chip-seed::before {
+  content: '🌱';
+  font-size: 10px;
+}
+
+/* ─── Timeline connector (vertical line between entries) ─── */
+.scratch-thread-entry::before {
+  content: '';
+  position: absolute;
+  left: 28px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+.scratch-thread-entry:first-child::before {
+  top: 50%;
+}
+.scratch-thread-entry:last-child::before {
+  bottom: 50%;
+}
+.scratch-thread-entry:only-child::before {
+  display: none;
+}
+
+/* ─── Deprecation notice for publish_artifact ─── */
+.scratch-deprecated-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 150, 50, 0.06);
+  border: 1px solid rgba(255, 150, 50, 0.15);
+  border-radius: 6px;
+  color: hsl(30, 80%, 65%);
+  font-size: 12px;
+  margin-top: 8px;
+}
+.scratch-deprecated-notice::before {
+  content: '⚠️';
+}

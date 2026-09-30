@@ -1,0 +1,24 @@
+# superdash-v2 .gitignore — Git Standardization Phase 1
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Logs
+*.log
+
+# Temp / Backup
+temp/
+*.bak*
+
+# Environment
+.env
+
+# IDE
+.vscode/
+
+# Copilot / MCP bridge
+.copilot/
+.mcp-bridge/

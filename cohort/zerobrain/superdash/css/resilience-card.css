@@ -1,0 +1,79 @@
+/* RFC587-B4 -- Resilience Card panel styles
+ * Mirrors css/tool-cost-panel.css conventions. Reuses phase-badge styles
+ * from css/phase-badge.css (AC-B4.4 border-grammar).
+ */
+
+.resilience-card-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+  background: #777;
+}
+.resilience-card-dot--loading { background: #888; opacity: 0.6; }
+.resilience-card-dot--green   { background: #2bbb6b; }
+.resilience-card-dot--yellow  { background: #d8a72a; }
+.resilience-card-dot--red     { background: #d94040; }
+.resilience-card-dot--error   { background: #d94040; opacity: 0.9; }
+
+#resilience-card .resilience-card-loading,
+#resilience-card .resilience-card-empty {
+  padding: 8px 0;
+  color: #888;
+  font-style: italic;
+}
+
+#resilience-card .resilience-card-banner {
+  padding: 6px 8px;
+  margin: 4px 0;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+#resilience-card .resilience-card-banner--error {
+  background: rgba(217, 64, 64, 0.12);
+  color: #d94040;
+}
+
+#resilience-card .resilience-card-retry {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border: 1px solid #d94040;
+  background: transparent;
+  color: #d94040;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+#resilience-card .resilience-card-retry:hover { background: rgba(217, 64, 64, 0.08); }
+
+#resilience-card .resilience-card-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+#resilience-card .resilience-card-row td {
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  vertical-align: middle;
+}
+#resilience-card .rc-node {
+  font-weight: 600;
+  white-space: nowrap;
+}
+#resilience-card .rc-phase {
+  text-align: center;
+}
+#resilience-card .rc-observed {
+  font-size: 0.8em;
+  color: #999;
+}
+#resilience-card .resilience-card-observed { color: #999; font-style: italic; }
+
+#resilience-card .resilience-card-truncated {
+  margin-top: 6px;
+  font-size: 0.8em;
+  color: #888;
+  text-align: right;
+}

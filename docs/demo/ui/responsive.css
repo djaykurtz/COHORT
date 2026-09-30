@@ -1,0 +1,299 @@
+/* ZEROBRAIN Superdash v2 -- Responsive styles: notifications, polish, breakpoints */
+
+/* ══════════════════════════════════════════════════════════
+   U4: RESPONSIVE BREAKPOINTS + NOTIFICATIONS + POLISH
+   ══════════════════════════════════════════════════════════ */
+
+/* -- Global Notification Toasts -- */
+.notify-container { display: none !important; }
+.notify-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--glass-1);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevated);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.4;
+  pointer-events: all;
+  opacity: 0;
+  transform: translateX(20px);
+  animation: notifyIn 0.3s ease forwards;
+  cursor: pointer;
+  transition: border-color 0.2s, opacity 0.3s;
+}
+.notify-toast:hover { border-color: var(--accent); }
+.notify-toast.notify-out {
+  animation: notifyOut 0.3s ease forwards;
+}
+.notify-toast-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.notify-toast-body { flex: 1; min-width: 0; }
+.notify-toast-title {
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.notify-toast-msg {
+  color: var(--text-secondary);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.notify-toast-time {
+  font-size: 9px;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+/* Notification variants */
+.notify-toast.notify-message { border-left: 3px solid var(--accent); }
+.notify-toast.notify-task { border-left: 3px solid var(--purple); }
+.notify-toast.notify-alert { border-left: 3px solid var(--warning); }
+.notify-toast.notify-error { border-left: 3px solid var(--error); }
+.notify-toast.notify-success { border-left: 3px solid var(--success); }
+
+@keyframes notifyIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes notifyOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(20px) scale(0.95); }
+}
+
+/* -- Mobile nav toggle -- */
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 18px;
+  transition: var(--transition);
+}
+.nav-toggle:hover { color: var(--text); border-color: var(--accent); }
+
+/* -- Focus states (accessibility) -- */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+button:focus-visible, .node-card:focus-visible, .cairn-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+/* -- Smooth content transitions -- */
+.nav, .main, .intel {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* ═══ TABLET: ≤1400px -- collapse intel below main ═══ */
+@media (max-width: 1400px) {
+  .cockpit {
+    grid-template-columns: 200px 1fr;
+    /* BUG FIX (OPERATOR-reported, 2026-08): main's row was a fixed `1fr` grid
+     * track here, shared with intel's `auto` track below it. Since CSS Grid
+     * track sizing is independent of a flex CHILD's own inline height, the
+     * original js/layout-resizer.js (which only ever set #main-panel's own
+     * flex/height) had NO way to actually reallocate space between the main
+     * and intel rows at this breakpoint -- dragging the handle was a no-op
+     * here even after the handle itself became visible, because #main-panel
+     * simply doesn't control its own grid row's size once main+intel stack.
+     * --taskboard-row-size (set by layout-resizer.js only in stacked/tablet
+     * mode) lets the resizer directly control this row's track size instead,
+     * which correctly grows/shrinks main at intel's expense. Defaults to 1fr
+     * (identical to prior behavior) when the JS hasn't set anything yet. */
+    grid-template-rows: auto var(--taskboard-row-size, 1fr) auto auto;
+    grid-template-areas:
+      "header header"
+      "nav    main"
+      "nav    intel"
+      "status status";
+  }
+  .intel {
+    max-height: 280px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    overflow-y: auto;
+  }
+  .intel-card { flex: 1 1 280px; min-width: 240px; }
+  .cairn-drawer { width: min(92vw, 1230px); }
+}
+
+/* ═══ SMALL TABLET: ≤1024px -- narrow nav, stack layout ═══ */
+@media (max-width: 1024px) {
+  .cockpit {
+    grid-template-columns: 1fr;
+    /* Same --taskboard-row-size mechanism as the 1400px breakpoint above --
+     * main and intel are still adjacent grid ROWS at this width (just with
+     * nav moved to its own row instead of spanning beside them), so the same
+     * JS-driven custom property applies here too. */
+    grid-template-rows: auto auto var(--taskboard-row-size, 1fr) auto auto;
+    grid-template-areas:
+      "header"
+      "nav"
+      "main"
+      "intel"
+      "status";
+    gap: 8px;
+    padding: 8px;
+  }
+  .nav {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-height: 80px;
+    gap: 6px;
+  }
+  .nav.nav-collapsed { display: none; }
+  .nav-toggle { display: flex; }
+  .node-card {
+    min-width: 160px;
+    flex-shrink: 0;
+    padding: 10px 12px;
+  }
+  .node-card:hover { transform: none; }
+  .header { flex-wrap: wrap; gap: 8px; padding: 10px 16px; }
+  .header-stats { gap: 12px; }
+  .intel {
+    max-height: 240px;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .intel-card { flex: 1 1 200px; }
+  .cairn-drawer { width: 100vw; right: 0; border-radius: 0; }
+  .glass-panel { padding: 14px; border-radius: var(--radius-md); }
+}
+
+/* ═══ MOBILE: ≤640px -- full single-column, compact ═══ */
+@media (max-width: 640px) {
+  .cockpit {
+    padding: 4px;
+    gap: 6px;
+  }
+  .header {
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+  }
+  .header-brand h1 { font-size: 14px; }
+  .header-stats .stat { display: none; }
+  .header-stats .stat:first-child { display: flex; }
+  .header-time { display: none; }
+  .nav {
+    max-height: 64px;
+  }
+  .node-card {
+    min-width: 120px;
+    padding: 8px 10px;
+  }
+  .node-name { font-size: 11px; }
+  .node-meta { display: none; }
+  .glass-panel { padding: 10px; border-radius: var(--radius-sm); }
+  .panel-title { font-size: 10px; letter-spacing: 1px; }
+  .status-bar {
+    flex-wrap: wrap;
+    padding: 6px 12px;
+    gap: 10px;
+    font-size: 10px;
+  }
+  .status-live { display: none; }
+  .intel-card { flex: 1 1 100%; }
+  .notify-container { max-width: calc(100vw - 32px); left: 16px; right: 16px; }
+  .cairn-tabs { margin: 0 6px; }
+  .cairn-tab { padding: 3px 8px; font-size: 10px; }
+  /* Cairn card grid for kanban */
+  .cairn-kanban { flex-direction: column; }
+  .cairn-column { min-width: 100%; }
+}
+
+
+/* ── Notification Bell + Panel (OPERATOR 2026-06-01 21:01 PDT) ── */
+.notif-bell {
+  position: relative;
+  background: var(--glass-1, rgba(255,255,255,0.05));
+  border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+  border-radius: var(--radius-md, 6px);
+  color: var(--text, #e8e8e8);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 4px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.notif-bell:hover { border-color: var(--accent, #5eb1ff); background: var(--glass-2, rgba(255,255,255,0.08)); }
+.notif-bell-icon { line-height: 1; }
+.notif-bell-count {
+  background: var(--accent, #5eb1ff);
+  color: #001020;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 1px 6px;
+  min-width: 16px;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+}
+.notif-bell-count[hidden] { display: none; }
+
+.notif-panel { padding: 12px 16px; display: flex; flex-direction: column; gap: 12px; height: 100%; overflow: hidden; }
+.notif-panel-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding-bottom: 8px; border-bottom: 1px solid var(--glass-border, rgba(255,255,255,0.08)); }
+.notif-action-btn {
+  background: var(--glass-1, rgba(255,255,255,0.05));
+  border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+  border-radius: var(--radius-sm, 4px);
+  color: var(--text, #e8e8e8);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 5px 12px;
+  letter-spacing: 0.3px;
+  transition: border-color 0.2s;
+}
+.notif-action-btn:hover { border-color: var(--accent, #5eb1ff); }
+.notif-panel-future { font-size: 10px; color: var(--text-tertiary, #6a7585); font-style: italic; margin-left: auto; }
+
+.notif-panel-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+.notif-empty { color: var(--text-tertiary, #6a7585); font-size: 12px; padding: 24px 0; text-align: center; }
+
+.notif-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px;
+  background: var(--glass-1, rgba(255,255,255,0.04));
+  border: 1px solid var(--glass-border, rgba(255,255,255,0.08));
+  border-radius: var(--radius-md, 6px);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.notif-item.notif-read { opacity: 0.55; }
+.notif-item-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.notif-item-body { flex: 1; min-width: 0; }
+.notif-item-title { font-weight: 600; font-size: 11px; letter-spacing: 0.3px; color: var(--text, #e8e8e8); margin-bottom: 2px; }
+.notif-item-msg { color: var(--text-secondary, #a0a8b5); font-size: 11px; word-wrap: break-word; }
+.notif-item-time { font-size: 9px; color: var(--text-tertiary, #6a7585); font-family: 'JetBrains Mono', monospace; flex-shrink: 0; margin-top: 2px; }
+.notif-item.notif-message { border-left: 3px solid var(--accent, #5eb1ff); }
+.notif-item.notif-task    { border-left: 3px solid var(--purple, #b478ff); }
+.notif-item.notif-alert   { border-left: 3px solid var(--warning, #ffb547); }
+.notif-item.notif-error   { border-left: 3px solid var(--error, #ff6470); }
+.notif-item.notif-success { border-left: 3px solid var(--success, #66e890); }

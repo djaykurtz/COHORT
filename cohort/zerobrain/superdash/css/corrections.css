@@ -1,0 +1,676 @@
+/* Corrections / Lessons Learned Panel -- Superdash v2
+   Owner: UXIA | RFC: 84BE18 */
+
+.corrections-panel {
+  padding: 8px 12px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.corrections-loading {
+  color: var(--text-tertiary);
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 13px;
+}
+
+/* Waiting for API state */
+.corrections-waiting {
+  text-align: center;
+  padding: 40px 20px;
+}
+.corrections-waiting-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+.corrections-waiting-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.corrections-waiting-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-width: 500px;
+  margin: 0 auto 16px;
+}
+.corrections-preview {
+  margin-top: 16px;
+}
+.corrections-preview-title {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.corrections-preview-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+.corrections-preview-chip {
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.corrections-preview-chip.active {
+  border-color: #f85149;
+  color: #f85149;
+}
+.corrections-preview-chip.learned {
+  border-color: #3fb950;
+  color: #3fb950;
+}
+.corrections-preview-chip.archived {
+  border-color: #6e7681;
+  color: #6e7681;
+}
+.corrections-preview-chip.fleet {
+  border-color: #388bfd;
+  color: #388bfd;
+}
+.corrections-preview-chip.trajectory {
+  border-color: #d29922;
+  color: #d29922;
+}
+
+/* Toolbar */
+.corrections-toolbar {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.corrections-view-tabs {
+  display: flex;
+  gap: 4px;
+}
+.corrections-archived-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.15s;
+}
+.corrections-archived-toggle:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-primary);
+}
+.corrections-archived-toggle[aria-pressed="true"] {
+  background: rgba(110,118,129,0.15);
+  border-color: #6e7681;
+  color: var(--text-primary);
+}
+.corrections-tab {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.15s;
+}
+.corrections-tab:hover {
+  background: rgba(255,255,255,0.05);
+  color: var(--text-primary);
+}
+.corrections-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* Empty state */
+.corrections-empty {
+  color: var(--text-tertiary);
+  text-align: center;
+  padding: 24px;
+  font-size: 12px;
+}
+
+/* Section titles */
+.corrections-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+/* Node groups -- collapsible */
+.corrections-node-group {
+  margin-bottom: 14px;
+}
+.corrections-node-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+.corrections-node-header:hover {
+  background: rgba(255,255,255,0.03);
+  border-radius: 4px 4px 0 0;
+}
+.corrections-node-toggle {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  min-width: 16px;
+  text-align: center;
+  margin-right: 6px;
+  line-height: 1;
+}
+.corrections-node-body {
+  transition: max-height 0.2s ease;
+}
+.corrections-node-group.collapsed .corrections-node-body {
+  display: none;
+}
+.corrections-node-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.corrections-node-counts {
+  display: flex;
+  gap: 8px;
+  font-size: 10px;
+}
+.count-active {
+  color: #f85149;
+}
+.count-learned {
+  color: #3fb950;
+}
+.count-archived,
+.count-archived-hidden {
+  color: #6e7681;
+  font-style: italic;
+}
+.count-archived-hidden {
+  opacity: 0.75;
+}
+
+/* Critical surface (pinned row above per-node groups) */
+.corrections-critical-surface {
+  background: rgba(248, 81, 73, 0.06);
+  border: 1px solid rgba(248, 81, 73, 0.35);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+}
+.critical-surface-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #f85149;
+  margin-bottom: 8px;
+}
+.critical-surface-title .critical-dot {
+  font-size: 14px;
+  line-height: 1;
+  vertical-align: middle;
+}
+.critical-surface-title .critical-count {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.critical-surface-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.critical-row {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.critical-row:hover {
+  background: rgba(255,255,255,0.04);
+}
+.critical-node {
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 11px;
+}
+.critical-title {
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.critical-age {
+  color: var(--text-tertiary);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+/* Inline empty state (inside a per-node body when all archived hidden) */
+.corrections-empty-inline {
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 11px;
+  font-style: italic;
+}
+
+/* Lesson cards */
+.lesson-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  border-left: 3px solid var(--border);
+}
+.lesson-card.status-active {
+  border-left-color: #f85149;
+}
+.lesson-card.status-learned {
+  border-left-color: #3fb950;
+}
+.lesson-card.status-archived {
+  border-left-color: #6e7681;
+  opacity: 0.7;
+}
+.lesson-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.lesson-status {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  min-width: 60px;
+}
+.lesson-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+.lesson-relapse {
+  font-size: 10px;
+  color: #d29922;
+  background: rgba(210,153,34,0.1);
+  padding: 1px 6px;
+  border-radius: 8px;
+}
+.lesson-body {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 4px;
+  max-height: 80px;
+  overflow: hidden;
+}
+.lesson-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+/* Fleet lessons */
+.fleet-lesson-card {
+  background: rgba(56,139,253,0.04);
+  border: 1px solid rgba(56,139,253,0.2);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+}
+.fleet-lesson-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #388bfd;
+  margin-bottom: 4px;
+}
+.fleet-lesson-body {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+.fleet-lesson-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+/* Trajectory */
+.corrections-trajectory {
+  margin-top: 12px;
+}
+.trajectory-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.trajectory-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+.trajectory-num {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+.trajectory-label {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+.trajectory-bar {
+  height: 8px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.trajectory-segment.learned {
+  height: 100%;
+  background: #3fb950;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+.trajectory-pct {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* Tool Failures section */
+.tf-section {
+  margin-bottom: 16px;
+  border: 1px solid rgba(248,81,73,0.2);
+  border-radius: 8px;
+  background: rgba(248,81,73,0.03);
+  padding: 10px 12px;
+}
+.tf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.tf-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f85149;
+}
+.tf-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: rgba(248,81,73,0.12);
+  color: #f85149;
+  font-weight: 600;
+}
+.tf-sub-title {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.tf-empty {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-align: center;
+  padding: 10px;
+}
+.tf-live {
+  margin-bottom: 10px;
+}
+.tf-feed {
+  max-height: 200px;
+  overflow-y: auto;
+}
+.tf-feed-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  font-size: 11px;
+}
+.tf-feed-item:last-child {
+  border-bottom: none;
+}
+.tf-feed-ts {
+  min-width: 50px;
+  color: var(--text-tertiary);
+  font-size: 10px;
+}
+.tf-feed-node {
+  min-width: 60px;
+  font-weight: 600;
+  font-size: 10px;
+}
+.tf-feed-tool {
+  min-width: 100px;
+  color: #d29922;
+  font-family: monospace;
+  font-size: 10px;
+}
+.tf-feed-detail {
+  color: var(--text-secondary);
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+.tf-more {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  text-align: center;
+  padding: 4px;
+}
+.tf-agg {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 8px;
+}
+.tf-leaderboard {
+  max-height: 160px;
+  overflow-y: auto;
+}
+.tf-agg-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  font-size: 11px;
+}
+.tf-agg-item:last-child {
+  border-bottom: none;
+}
+.tf-agg-rank {
+  min-width: 24px;
+  font-weight: 700;
+  color: #f85149;
+  font-size: 10px;
+}
+.tf-agg-tool {
+  min-width: 120px;
+  font-family: monospace;
+  color: var(--text-primary);
+  font-size: 11px;
+}
+.tf-agg-count {
+  min-width: 40px;
+  font-weight: 700;
+  color: #d29922;
+  font-size: 11px;
+}
+.tf-agg-nodes {
+  flex: 1;
+  color: var(--text-tertiary);
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tf-agg-last {
+  min-width: 50px;
+  color: var(--text-tertiary);
+  font-size: 10px;
+  text-align: right;
+}
+
+/* ── Tool Failures: Tab bar ───────────────────── */
+.tf-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.tf-tab {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.tf-tab:hover {
+  background: rgba(255,255,255,0.04);
+  color: var(--text-secondary);
+}
+.tf-tab.active {
+  background: rgba(248,81,73,0.12);
+  color: #f85149;
+  border-color: rgba(248,81,73,0.3);
+}
+
+/* ── Tool Failures: Per Node view ─────────────── */
+.tf-node-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+.tf-node-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tf-node-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tf-node-name {
+  font-weight: 700;
+  font-size: 12px;
+}
+.tf-node-total {
+  font-size: 10px;
+  font-weight: 600;
+  color: #f85149;
+}
+.tf-node-last {
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+.tf-node-tools {
+  margin-top: 2px;
+}
+.tf-node-tool-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  font-size: 10px;
+}
+.tf-node-tool-row:last-child {
+  border-bottom: none;
+}
+.tf-node-tool-name {
+  font-family: monospace;
+  color: var(--text-secondary);
+}
+.tf-node-tool-count {
+  font-weight: 700;
+  color: #d29922;
+}
+
+/* ── Corrections: Collapsible Section ─────────── */
+.corrections-collapsible {
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+.corrections-collapsible-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+  border-radius: 4px;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  user-select: none;
+}
+.corrections-collapsible-header:hover {
+  background: rgba(255,255,255,0.04);
+}
+.corrections-collapse-toggle {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  width: 12px;
+}
+.corrections-collapsible-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.corrections-collapsible-body {
+  margin-top: 4px;
+}

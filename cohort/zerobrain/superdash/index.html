@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZEROBRAIN -- Superdash v2</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 dominant-baseline=%22central%22 font-size=%2290%22>%E2%98%A2%EF%B8%8F</text></svg>">
+<script src="marked.min.js?v=portfolio-v1"></script>
+<link rel="stylesheet" href="css/base.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/components.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/cairn.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/responsive.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/messaging.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/scratch-threads.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/scratch-limits.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/bus-panel.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/recovery-panel.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/fleet-sections.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/merit.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/corrections.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/overrides.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/chat.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/tool-cost-panel.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/resilience-card.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/failure-episodes.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/deploy-pending-banner.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/electric-border.css?v=portfolio-v1">
+<link rel="stylesheet" href="css/gary-panel.css?v=portfolio-v1">
+</head>
+<body>
+
+<!-- SWAT-20260604-0017 Option C top-of-page deploy-pending banner REMOVED 2026-06-22
+     (OPERATOR: deploy state belongs in the footer "Deploy:" pill, not a page-spanning
+     announcement). Drift is still surfaced live via #status-deploy; promote steps live in
+     docs/SUPERDASH-DEPLOY-DISCIPLINE.md. css/deploy-pending-banner.css is retained for the
+     #status-deploy pill colorings; js/deploy-pending-banner.js now drives the pill only. -->
+
+<div class="ambient"></div>
+<div class="grid-overlay"></div>
+
+<!-- SWAT-20260615-0014: shared SVG turbulence filter for the ?electric=1 electric-border
+     accent (css/electric-border.css). Hidden; off-flow; aria-hidden. -->
+<svg class="electric-border-svg" aria-hidden="true" focusable="false" width="0" height="0"
+     style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <filter id="electric-border-filter" x="-25%" y="-25%" width="150%" height="150%"
+            color-interpolation-filters="sRGB">
+      <feTurbulence type="turbulence" baseFrequency="0.02 0.05" numOctaves="2" seed="3" result="noise">
+        <animate attributeName="baseFrequency" dur="6s"
+                 values="0.02 0.05; 0.035 0.07; 0.02 0.05" repeatCount="indefinite"/>
+      </feTurbulence>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="5"
+                         xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<div class="cockpit">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-brand">
+      <div class="pulse"></div>
+      <h1 id="brand-title" class="brand-dim">ZEROBRAIN</h1>
+      <div class="boot-loader" id="boot-loader">
+        <div class="boot-loader-fill" id="boot-loader-fill"></div>
+      </div>
+    </div>
+    <div class="header-stats">
+      <!-- BB pill removed 2026-06-06 (UXIA, OPERATOR-direct): redundant with left-side node list which conveys the same liveness signal in real time. bb-pill.js orphaned. -->
+      <div class="stat">
+        <span class="stat-label">Tasks</span>
+        <span class="stat-value" id="stat-tasks">--</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Msgs Today</span>
+        <span class="stat-value" id="stat-events">--</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Uptime</span>
+        <span class="stat-value" id="stat-uptime">--</span>
+      </div>
+      <!-- SWAT-20260612-0039 Δ3: visible last-fleet-refresh indicator -->
+      <div class="stat" title="Time since the dashboard last received fresh /api/fleet data; helps distinguish 'data is fresh' from 'refresh overdue'">
+        <span class="stat-label">Fleet Refresh</span>
+        <span class="stat-value" id="stat-fleet-refresh">--</span>
+      </div>
+    </div>
+    <div class="header-time" id="clock">--:--:--</div>
+    <div class="header-actions">
+      <button class="notif-bell" id="notif-bell" onclick="App.switchTab('notifications')" title="Notifications" aria-label="Notifications">
+        <span class="notif-bell-icon">&#128276;</span>
+        <span class="notif-bell-count" id="notif-bell-count" hidden>0</span>
+      </button>
+      <span class="header-actions-sep" aria-hidden="true"></span>
+      <button class="refresh-btn" id="refresh-now" onclick="App.refreshNow()" title="Refresh all data now">&#8635;</button>
+    </div>
+    <button class="nav-toggle" id="nav-toggle" onclick="document.getElementById('node-nav').classList.toggle('nav-collapsed')" aria-label="Toggle navigation">&#9776;</button>
+  </header>
+
+  <!-- Left: Node Navigation + Fleet Health (compact card at bottom per OPERATOR 2026-06-04) -->
+  <nav class="nav" id="node-nav">
+    <div id="node-nav-list" class="nav-nodes">
+      <div class="nav-loading">Loading nodes...</div>
+    </div>
+    <div class="intel-card nav-fleet-health">
+      <div class="intel-card-title">Fleet Health</div>
+      <div id="fleet-health">
+        <div class="loading-text">Loading...</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main: Content Area -->
+  <main class="main">
+    <div class="main-tabs" id="main-tabs">
+      <button class="tab active" data-tab="taskboard">📋 Tasks</button>
+      <button class="tab" data-tab="review-pipeline">&#128269; Review</button>
+      <!-- ⚡ Fleet tab moved to overflow drawer per UXIA addendum 2026-06-05; lazy-load via existing switchTab gate (FleetSections.init only runs when overview is selected). -->
+      <button class="tab cairn-tab-main" data-tab="cairn" onclick="Cairn.toggle(event); return false;">⬡ CAIRN</button>
+      <button class="tab" data-tab="messages">✉ Messages</button>
+      <button class="tab" data-tab="guestbook">🔑 Authorization</button>
+      <button class="tab" data-tab="files">📁 Files</button>
+      <button class="tab" data-tab="notifications">&#128276; Notifications</button>
+      <button class="tab" data-tab="corrections">&#128218; Lessons</button>
+      <div class="tabs-overflow-wrap">
+        <button class="tabs-overflow-trigger" id="tabs-overflow-trigger"
+                type="button"
+                aria-haspopup="true" aria-expanded="false"
+                aria-controls="tabs-overflow-popup"
+                title="Legacy panels">&#9662;</button>
+        <div class="tabs-overflow-popup" id="tabs-overflow-popup"
+             role="menu" aria-labelledby="tabs-overflow-trigger" hidden>
+          <button class="tabs-overflow-item" data-tab="overview" role="menuitem" type="button">⚡ Fleet</button>
+          <button class="tabs-overflow-item" data-tab="merit" role="menuitem" type="button">&#127941; Merit</button>
+          <button class="tabs-overflow-item" data-tab="gary" role="menuitem" type="button">🧪 Gary Status</button>
+          <!-- LEGACY-DRAWER-EXTENSION-POINT: add deprecated tabs here as menuitem buttons (data-tab="<tab-name>") -->
+        </div>
+      </div>
+    </div>
+    <div class="glass-panel" id="main-panel" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+      <div class="panel-header">
+        <span class="panel-title" id="main-panel-title">Task Board</span>
+        <span class="panel-badge" id="main-panel-badge"></span>
+      </div>
+      <div class="main-content" id="main-content">
+        <div class="loading-text">Loading fleet data...</div>
+      </div>
+    </div>
+  </main>
+
+  <button class="taskboard-height-resizer" id="taskboard-height-resizer"
+          type="button" role="separator" aria-orientation="horizontal"
+          aria-label="Resize Task Board height"
+          aria-valuemin="360" aria-valuemax="780"
+          title="Drag up or down to resize Task Board"></button>
+
+  <!-- Right: Intel Panels -->
+  <aside class="intel">
+    <!-- Active Tasks intel-card removed 2026-06-06 (UXIA, OPERATOR-direct):
+         redundant with the Task Board which is the front-page authoritative
+         view. Per same directive the Active RFCs section now surfaces a task
+         counter inline with each card, so the side-panel was double-display. -->
+
+    <!-- MOLT Control hidden per OPERATOR 2026-06-04 (doesn't need to load or display).
+         Markup kept for future restoration; CSS display:none prevents render/layout. -->
+    <div class="intel-card" style="display:none" aria-hidden="true">
+      <div class="intel-card-title">MOLT Control</div>
+      <div id="molt-status">
+        <div class="loading-text">Loading...</div>
+      </div>
+    </div>
+
+    <!-- Fleet Health moved to left nav (compact, per OPERATOR 2026-06-04). -->
+
+    <div class="intel-card">
+      <div class="intel-card-title">&#11045; Active RFCs</div>
+      <div id="cairn-recent">
+        <div class="loading-text">Loading...</div>
+      </div>
+    </div>
+
+    <!-- RFC587-B4 Resilience Card (feature-flagged, default hidden; B4.1 backend live).
+         Enable: localStorage.setItem('resilienceCard','1') and reload. See js/resilience-card.js. -->
+    <div class="intel-card" id="resilience-card" style="display:none">
+      <div class="intel-card-title">
+        <span class="resilience-card-dot resilience-card-dot--loading" id="resilience-card-dot"></span>
+        &#128737; Resilience
+        <span class="intel-card-badge" id="resilience-card-badge">--</span>
+      </div>
+      <div class="resilience-card-body" id="resilience-card-body">
+        <div class="resilience-card-loading">loading&hellip;</div>
+      </div>
+    </div>
+
+    <div class="intel-card" id="failure-episodes-card">
+      <div class="intel-card-title">
+        <span class="failure-episodes-dot failure-episodes-dot--warn" id="failure-episodes-dot"></span>
+        &#9888; Failure Episodes
+        <span class="intel-card-badge" id="failure-episodes-badge">--</span>
+      </div>
+      <div class="failure-episodes-body" id="failure-episodes-body">
+        <div class="loading-text">Loading failure episodes...</div>
+      </div>
+    </div>
+
+    <!-- RFC017-P5 Tool Cost intel-card (RFC017-P5 AC18: enabled by default; P3.5 endpoint shipped + telemetry accreted).
+         Force-hide fleet-wide via window.TOOL_COST_WIDGET_ENABLED=false in config.js. See js/tool-cost-panel.js. -->
+    <div class="intel-card" id="tool-cost-card" style="display:none">
+      <div class="intel-card-title">
+        <span class="tool-cost-dot tool-cost-dot--loading" id="tool-cost-dot"></span>
+        &#128181; Tool Cost
+        <span class="intel-card-badge" id="tool-cost-badge">--</span>
+      </div>
+      <div class="tool-cost-body" id="tool-cost-body">
+        <div class="loading-text">Loading...</div>
+      </div>
+    </div>
+
+    <div class="intel-card feedback-card">
+      <div class="intel-card-title">💬 OPERATOR Feedback</div>
+      <div id="feedback-box">
+        <textarea id="feedback-body" class="feedback-textarea" placeholder="Quick note, bug, idea..." rows="3"></textarea>
+        <div class="feedback-controls">
+          <input id="feedback-title" class="feedback-title-input" type="text" placeholder="Ref (task, RFC, node, page...)">
+          <button id="feedback-submit" class="feedback-submit-btn" onclick="Feedback.submit()">Scratch it</button>
+        </div>
+        <div id="feedback-status" class="feedback-status"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Status Bar -->
+  <footer class="status-bar">
+    <div class="status-item">
+      <span class="status-label">Coordinator:</span>
+      <span class="status-value" id="status-coordinator">--</span>
+    </div>
+    <div class="status-item">
+      <span class="status-label">DB:</span>
+      <span class="status-value" id="status-db">--</span>
+    </div>
+    <div class="status-item">
+      <span class="status-label">SW:</span>
+      <span class="status-value" id="status-sw">--</span>
+    </div>
+    <div class="status-item" title="SWAT-0014: live version stamp -- click for diagnostics">
+      <span class="status-label">Build:</span>
+      <span class="status-value" id="status-build">loading...</span>
+    </div>
+    <div class="status-item" title="SWAT-0604-0017: live deploy-vs-master drift (click banner for promote instructions)">
+      <span class="status-label">Deploy:</span>
+      <span class="status-value" id="status-deploy">--</span>
+    </div>
+    <div class="status-item">
+      <span class="status-label">SSE:</span>
+      <span class="status-value" id="status-sse">disconnected</span>
+    </div>
+    <!-- MOLT status pill hidden per OPERATOR 2026-06-04 (paired with MOLT Control card). -->
+    <div class="status-item" style="display:none" aria-hidden="true">
+      <span class="status-label">MOLT:</span>
+      <span class="status-value" id="status-molt">--</span>
+    </div>
+    <div class="status-item cairn-trigger" onclick="Cairn.toggle(event)">
+      <span class="status-label">CAIRN</span>
+      <span class="status-value" id="status-cairn">▸</span>
+    </div>
+    <div class="status-live">
+      <div class="live-dot" id="live-dot"></div>
+      <span class="status-value" id="status-live-text">CONNECTING</span>
+    </div>
+  </footer>
+</div>
+
+<!-- CAIRN Drawer -->
+<div class="cairn-overlay" id="cairn-overlay" onclick="Cairn.toggle(event)"></div>
+<div class="cairn-drawer" id="cairn-drawer">
+  <div class="cairn-drawer-header">
+    <div class="cairn-drawer-brand">
+      <span class="cairn-icon">⬡</span>
+      <span class="cairn-drawer-title">CAIRN</span>
+      <span class="cairn-drawer-subtitle">Knowledge Engine</span>
+    </div>
+    <div class="cairn-tabs" id="cairn-tabs">
+      <button class="cairn-tab active" data-tab="board" onclick="Cairn.switchTab('board')">RFC</button>
+      <button class="cairn-tab" data-tab="scratch" onclick="Cairn.switchTab('scratch')">Scratch</button>
+      <button class="cairn-tab" data-tab="kb" onclick="Cairn.switchTab('kb')">KB</button>
+      <button class="cairn-tab" data-tab="archive" onclick="Cairn.switchTab('archive')">📦 Archive</button>
+    </div>
+    <div class="cairn-filter-bar" id="cairn-filters"></div>
+    <button class="cairn-close" onclick="Cairn.toggle(event)">✕</button>
+  </div>
+  <div class="cairn-body" id="cairn-body">
+    <div class="loading-text">Loading Cairn...</div>
+  </div>
+</div>
+
+<script src="js/config.js?v=portfolio-v1" defer></script>
+<script src="js/api.js?v=portfolio-v1" defer></script>
+<script src="js/datastore.js?v=portfolio-v1" defer></script>
+<script src="js/components.js?v=portfolio-v1" defer></script>
+<script src="js/api-resilience.js?v=portfolio-v1" defer></script>
+<script src="js/notify.js?v=portfolio-v1" defer></script>
+<script src="js/notifications-panel.js?v=portfolio-v1" defer></script>
+<script src="js/nodes.js?v=portfolio-v1" defer></script>
+<script src="js/panels.js?v=portfolio-v1" defer></script>
+<script src="js/messages.js?v=portfolio-v1" defer></script>
+<script src="js/docs.js?v=portfolio-v1" defer></script>
+<script src="js/scripts.js?v=portfolio-v1" defer></script>
+<script src="js/broadcast.js?v=portfolio-v1" defer></script>
+<script src="js/motd.js?v=portfolio-v1" defer></script>
+<script src="js/messaging.js?v=portfolio-v1" defer></script>
+<script src="js/taskboard.js?v=portfolio-v1" defer></script>
+<script src="js/layout-resizer.js?v=portfolio-v1" defer></script>
+<script src="js/guestbook.js?v=portfolio-v1" defer></script>
+<script src="js/cairn-panel.js?v=portfolio-v1" defer></script>
+<script src="js/images.js?v=portfolio-v1" defer></script>
+<script src="js/files-panel.js?v=portfolio-v1" defer></script>
+<script src="js/cairn.js?v=portfolio-v1" defer></script>
+<script src="js/cairn-board.js?v=portfolio-v1" defer></script>
+<script src="js/cairn-scratch.js?v=portfolio-v1" defer></script>
+<script src="js/scratch-threads.js?v=portfolio-v1" defer></script>
+<script src="js/scratch-limits.js?v=portfolio-v1" defer></script>
+<script src="js/cairn-kb.js?v=portfolio-v1" defer></script>
+<script src="js/cairn-search.js?v=portfolio-v1" defer></script>
+<script src="js/cairn-cache.js?v=portfolio-v1" defer></script>
+<script src="js/approval-throughline.js?v=portfolio-v1" defer></script>
+<script src="js/cairn-recent.js?v=portfolio-v1" defer></script>
+<script src="js/bus-panel.js?v=portfolio-v1" defer></script>
+<!-- bb-pill.js orphaned 2026-06-06 (UXIA, OPERATOR-direct): BB header widget removed; node list is the canonical liveness surface. -->
+<script src="js/recovery-status-panel.js?v=portfolio-v1" defer></script>
+<script src="js/gary-panel.js?v=portfolio-v1" defer></script>
+<script src="js/tool-cost-panel.js?v=portfolio-v1" defer></script>
+<script src="js/resilience-incidents.js?v=portfolio-v1" defer></script>
+<script src="js/resilience-card.js?v=portfolio-v1" defer></script>
+<script src="js/failure-episodes.js?v=portfolio-v1" defer></script>
+<script src="js/fleet-sections.js?v=portfolio-v1" defer></script>
+<script src="js/merit.js?v=portfolio-v1" defer></script>
+<script src="js/boomerang.js?v=portfolio-v1" defer></script>
+<script src="js/tool-failures.js?v=portfolio-v1" defer></script>
+<script src="js/corrections.js?v=portfolio-v1" defer></script>
+<script src="js/deploy.js?v=portfolio-v1" defer></script>
+<script src="js/deploy-pending-banner.js?v=portfolio-v1" defer></script>
+<script src="js/feedback.js?v=portfolio-v1" defer></script>
+<script src="js/sse.js?v=portfolio-v1" defer></script>
+<script src="js/boot-loader.js?v=portfolio-v1" defer></script>
+<script src="js/review-pipeline.js?v=portfolio-v1" defer></script>
+<script src="js/app.js?v=portfolio-v1" defer></script>
+<script src="js/perf-guard.js?v=portfolio-v1" defer></script>
+<script src="js/version-stamp.js?v=portfolio-v1" defer></script>
+<script>
+// SWAT-candidate finding J (superdash resource-efficiency pass, 2026-08):
+// all <script src> tags above are now `defer` (were render-blocking, no
+// defer/async -- 52 serialized synchronous script loads). `defer` scripts
+// execute in document order but only AFTER HTML parsing completes and
+// BEFORE DOMContentLoaded fires -- so this trailing call (previously safe
+// as a synchronous inline script running immediately after everything
+// above had already executed in order) must wait for DOMContentLoaded to
+// guarantee PerfGuard is defined by the time init() runs. Without this
+// wrapper, this bare inline script would execute at parse-time, before any
+// deferred script has run, throwing "PerfGuard is not defined".
+document.addEventListener('DOMContentLoaded', function() { PerfGuard.init(); });
+</script>
+</body>
+</html>

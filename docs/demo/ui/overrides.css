@@ -1,0 +1,759 @@
+/* ZEROBRAIN Superdash v2 -- Overrides: operator UI, lifecycle, docs, commentary, images */
+
+/* ── Refresh Now Button (RFC-FDDB12) ── */
+.refresh-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-3);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 16px;
+  transition: var(--transition);
+  font-family: inherit;
+  flex-shrink: 0;
+}
+.refresh-btn:hover { background: var(--glass-2); color: var(--accent); border-color: rgba(88, 166, 255, 0.3); }
+
+/* ── Task Board height resizer (SWAT-superdash-taskboard-roller) ──
+ * BUG FIX (OPERATOR-reported, 2026-08): js/layout-resizer.js + the
+ * #taskboard-height-resizer <button> in index.html were both shipped, but
+ * NO CSS existed for this element anywhere in the stylesheet -- meaning it
+ * had no `position` (so the JS's inline left/top/width positioning against
+ * .cockpit was a no-op on a statically-positioned element), no size, and no
+ * visible appearance. The handle was completely invisible/non-functional at
+ * any viewport width, even though the drag/keyboard-resize logic itself was
+ * fully implemented and working. This is the missing half of that feature.
+ *
+ * Positioning contract with js/layout-resizer.js: the script computes
+ * `left`/`top`/`width` as inline pixel styles relative to `.cockpit`
+ * (position: relative, set in base.css) every time the panel resizes or the
+ * window resizes -- this rule only needs to provide `position: absolute` so
+ * those inline values actually take effect, plus the handle's own height/
+ * visual treatment. `.cockpit`'s grid-gap (12px) provides the vertical room
+ * this bar sits in, between #main-panel's bottom edge and the status bar row.
+ */
+.taskboard-height-resizer {
+  position: absolute;
+  height: 14px;
+  margin-top: -7px; /* center the 14px hit-area on the computed `top` (panel's bottom edge) */
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: ns-resize;
+  z-index: 5;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.taskboard-height-resizer[hidden] { display: none; }
+/* Slim visible grip-bar, centered in the larger invisible hit-area above --
+ * keeps the draggable target comfortable (14px) without looking heavy. */
+.taskboard-height-resizer::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 3px;
+  transform: translateY(-50%);
+  border-radius: 2px;
+  background: var(--glass-border);
+  transition: var(--transition);
+}
+/* Small centered grip-dots for drag affordance, same "this is grabbable"
+ * language as a native OS window-resize handle. */
+.taskboard-height-resizer::after {
+  content: '\00b7\00b7\00b7'; /* three middle-dots */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -60%);
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 2px;
+  color: var(--text-tertiary);
+  opacity: 0;
+  transition: var(--transition);
+  pointer-events: none;
+}
+.taskboard-height-resizer:hover::before,
+.taskboard-height-resizer:focus-visible::before {
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-glow);
+}
+.taskboard-height-resizer:hover::after,
+.taskboard-height-resizer:focus-visible::after {
+  opacity: 1;
+  color: var(--accent);
+}
+.taskboard-height-resizer:focus-visible {
+  outline: none; /* the ::before glow above is the focus indicator */
+}
+/* While actively dragging: force the resize cursor + block text selection
+ * fleet-wide so fast pointer movement outside the thin handle doesn't
+ * accidentally select page text (standard drag-resize UX pattern). */
+body.is-resizing-taskboard-height {
+  cursor: ns-resize !important;
+  user-select: none !important;
+}
+body.is-resizing-taskboard-height .taskboard-height-resizer::before {
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+@media (prefers-reduced-motion: reduce) {
+  .taskboard-height-resizer::before,
+  .taskboard-height-resizer::after {
+    transition: none;
+  }
+}
+.refresh-btn.spinning { animation: spin-once 0.5s ease; }
+@keyframes spin-once { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ── CAIRN OPERATOR UI (UXIA S6) ── */
+.cairn-search-bar { display:flex; gap:6px; padding:4px 0; }
+.cairn-search-input { flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:4px; padding:6px 10px; color:#e6edf3; font-size:13px; outline:none; }
+.cairn-search-input:focus { border-color:rgba(88,166,255,0.5); }
+.cairn-btn-search { background:rgba(88,166,255,0.15); border:1px solid rgba(88,166,255,0.3); color:#58a6ff; border-radius:4px; padding:4px 10px; cursor:pointer; }
+.cairn-btn-search:hover { background:rgba(88,166,255,0.25); }
+.cairn-signal-frame { color:#d2a8ff !important; }
+.cairn-btn-token { background:rgba(210,169,34,0.15); border:1px solid rgba(210,169,34,0.3); color:#d29922; font-size:12px; }
+.cairn-btn-token:hover { background:rgba(210,169,34,0.25); }
+.cairn-btn-star-rfc { background:rgba(210,169,34,0.1); border:1px solid rgba(210,169,34,0.2); color:#d29922; font-size:12px; }
+.cairn-btn-star-rfc:hover { background:rgba(210,169,34,0.2); }
+.cairn-respond-form { margin:10px 0; padding:10px; background:rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.15); border-radius:6px; }
+.cairn-respond-header { font-size:12px; font-weight:600; color:#58a6ff; margin-bottom:6px; }
+.cairn-respond-select { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:4px; padding:4px 8px; color:#e6edf3; font-size:12px; margin-bottom:6px; width:auto; }
+.cairn-respond-textarea { width:100%; box-sizing:border-box; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:4px; padding:6px 8px; color:#e6edf3; font-size:13px; font-family:inherit; resize:vertical; margin-bottom:6px; }
+.cairn-respond-textarea:focus { border-color:rgba(88,166,255,0.5); outline:none; }
+.cairn-operator-frame { border-left:3px solid #d2a8ff !important; background:rgba(210,168,255,0.05) !important; }
+
+/* CAIRN Main Tab -- stone texture */
+.cairn-tab-main {
+  background: linear-gradient(135deg, #3a3632 0%, #4a4540 50%, #3a3632 100%) !important;
+  color: #f0dcc0 !important;
+  border: 1px solid rgba(210, 169, 34, 0.4) !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 11px !important;
+  padding: 6px 16px !important;
+  border-radius: 6px !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 2px 8px rgba(0,0,0,0.3);
+  transition: all 0.2s ease;
+}
+.cairn-tab-main:hover {
+  background: linear-gradient(135deg, #4a4540 0%, #5a554f 50%, #4a4540 100%) !important;
+  border-color: rgba(210, 169, 34, 0.7) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 2px 12px rgba(210, 169, 34, 0.2);
+}
+
+/* FIX 4: Readable card density */
+.cairn-col-items { max-height: calc(100vh - 280px); overflow-y: auto; }
+.cairn-col-items .cairn-card {
+  padding: 8px 10px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.cairn-col-items .cairn-card-title { font-size: 13px; margin-bottom: 3px; line-height: 1.35; }
+.cairn-col-items .cairn-card-top { margin-bottom: 3px; }
+.cairn-col-items .cairn-card-bottom { font-size: 10px; }
+.cairn-col-items .cairn-card-id { font-size: 10px; }
+
+/* FIX 6: Filter padding -- prevent overlap with drawer edge */
+.cairn-filter-bar { padding-bottom: 12px; margin-bottom: 4px; }
+.cairn-chips { margin-bottom: 6px; padding-bottom: 4px; }
+
+/* FIX 7: Kanban -- fill available width, readable columns */
+.cairn-kanban { overflow-x: auto; overflow-y: hidden; padding-right: 16px; flex-wrap: nowrap; }
+.cairn-column { flex: 1 1 0; min-width: 180px; }
+.cairn-col-count { white-space: nowrap; }
+.cairn-col-label { font-size: 12px; }
+
+/* FIX 5: Seed filter controls */
+.cairn-seed-filters { display: flex; gap: 6px; margin-bottom: 8px; align-items: center; }
+.cairn-seed-filter-btn { background: var(--glass-1); border: 1px solid var(--glass-border); border-radius: 4px; padding: 3px 8px; color: var(--text-secondary); font-size: 10px; cursor: pointer; }
+.cairn-seed-filter-btn:hover { background: var(--glass-2); }
+.cairn-seed-filter-btn.active { background: rgba(88,166,255,0.15); border-color: rgba(88,166,255,0.4); color: #58a6ff; }
+
+/* Search results panel */
+.cairn-search-results { padding: 8px; }
+.cairn-search-results .cairn-card { margin-bottom: 6px; }
+/* Wave/Star/Live badges on RFC cards */
+.cairn-card-badges { display:flex; gap:3px; align-items:center; }
+.cairn-badge { font-size:10px; padding:2px 6px; border-radius:3px; font-weight:600; white-space:nowrap; }
+.cairn-badge-live { background:rgba(63,185,80,0.2); color:#3fb950; animation:cairn-pulse 2s infinite; }
+.cairn-badge-star { background:rgba(210,169,34,0.15); color:#d29922; }
+.cairn-badge-wave { background:rgba(88,166,255,0.15); color:#58a6ff; }
+.cairn-card-stars { font-size:11px; color:#d29922; }
+@keyframes cairn-pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+/* Lifecycle Pipeline View */
+.cairn-lifecycle { padding: 12px; }
+.cairn-lifecycle-nav { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.cairn-lifecycle-title { font-size:14px; font-weight:600; color:var(--text); }
+.cairn-lifecycle-total { font-size:11px; color:var(--text-tertiary); margin-left:auto; }
+.cairn-pipeline { display:flex; flex-direction:column; gap:12px; }
+.cairn-pipe-stage { display:flex; flex-direction:column; gap:4px; }
+.cairn-pipe-bar { height:20px; background:var(--glass-1); border-radius:4px; overflow:hidden; border:1px solid var(--glass-border); }
+.cairn-pipe-fill { height:100%; border-radius:3px; transition:width 0.5s ease; min-width:4px; }
+.cairn-pipe-label { display:flex; align-items:center; gap:6px; font-size:11px; }
+.cairn-pipe-dot { width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+.cairn-pipe-name { font-weight:600; color:var(--text); }
+.cairn-pipe-count { font-weight:700; color:var(--accent); font-family:'JetBrains Mono',monospace; }
+.cairn-pipe-pct { color:var(--text-tertiary); font-size:10px; }
+.cairn-pipe-items { padding-left:16px; }
+.cairn-pipe-item { font-size:10px; color:var(--text-secondary); padding:2px 0; cursor:pointer; }
+.cairn-pipe-item:hover { color:var(--accent); }
+.cairn-pipe-more { font-size:9px; color:var(--text-tertiary); font-style:italic; }
+.cairn-pipe-arrow { text-align:center; font-size:16px; color:var(--text-tertiary); margin:-4px 0; }
+.cairn-funnel { margin-top:16px; padding:10px; background:var(--glass-1); border:1px solid var(--glass-border); border-radius:6px; }
+.cairn-funnel-title { font-size:11px; font-weight:600; color:var(--text); margin-bottom:6px; }
+.cairn-funnel-stats { display:flex; gap:16px; flex-wrap:wrap; }
+.cairn-funnel-stat { font-size:11px; color:var(--text-secondary); font-family:'JetBrains Mono',monospace; }
+.cairn-btn-pipeline { background:rgba(88,166,255,0.1); border:1px solid rgba(88,166,255,0.25); color:#58a6ff; font-size:11px; padding:4px 10px; border-radius:4px; cursor:pointer; }
+.cairn-btn-pipeline:hover { background:rgba(88,166,255,0.2); }
+/* Living Docs - KB Detail View */
+.cairn-kb-detail { padding: 12px; }
+.cairn-kb-detail-nav { margin-bottom: 12px; }
+.cairn-kb-detail-header { margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--glass-border); }
+.cairn-kb-detail-title { font-size: 18px; font-weight: 700; color: var(--text); margin: 0 0 8px 0; line-height: 1.3; }
+.cairn-kb-detail-meta { display: flex; gap: 12px; align-items: center; font-size: 11px; color: var(--text-tertiary); }
+.cairn-kb-detail-author { color: var(--accent); font-weight: 600; }
+.cairn-kb-detail-status { padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: 600; }
+.cairn-badge-published { background: rgba(63,185,80,0.15); color: #3fb950; }
+.cairn-badge-draft { background: rgba(210,153,34,0.15); color: #d2992a; }
+.cairn-kb-detail-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+.cairn-kb-detail-content { line-height: 1.6; color: var(--text-secondary); }
+
+/* Markdown rendering -- readable long-form typography */
+.cairn-markdown {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text);
+  max-width: 740px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.cairn-markdown h1 { font-size: 22px; font-weight: 700; color: var(--text); margin: 28px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--glass-border); }
+.cairn-markdown h2 { font-size: 18px; font-weight: 700; color: var(--text); margin: 24px 0 10px; padding-bottom: 4px; border-bottom: 1px solid var(--glass-border); }
+.cairn-markdown h3 { font-size: 15px; font-weight: 600; color: var(--text); margin: 20px 0 8px; }
+.cairn-markdown h4 { font-size: 13px; font-weight: 600; color: var(--text); margin: 16px 0 6px; }
+.cairn-markdown h1:first-child, .cairn-markdown h2:first-child, .cairn-markdown h3:first-child { margin-top: 0; }
+.cairn-markdown p { margin: 10px 0; }
+.cairn-markdown ul, .cairn-markdown ol { margin: 10px 0; padding-left: 24px; }
+.cairn-markdown li { margin: 5px 0; line-height: 1.6; }
+.cairn-markdown li > ul, .cairn-markdown li > ol { margin: 4px 0; }
+.cairn-markdown code { background: rgba(88,166,255,0.1); padding: 2px 6px; border-radius: 3px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); }
+.cairn-markdown pre { background: var(--bg-deep, var(--glass-1)); border: 1px solid var(--glass-border); border-radius: 6px; padding: 12px 14px; overflow-x: auto; margin: 14px 0; }
+.cairn-markdown pre code { background: none; padding: 0; color: var(--text-secondary); font-size: 12px; }
+.cairn-markdown strong { color: var(--text); font-weight: 700; }
+.cairn-markdown em { font-style: italic; }
+.cairn-markdown blockquote { border-left: 3px solid var(--accent); padding: 8px 14px; margin: 14px 0; color: var(--text-secondary); background: var(--glass-1); border-radius: 0 6px 6px 0; }
+.cairn-markdown hr { border: none; border-top: 1px solid var(--glass-border); margin: 22px 0; }
+.cairn-markdown a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
+.cairn-markdown a:hover { border-bottom-color: var(--accent); }
+.cairn-markdown img { max-width: 100%; border-radius: 6px; margin: 10px 0; }
+.cairn-markdown table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 13px; }
+.cairn-markdown th, .cairn-markdown td { border: 1px solid var(--glass-border); padding: 6px 10px; text-align: left; }
+.cairn-markdown th { background: var(--accent-soft); font-weight: 600; }
+.cairn-kb-article-header:hover { background: var(--glass-1); border-radius: 4px; }
+/* OPERATOR Commentary */
+.cairn-commentary { margin-top: 16px; border-top: 1px solid var(--glass-border); padding-top: 12px; }
+.cairn-commentary-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.cairn-commentary-title { font-size: 13px; font-weight: 600; color: var(--text); }
+.cairn-commentary-list { max-height: 300px; overflow-y: auto; margin-bottom: 8px; }
+.cairn-comment { padding: 8px 10px; background: var(--glass-1); border: 1px solid var(--glass-border); border-radius: 6px; margin-bottom: 6px; }
+.cairn-comment-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; font-size: 10px; }
+.cairn-comment-author { font-weight: 700; color: #d2a8ff; }
+.cairn-comment-date { color: var(--text-tertiary); }
+.cairn-comment-body { font-size: 12px; color: var(--text-secondary); line-height: 1.5; white-space: pre-wrap; }
+.cairn-commentary-form { display: flex; gap: 6px; align-items: flex-end; }
+.cairn-comment-input { flex: 1; background: var(--glass-1); border: 1px solid var(--glass-border); border-radius: 4px; color: var(--text); padding: 6px 8px; font-size: 12px; font-family: inherit; resize: vertical; min-height: 36px; }
+.cairn-comment-input:focus { border-color: var(--accent); outline: none; }
+.cairn-btn-sm { font-size: 10px; padding: 4px 8px; }
+
+/* ── Feedback Box ── */
+.feedback-card { border-color: rgba(227, 179, 65, 0.15); }
+.feedback-card:hover { border-color: rgba(227, 179, 65, 0.3); }
+.feedback-textarea {
+  width: 100%;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 8px 10px;
+  font-size: 12px;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 60px;
+  max-height: 150px;
+  line-height: 1.5;
+  transition: border-color 0.2s;
+}
+.feedback-textarea:focus { border-color: var(--gold); outline: none; }
+.feedback-textarea::placeholder { color: var(--text-tertiary); }
+.feedback-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 6px;
+}
+.feedback-title-input {
+  flex: 1;
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 5px 8px;
+  font-size: 11px;
+  font-family: inherit;
+}
+.feedback-title-input:focus { border-color: var(--gold); outline: none; }
+.feedback-title-input::placeholder { color: var(--text-tertiary); }
+.feedback-submit-btn {
+  padding: 5px 12px;
+  background: var(--gold-soft);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.feedback-submit-btn:hover { background: var(--gold); color: var(--bg-deep); }
+.feedback-status {
+  font-size: 11px;
+  margin-top: 4px;
+  min-height: 16px;
+}
+.feedback-status.success { color: var(--success); }
+.feedback-status.error { color: var(--error); }
+.feedback-status.pending { color: var(--text-secondary); }
+
+/* ── Images Panel ── */
+.images-panel { display: flex; flex-direction: column; gap: 16px; height: 100%; }
+.images-upload-zone {
+  border: 2px dashed rgba(88,166,255,0.2);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+.images-upload-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(88,166,255,0.05);
+}
+.drop-label { color: var(--text-secondary); margin-bottom: 8px; }
+.drop-label a { color: var(--accent); text-decoration: none; }
+.upload-caption-row { display: flex; gap: 8px; margin-top: 8px; }
+.caption-input {
+  flex: 1;
+  background: var(--bg-tertiary, #0d1117);
+  border: 1px solid var(--border, rgba(88,166,255,0.12));
+  border-radius: 6px;
+  color: var(--text-primary, #e6edf3);
+  padding: 6px 10px;
+  font-size: 12px;
+}
+.upload-btn {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+}
+.upload-btn:hover { opacity: 0.9; }
+.upload-status { font-size: 11px; margin-top: 6px; min-height: 16px; }
+.upload-status.success { color: var(--success, #3fb950); }
+.upload-status.error { color: var(--error, #f85149); }
+.upload-status.uploading { color: var(--accent); }
+
+.images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  overflow-y: auto;
+  flex: 1;
+  padding: 4px;
+}
+.images-empty, .images-error {
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 40px 20px;
+  grid-column: 1 / -1;
+}
+.image-card {
+  background: var(--bg-secondary, #161b22);
+  border: 1px solid var(--border, rgba(88,166,255,0.12));
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.image-card:hover { border-color: var(--accent); }
+.image-thumb {
+  height: 120px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d1117;
+}
+.image-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.image-meta { padding: 8px; }
+.image-name {
+  display: block;
+  font-size: 11px;
+  color: var(--text-primary, #e6edf3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.image-info { font-size: 10px; color: var(--text-secondary); }
+.image-actions { display: flex; gap: 4px; padding: 0 8px 8px; }
+.image-actions button {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 2px 8px;
+  font-size: 12px;
+  transition: border-color 0.2s;
+}
+.image-actions button:hover { border-color: var(--accent); }
+
+/* Image overlay/lightbox */
+.image-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  cursor: pointer;
+}
+.image-overlay img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 8px;
+  cursor: default;
+}
+.overlay-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+
+/* ── Top-bar UX pass (SWAT 2026-06-05, NIMBUS, ref UXIA #49005+#49015) ──
+   4 polish items + Fleet legacy-overflow drawer:
+   1) tighten bell+refresh spacing into cluster
+   2) `|` separator between bell and refresh
+   3) persistent border made more visible (rgba 0.1 → 0.25)
+   4) press-state preserved (:active scale + bg)
+   5) ⚡ Fleet button → far-right overflow trigger (Win11 tray-overflow pattern)
+*/
+
+/* Cluster: tighten bell+refresh into single action group */
+.header-actions {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 0 4px;
+}
+.header-actions > .notif-bell,
+.header-actions > .refresh-btn {
+  margin: 0;
+  border-radius: 0;
+  /* Item 3: bumped default border opacity for always-on affordance */
+  border-color: rgba(88, 166, 255, 0.25);
+}
+.header-actions > .notif-bell { padding: 6px 10px; }
+.header-actions > :first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+.header-actions > :last-child {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+/* Item 2: vertical separator between bell and refresh */
+.header-actions-sep {
+  display: inline-block;
+  width: 1px;
+  align-self: stretch;
+  margin: 4px 0;
+  background: rgba(88, 166, 255, 0.25);
+  flex-shrink: 0;
+}
+/* Item 4: press-state visual feedback (verify and preserve) */
+.header-actions > .notif-bell:active,
+.header-actions > .refresh-btn:active {
+  background: var(--glass-2);
+  transform: scale(0.96);
+}
+
+/* Legacy-tabs overflow drawer: ⚡ Fleet pinned far-right as `^` trigger */
+.tabs-overflow-wrap {
+  position: relative;
+  margin-left: auto;
+  margin-right: 2px;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.tabs-overflow-trigger {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-1);
+  border: 1px solid rgba(88, 166, 255, 0.25);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  font-family: inherit;
+  transition: var(--transition);
+}
+.tabs-overflow-trigger:hover {
+  background: var(--glass-2);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.tabs-overflow-trigger:active { transform: scale(0.96); }
+.tabs-overflow-trigger.active,
+.tabs-overflow-trigger[aria-expanded="true"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* #main-tabs has backdrop-filter:blur(16px) which creates a stacking context.
+   It's position:static z-index:auto, so its whole context renders in DOM order
+   vs sibling #main-panel (.glass-panel, also backdrop-filter:blur). #main-panel
+   comes after #main-tabs in DOM, so it paints OVER the overflow popup regardless
+   of popup z-index -- popup is trapped INSIDE #main-tabs's context. Raising
+   #main-tabs to position:relative z-index:2 lifts the whole tabs-row context
+   above main-panel, so the popup escapes. No layout impact (rows don't overlap
+   except via the popup, which is exactly when we want tabs-row to win).
+   UXIA DOM-probe + playwright round-2 #49229. */
+#main-tabs {
+  position: relative;
+  z-index: 2;
+}
+
+.tabs-overflow-popup {
+  position: absolute;
+  /* dropdown (top:), not popup-above (bottom:) -- header has backdrop-filter:blur
+     creating a stacking context that traps popup-above pointer-events even at
+     z-index:50. Win11 task-bar reference was wrong analog: that popup opens
+     into empty screen space; superdash popup-above would open INTO the header.
+     UXIA playwright validation #49223 caught the bug; dropdown sidesteps it.
+     Trigger at y=94.5 → popup opens at ~y=128, well clear of header (y=12-68). */
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 50;
+  min-width: 160px;
+  padding: 4px;
+  background: var(--glass-3, rgba(15, 21, 32, 0.95));
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  backdrop-filter: blur(16px);
+}
+.tabs-overflow-popup[hidden] { display: none; }
+.tabs-overflow-item {
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: var(--transition);
+}
+.tabs-overflow-item:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-color: var(--glass-border);
+}
+.tabs-overflow-item:active { transform: scale(0.98); }
+/* RFC540 Approval Throughline -- header glyph + expanded thread (UXIA 2026-06-06) */
+.approval-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  margin-right: 4px;
+  min-width: 14px;
+  transition: var(--transition);
+}
+.approval-glyph:hover { transform: scale(1.15); }
+.approval-glyph-approved   { color: var(--success); }
+.approval-glyph-qualified  { color: var(--success); }
+.approval-glyph-warn       { color: var(--warning); }
+.approval-glyph-unapproved { color: var(--text-tertiary); opacity: 0.55; cursor: default; }
+.approval-glyph-sup {
+  font-size: 9px;
+  font-weight: 600;
+  margin-left: 1px;
+  vertical-align: super;
+  line-height: 1;
+}
+.cairn-recent-throughline[hidden] { display: none; }
+.cairn-recent-throughline {
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: var(--glass-1, rgba(255,255,255,0.02));
+  border-left: 2px solid var(--success);
+  border-radius: 4px;
+  font-size: 10px;
+  line-height: 1.4;
+}
+.cairn-recent-throughline .throughline-empty {
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+.cairn-recent-throughline .throughline-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.cairn-recent-throughline .throughline-event {
+  display: grid;
+  grid-template-columns: 70px 14px 70px 1fr 14px;
+  gap: 4px;
+  align-items: start;
+  padding: 2px 0;
+}
+.cairn-recent-throughline .throughline-event-revoke .throughline-eg { color: var(--warning); }
+.cairn-recent-throughline .throughline-event-ratify  .throughline-eg { color: var(--success); }
+.cairn-recent-throughline .throughline-ts {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-tertiary);
+  font-size: 9px;
+  white-space: nowrap;
+}
+.cairn-recent-throughline .throughline-eg {
+  text-align: center;
+  font-weight: 600;
+}
+.cairn-recent-throughline .throughline-author {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-secondary);
+  font-size: 9px;
+  white-space: nowrap;
+}
+.cairn-recent-throughline .throughline-ctx {
+  color: var(--text-secondary);
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cairn-recent-throughline .throughline-link {
+  color: var(--accent, #58a6ff);
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+}
+.cairn-recent-throughline .throughline-link:hover { text-decoration: underline; }
+.cairn-recent-throughline .throughline-link-none {
+  color: var(--text-tertiary);
+  opacity: 0.4;
+  cursor: default;
+}
+.cairn-recent-throughline .throughline-chips {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 4px;
+  border-top: 1px dashed var(--glass-3, rgba(255,255,255,0.08));
+}
+.cairn-recent-throughline .throughline-chip {
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 1px 6px;
+  background: var(--glass-2, rgba(255,255,255,0.04));
+  border-radius: 8px;
+  color: var(--text-tertiary);
+  cursor: default;
+}
+/* RFC540p2 followup-7b: cross-RFC inheritance chips. Severity-coded so the
+ * conflict-loud signal reads at-a-glance: red=blocked/revoke, amber=qualifier,
+ * orange=narrow/exclude, blue=override, muted=advisory. */
+.cairn-recent-throughline .throughline-chips-inheritance {
+  border-top: 1px dashed rgba(248,81,73,0.18);
+}
+.cairn-recent-throughline .throughline-chip-inh {
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 1px 6px;
+  border-radius: 8px;
+  cursor: help;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.cairn-recent-throughline .throughline-chip-inh .throughline-chip-glyph {
+  font-size: 10px;
+  line-height: 1;
+}
+.cairn-recent-throughline .throughline-chip-inh-blocked {
+  background: rgba(248,81,73,0.12);
+  color: #ff8a82;
+  border: 1px solid rgba(248,81,73,0.32);
+}
+.cairn-recent-throughline .throughline-chip-inh-revoke {
+  background: rgba(248,81,73,0.10);
+  color: #ff8a82;
+  border: 1px solid rgba(248,81,73,0.28);
+}
+.cairn-recent-throughline .throughline-chip-inh-narrow {
+  background: rgba(245,158,11,0.10);
+  color: #f5b042;
+  border: 1px solid rgba(245,158,11,0.28);
+}
+.cairn-recent-throughline .throughline-chip-inh-qualifier {
+  background: rgba(234,179,8,0.10);
+  color: #eab308;
+  border: 1px solid rgba(234,179,8,0.26);
+}
+.cairn-recent-throughline .throughline-chip-inh-override {
+  background: rgba(59,130,246,0.10);
+  color: #7eb6ff;
+  border: 1px solid rgba(59,130,246,0.28);
+}
+.cairn-recent-throughline .throughline-chip-inh-advisory {
+  background: var(--glass-2, rgba(255,255,255,0.04));
+  color: var(--text-tertiary);
+  border: 1px dashed rgba(255,255,255,0.18);
+}

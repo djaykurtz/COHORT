@@ -1,0 +1,71 @@
+/* SWAT-20260615-0014: "Electric Border" accent for near-complete RFC cards.
+ *
+ * Vanilla CSS+SVG port of the React Bits "Electric Border" effect
+ * (https://reactbits.dev/animations/electric-border) -- superdash-v2 is
+ * hand-rolled JS/CSS with no React island, so the SVG turbulence filter lives
+ * in index.html (#electric-border-filter) and is applied here.
+ *
+ * Applied to `.cairn-card.electric-border`, a class cairn-board.js gates behind
+ * ?electric=1 (Cairn.electricEnabled) for ratified RFCs at >=70% and <100% task
+ * completion -- the operator-attention "almost there" band.
+ *
+ * Accessibility: prefers-reduced-motion disables the flicker + the turbulence
+ * distortion entirely, leaving a calm static accent border so the >=70% cohort
+ * still reads as distinct without motion.
+ */
+
+.cairn-card.electric-border {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Electric outline: a 1-pt ring distorted by the SVG turbulence filter to give
+ * the wavy "arc" look, brightness-flickering on a loop. */
+.cairn-card.electric-border::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1.5px solid var(--success, #3fb950);
+  filter: url(#electric-border-filter);
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 1;
+  animation: electric-flicker 2.4s linear infinite;
+}
+
+/* Soft pulsing glow halo behind the card. */
+.cairn-card.electric-border::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  box-shadow: 0 0 9px 1px color-mix(in oklab, var(--success, #3fb950) 70%, transparent);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+  animation: electric-glow 2.4s ease-in-out infinite;
+}
+
+@keyframes electric-flicker {
+  0%, 100% { opacity: 0.85; filter: url(#electric-border-filter) brightness(1); }
+  45%      { opacity: 1;    filter: url(#electric-border-filter) brightness(1.3); }
+  55%      { opacity: 0.72; filter: url(#electric-border-filter) brightness(0.95); }
+}
+
+@keyframes electric-glow {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.68; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cairn-card.electric-border::before {
+    animation: none;
+    filter: none; /* drop the turbulence distortion -> calm static accent */
+    opacity: 0.9;
+  }
+  .cairn-card.electric-border::after {
+    animation: none;
+    opacity: 0.35;
+  }
+}
