@@ -199,3 +199,7 @@ dialog { font-size: 18px; line-height: 1.7; }
   .node-card { width: 240px; }
   .nav .nav-fleet-health { display: none; }
 }
+
+/* Avoid single words stranded on their own line. */
+p, li, dd, figcaption { text-wrap: pretty; }
+h1, h2, h3 { text-wrap: balance; }

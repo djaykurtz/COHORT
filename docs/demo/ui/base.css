@@ -854,7 +854,3 @@ nav .intel-card.nav-fleet-health #fleet-health > .loading-text {
 .fleet-legacy-chevron { color: var(--text-muted, #8b949e); }
 .fleet-legacy-body { margin-top: 12px; }
 
-
-/* Avoid single words stranded on their own line. */
-p, li, dd, figcaption { text-wrap: pretty; }
-h1, h2, h3 { text-wrap: balance; }
