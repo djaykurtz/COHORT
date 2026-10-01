@@ -1,3 +1,18 @@
+var header = document.querySelector('.masthead');
+var researchLink = header.querySelector('a[href="../demo/?view=governance"]');
+var navigation = document.createElement('nav');
+navigation.className = 'project-navigation';
+navigation.setAttribute('aria-label', 'Project exploration');
+var overviewLink = document.createElement('a');
+overviewLink.href = '../';
+overviewLink.textContent = 'Project overview';
+var portfolioLink = document.createElement('a');
+portfolioLink.href = 'https://djaykurtz.github.io/#cohort';
+portfolioLink.textContent = 'Back to portfolio';
+researchLink.textContent = 'Research / Decisions';
+navigation.append(overviewLink, researchLink, portfolioLink);
+header.appendChild(navigation);
+
 var cards = Array.from(document.querySelectorAll('.system-card'));
 function filterSystems() {
   var query = document.getElementById('system-query').value.trim().toLowerCase();

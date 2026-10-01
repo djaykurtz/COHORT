@@ -76,6 +76,9 @@ figcaption a { font-size: 16px; }
 .connection { gap: 15px; }
 .connection span, .connection i { font-size: 16px; line-height: 1.6; }
 .movement-links { display: flex; flex-wrap: wrap; gap: 16px 24px; }
+.masthead { flex-wrap: wrap; }
+.project-navigation { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+.project-navigation a { font-size: 16px; line-height: 1.6; }
 @media(max-width:1000px) {
   .movement-layout { grid-template-columns: 1fr; gap: 24px; }
   .movement-nav { flex-direction: row; flex-wrap: wrap; gap: 0 20px; }

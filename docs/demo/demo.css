@@ -119,6 +119,8 @@ body { font-size: 18px; }
 }
 .header { min-height: 88px; flex-wrap: wrap; gap: 14px; }
 .header-brand .sample-label { font-size: 16px; line-height: 1.5; }
+.project-navigation { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.header-actions { flex-wrap: wrap; }
 .header-stats .stat-label, .header-stats .stat-value { font-size: 14px; }
 .main-tabs .tab, .demo-button, .demo-link { font-size: 16px; line-height: 1.5; }
 .main-tabs { overflow: visible; }
