@@ -84,3 +84,7 @@ figcaption a { font-size: 16px; }
   .movement-nav { flex-direction: row; flex-wrap: wrap; gap: 0 20px; }
   .movement-nav button { flex: 1 1 250px; }
 }
+
+/* Avoid single words stranded on their own line. */
+p, li, dd, figcaption { text-wrap: pretty; }
+h1, h2, h3 { text-wrap: balance; }

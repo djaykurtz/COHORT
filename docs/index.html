@@ -16,13 +16,13 @@
       <p class="eyebrow">AGENT COORDINATION / AN OPERATOR'S VIEW</p>
       <h1>Many agents.<br>One accountable system.</h1>
       <p class="lede">David built COHORT to organize his own projects and tasks as a team of engineering
-        roles with distinct perspectives. Research and recorded decisions became a way to develop
-        and build ideas together, not just another task board.</p>
+        roles with distinct perspectives. Research and recorded decisions became a shared space to develop
+        and build ideas together.</p>
       <div class="actions"><a class="primary-link" href="systems/">Explore the system atlas <span aria-hidden="true">&#8599;</span></a><a href="demo/?view=governance">Try research and decisions</a><a href="demo/">Explore ZeroBrain</a></div>
-      <p class="boundary">The demo is functional, disconnected, and synthetic. No live fleet, account, or backend.</p>
+      <p class="boundary">The demo runs entirely in your browser with sample data.</p>
     </section>
     <section class="origin-story">
-      <p class="eyebrow">A TEAM OF PERSPECTIVES / NOT PAPERWORK FOR ITS OWN SAKE</p>
+      <p class="eyebrow">A TEAM OF PERSPECTIVES / EVERY CONTROL HAS A REASON</p>
       <h2>Keep the reason. Keep the responsibility.</h2>
       <p>The architect asks what should own a fact. The PM asks how work is broken down and adopted.
         Builders make the change; independent reviewers ask which revision was checked; an analyst
@@ -32,9 +32,9 @@
         to the wrong artifact, rationale disappearing after a handoff, or an unknown result reported
         as done. A narrow defect may be a SWAT; work under an accepted design may be a task; a new
         cross-system contract can require an RFC. Not every task needs a new design process.</p>
-      <p>Durable research and decision history can support reusable team conventions. More memory
-        or a larger context window does not itself establish authority, ownership or a reviewed
-        revision. This is continuity and retrieved context, not a claim of sentience or measured future learning.</p>
+      <p>Saved research and decision history turns into team conventions that get reused. Authority,
+        ownership and review still come from the records that own them, so a bigger memory never
+        quietly grants permission.</p>
       <a href="systems/#story-title">Follow one invented counter-freshness problem through the system</a>
     </section>
     <figure class="hero-frame"><a href="assets/dashboard-tasks.png"><img src="assets/dashboard-tasks.png" width="1600" height="1000" alt="Illustration of the disconnected ZeroBrain sample; readable interactive views are available in the demo"></a><figcaption>ZEROBRAIN / SUPERDASH V2 <span>ILLUSTRATIVE SAMPLE / <a href="assets/dashboard-tasks.png">OPEN FULL RESOLUTION</a></span></figcaption></figure>
@@ -56,11 +56,11 @@
             <p class="eyebrow">01 / RETRIEVAL BEFORE REUSE</p><h3>Find the evidence. Inspect its owner.</h3>
             <p>Spyglass makes research and knowledge searchable through a derived index. Cairn
               preserves the source records, revisions and rationale. A retrieved snippet is a
-              starting point, not authority to change current guidance.</p>
+              starting point; changing current guidance still goes through its owner.</p>
             <div class="connection"><span>Question</span><i class="storage">research retrieval</i><span>Spyglass</span><i class="storage">verify source</i><span>Cairn record</span></div>
             <details><summary>Inspect the failure this prevents</summary><p>A useful but stale search result
-              must not overwrite a current contract. Index corruption can trigger a bounded rebuild,
-              not erase durable knowledge or block the coordinator.</p></details>
+              can't overwrite a current contract. If the index is corrupted, it rebuilds on its own
+              while the knowledge store and coordinator keep running.</p></details>
             <p class="movement-links"><a href="demo/?view=governance">Search the invented research examples</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/systems/spyglass.md">Spyglass responsibility and boundary</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/systems/knowledge-lifecycle.md">Knowledge and research lifecycle</a></p>
           </article>
           <article data-panel="governance" hidden>
@@ -68,13 +68,13 @@
             <p>RFCs move through seed, ideation, in_round, ratified and shipped. Waves are deliberation
               rounds: responses, dissent, signals and votes remain recorded. A PM closes a round
               with non-empty synthesis; that latest synthesized wave is one ratification legal basis.</p>
-            <p>The reference does not use a numeric approve-vote threshold. Four citation/operator
-              bases are alternatives, and independent implementation review and delivery remain separate.</p>
+            <p>Ratification rests on recorded reasons, with no vote-count threshold. Four citation and operator
+              bases are alternatives, and implementation review and delivery stay separate steps.</p>
             <img class="movement-image" src="assets/dashboard-governance.png" width="1440" height="900" alt="Synthetic research and decision workflow, with a readable interactive version linked below" loading="lazy">
             <p class="movement-links"><a href="assets/dashboard-governance.png">Open sample illustration at full resolution</a><a href="demo/?view=governance">Inspect waves, votes and a local decision example</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/rebuild/rnd-processes.md#3-waves-signals-votes-and-consensus">Exact wave/vote/ratification contract</a></p>
           </article>
           <article data-panel="ownership" hidden>
-            <p class="eyebrow">03 / AUTHORITY BEFORE ACTIVITY</p><h3>A message is not a claim.</h3>
+            <p class="eyebrow">03 / AUTHORITY BEFORE ACTIVITY</p><h3>Every claim has a single winner.</h3>
             <p>Agents can announce the same work at the same time. COHORT's documented contract puts a
               single-winner compare-and-swap in the authoritative store. Losing a race must be free:
               no ownership, no work-in-progress charge, and an explicit loss result.</p>
@@ -84,12 +84,12 @@
             <p class="movement-links"><a href="demo/">Try task filtering and local transitions</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/systems/work-routing-and-evidence.md">Lane selection and completion evidence</a></p>
           </article>
           <article data-panel="review" hidden>
-            <p class="eyebrow">04 / EVIDENCE, NOT ASSERTION</p><h3>Approve the revision, not the intention.</h3>
+            <p class="eyebrow">04 / PROOF ATTACHED</p><h3>Approve the exact revision.</h3>
             <p>Review evidence needs an immutable artifact, a declared base-to-head relationship, and
               explicit authorship and recusal. A check-in or a statement of approval cannot replace those obligations.</p>
             <img class="movement-image" src="assets/dashboard-review.png" width="1600" height="1000" alt="Original ZeroBrain review table rendered with invented overdue and near-deadline claims" loading="lazy">
             <details><summary>Inspect what the UI demonstrates</summary><p>The original review table renderer distinguishes overdue, near-deadline and comfortable sample deadlines.
-              The offline adapter supplies fixed examples; it does not claim to authorize reviewers or verify actual artifacts.</p></details>
+              The offline adapter supplies fixed examples, so reviewer authorization and artifact checks are shown for illustration.</p></details>
             <p class="movement-links"><a href="assets/dashboard-review.png">Open illustration at full resolution</a><a href="demo/?view=review">Inspect the sample review layer</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/systems/review.md">Artifact and reviewer contract</a></p>
           </article>
           <article data-panel="memory" hidden>
@@ -102,16 +102,16 @@
             <p class="movement-links"><a href="systems/#handoff">Inspect continuity in the system atlas</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/systems/identity-and-memory.md">Identity, memory and handoff ownership</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/personas/README.md">Authored role perspectives</a></p>
           </article>
           <article data-panel="failure" hidden>
-            <p class="eyebrow">06 / UNKNOWN IS NOT HEALTHY</p><h3>An open port can still be a dead end.</h3>
+            <p class="eyebrow">06 / UNKNOWN COUNTS AS A WARNING</p><h3>An open port can still be a dead end.</h3>
             <p>The included health probe checks connection reachability and then an SSH identification banner.
-              A silent listener is degraded, not green. The frontend's caches likewise keep freshness and uncertainty visible.</p>
+              A silent listener shows as degraded. The frontend's caches likewise keep freshness and uncertainty visible.</p>
             <div class="connection"><span>Dashboard</span><i class="network">observation</i><span>Probe</span><i class="control">verified response</i><span>Service state</span></div>
             <details><summary>Inspect the executable evidence</summary><p>A deterministic Python test creates local banner, silent and closed listeners.
               It verifies the three outcomes without real fleet infrastructure. The browser demo illustrates those outcomes but never opens a socket.</p></details>
             <p class="movement-links"><a href="demo/?view=health">Explore synthetic health states</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/docs/systems/failure-episodes.md">Out-of-band failure evidence</a><a href="https://github.com/djaykurtz/COHORT/blob/main/cohort/zerobrain/superdash/tests/test_rfc599_w4_lane_probe.py">Executable two-tier probe check</a></p>
           </article>
           <article data-panel="delivery" hidden>
-            <p class="eyebrow">07 / SHIPPED MEANS SEEN</p><h3>A changed file is not a delivered interface.</h3>
+            <p class="eyebrow">07 / SHIPPED MEANS SEEN</p><h3>Editing the file is only half of delivery.</h3>
             <p>Versioned asset URLs, service-worker freshness, deploy provenance and verified receipts
               address the gap between editing source and the operator receiving it. Evidence lives at the relevant boundary.</p>
             <div class="connection"><span>Reviewed source</span><i class="work">promotion</i><span>Served bytes</span><i class="network">browser delivery</i><span>Operator view</span></div>
@@ -123,15 +123,15 @@
       </div>
     </section>
 
-    <section class="scope"><p class="eyebrow">WHAT YOU CAN RUN / WHAT IS A CONTRACT</p><h2>A precise portfolio boundary.</h2>
+    <section class="scope"><p class="eyebrow">WHAT YOU CAN RUN / WHAT IS DOCUMENTED</p><h2>What's included.</h2>
       <div class="scope-grid"><div><h3>Runnable here</h3><p>A plain JavaScript/CSS dashboard, its small Python HTTP server, regression tests,
         and this sample-only functional Pages demo. Filtering, drilldowns and simulations stay in browser memory.</p></div>
-      <div><h3>Documented, not bundled</h3><p>The coordinator backend, relational write-of-record, knowledge store, agent boot/runtime,
+      <div><h3>Documented separately</h3><p>The coordinator backend, relational write-of-record, knowledge store, agent boot/runtime,
         authorization and recovery system. Rebuild guides separate implementation references from intent and assessment.</p></div></div>
       <p><a href="systems/">Browse the documented/exported systems and their runtime boundaries</a>.
-        Database-backed records and omitted runtime components are not reconstructed or claimed complete here.</p>
-      <p>No benchmark or production-impact claim is made. David's architecture, operating-model and implementation work
-        is presented alongside documented agent contributions and retained third-party assets.</p>
+        Database-backed records and runtime components live outside this public snapshot.</p>
+      <p>David's architecture, operating-model and implementation work appears alongside documented
+        agent contributions and retained third-party assets.</p>
     </section>
   </main>
   <footer class="page-footer"><span>DAVID KURTZ / COHORT</span><a href="https://github.com/djaykurtz">GitHub profile</a><a href="https://github.com/djaykurtz/COHORT">Implementation and design record</a></footer>

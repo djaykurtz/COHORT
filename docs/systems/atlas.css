@@ -55,3 +55,7 @@
   .atlas-controls label { width: 100%; }
   .system-card summary { font-size: 20px; }
 }
+
+/* Avoid single words stranded on their own line. */
+p, li, dd, figcaption { text-wrap: pretty; }
+h1, h2, h3 { text-wrap: balance; }
