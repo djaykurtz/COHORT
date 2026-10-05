@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1120" height="460" viewBox="0 0 1120 460" role="img" aria-labelledby="map-title map-desc">
   <title id="map-title">COHORT work and evidence handoffs</title>
-  <desc id="map-desc">Operator authority bounds the coordinator. Research retrieves Cairn-backed context; proposals pass through deliberation into scoped work and independent review. Agent continuity supports execution. Superdash displays records without owning them. The textual handoff list below provides the same relationships.</desc>
+  <desc id="map-desc">Operator authority bounds the coordinator. Research retrieves Cairn-backed context; proposals take in the team's input before scoped work and independent review. Agent continuity supports execution. Superdash displays records without owning them. The textual handoff list below provides the same relationships.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="context-stroke"/></marker>
   </defs>
@@ -34,7 +34,7 @@
   <g fill="#ece8e1" font-family="system-ui, sans-serif" font-size="20">
     <text x="593" y="44">Operator + OPA</text>
     <text x="48" y="184">Research / Spyglass</text><text x="48" y="215">Retrieve, then verify</text>
-    <text x="318" y="184">RFC deliberation</text><text x="318" y="215">Waves + decision</text>
+    <text x="318" y="184">RFC team input</text><text x="318" y="215">Waves + decision</text>
     <text x="593" y="184">Scoped work</text><text x="593" y="215">Tasks / SWATs</text>
     <text x="868" y="184">Independent review</text><text x="868" y="215">Then closure / delivery</text>
     <text x="48" y="369">Cairn records</text><text x="48" y="400">Rationale + revisions</text>

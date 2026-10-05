@@ -35,7 +35,7 @@
   {
     "id": "cairn", "name": "Cairn durable knowledge", "aliases": "RFC, seed, scratch and KB persistence", "group": "Research", "availability": "documented",
     "purpose": "Preserve proposals, research, rationale, revisions and decisions so later work can inspect why a design exists.",
-    "inputs": "Seeds, RFC bodies, responses, signals, votes, syntheses and knowledge records.",
+    "inputs": "Seeds, RFC bodies, responses, signals, syntheses and knowledge records.",
     "outputs": "Content-addressed revisions, lifecycle/audit records and source material for search.",
     "owner": "Cairn's durable records; the guides distinguish its knowledge store from coordinator operational records.",
     "relations": ["spyglass", "rfc-governance", "knowledge", "backup"],
@@ -55,13 +55,13 @@
     "evidence": ["cohort/docs/systems/spyglass.md", "cohort/docs/rebuild/rnd-processes.md#8-spyglass", "cohort/docs/rebuild/mcp-tool-catalog.md#spyglass-search"]
   },
   {
-    "id": "rfc-governance", "name": "RFC deliberation and ratification", "aliases": "Waves; responses; signals; votes; SOLIDPLAN; legal bases", "group": "Research", "availability": "documented",
-    "purpose": "Turn a substantive proposal and recorded disagreement into a citable decision.",
-    "inputs": "Body/revision, adoption plan, per-wave responses/signals, per-RFC votes, PM synthesis and authority citations.",
+    "id": "rfc-governance", "name": "RFC design proposals", "aliases": "Waves; responses; signals; PM synthesis; SOLIDPLAN", "group": "Research", "availability": "documented",
+    "purpose": "Turn a proposal and the team's input, objections included, into a design the team can build from.",
+    "inputs": "Proposal body and revision, adoption plan, each node's responses and reactions, the PM synthesis and any cited approvals.",
     "outputs": "seed -> ideation -> in_round -> ratified -> shipped; append-only lifecycle audit and a ratify binding.",
-    "owner": "Cairn. A wave is a deliberation round; delivery is a later task/ship boundary.",
+    "owner": "Cairn. A wave is a round of team input; building and delivery come later through tasks.",
     "relations": ["cairn", "council-vessel", "council-annotations", "tasks", "review"],
-    "boundary": "Votes are recorded as audit evidence, with no vote-count threshold. wave_quorum means the latest wave is closed with a non-empty synthesis; it is one of five legal bases.",
+    "boundary": "Each node weighs in from its role and the work it usually leads. The PM's summary of each round carries the most weight, and the operator has the final say on approving the design as ready to build. There's no head count, and every response stays on the record.",
     "runtime": "Contracts documented; original lifecycle/wave display helpers are included, and backend enforcement runs outside this snapshot.",
     "evidence": ["cohort/docs/rebuild/rnd-processes.md#3-waves-signals-votes-and-consensus", "cohort/docs/rebuild/mcp-tool-catalog.md#cairn_ratify", "cohort/zerobrain/superdash/js/cairn-board.js"]
   },
@@ -70,7 +70,7 @@
     "purpose": "Challenge an RFC through different perspectives without printing the same shared assumptions five times.",
     "inputs": "Verbatim body and framing question; outsider, first-principles, executor, expansionist and contrarian lenses.",
     "outputs": "Verbatim considerations appended under an audited firing record.",
-    "owner": "Cairn firing/revision records. The vessel transports and captures output while the councilors deliberate.",
+    "owner": "Cairn firing/revision records. The vessel transports and captures output while the lenses respond.",
     "relations": ["rfc-governance", "authorization", "runtime"],
     "boundary": "The RFC author and prior vessels are excluded from hosting; context stripping, canary/version checks and append-only capture protect independence.",
     "runtime": "Documented agent-orchestrated mechanism; no lens sessions are launched by this site.",

@@ -174,7 +174,8 @@ dialog { font-size: 18px; line-height: 1.7; }
 .sample-wave, .council-note, .legal-bases { padding: 18px 0; border-top: 1px solid var(--glass-border); }
 .sample-wave summary, .council-note summary, .legal-bases summary { font-size: 18px; line-height: 1.6; cursor: pointer; }
 .sample-wave p, .legal-bases p, .council-note p { margin: 16px 0; }
-.vote-tally, .decision-outcome { padding: 18px; border: 1px solid var(--glass-border); background: var(--bg-secondary); }
+.response-frame { color: var(--text-secondary); font-size: 0.9em; }
+.decision-outcome { padding: 18px; border: 1px solid var(--glass-border); background: var(--bg-secondary); }
 .legal-bases ol, .governance-delivery { padding-left: 25px; }
 .legal-bases li, .governance-delivery li { margin: 16px 0; }
 @media (max-width: 1500px) {

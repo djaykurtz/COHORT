@@ -30,10 +30,10 @@ The screenshots show that sample UI, not operational results.
 
 The [research and decision inspector](https://djaykurtz.github.io/COHORT/demo/?view=governance)
 features Spyglass-style research retrieval, durable source inspection, substantive RFC
-sections, deliberation waves, recorded votes and a local `wave_quorum` example.
-Spyglass is derived search; Cairn owns the records. Waves are deliberation rounds,
-not delivery batches. Approve votes are audit evidence, **not** a numeric ratification
-gate. See the [actual legal-basis contract](cohort/docs/rebuild/rnd-processes.md#3-waves-signals-votes-and-consensus).
+sections, rounds of team input and a sample design decision.
+Spyglass is derived search; Cairn owns the records. On an RFC, each node weighs in
+from its role and the projects it usually leads. The PM's summary of each round carries
+the most weight, and the operator has the final say on approving the design as ready to build. See [how rounds and decisions are recorded](cohort/docs/rebuild/rnd-processes.md#3-waves-signals-votes-and-consensus).
 
 Authored role/persona perspectives and durable context can support reusable team
 conventions. Larger model context does not itself establish authority or a reviewed

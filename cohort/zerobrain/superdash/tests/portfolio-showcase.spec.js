@@ -110,7 +110,7 @@ test('project-prefix routing, movement disclosure, mobile layout and screenshots
   await expect(page.locator('#main-panel-title')).toContainText('Review Pipeline');
 });
 
-test('research, waves, votes and legal-basis illustration stay synthetic and disconnected', async ({ page }) => {
+test('research, team input and decision illustration stay synthetic and disconnected', async ({ page }) => {
   const requests = [];
   const errors = [];
   page.on('request', request => requests.push(request.url()));
@@ -128,40 +128,35 @@ test('research, waves, votes and legal-basis illustration stay synthetic and dis
   await expect(page.locator('.stage-rail li')).toHaveText(['seed', 'ideation', 'in_round', 'ratified', 'shipped']);
   await expect(page.locator('#research-content')).toContainText('not a production submission');
   await page.locator('[data-research-panel="decision"]').click();
-  for (const voter of ['ATLAS', 'BIRCH', 'CEDAR', 'DELTA', 'EMBER', 'FABLE']) {
-    await page.locator('#sample-voter').selectOption(voter);
-    await page.locator('#sample-vote').selectOption('approve');
-    await page.locator('#record-sample-vote').click();
-  }
-  await expect(page.locator('#sample-vote-tally')).toContainText('6 approve / 0 reject / 0 abstain');
+  await expect(page.locator('#research-content')).toContainText("There's no head count");
   await page.locator('#ratify-sample').click();
-  await expect(page.locator('#decision-outcome')).toContainText('Not ratified');
-  await expect(page.locator('#decision-outcome')).toContainText('Approve votes alone');
+  await expect(page.locator('#decision-outcome')).toContainText('Not ready yet');
   await page.locator('[data-research-panel="waves"]').click();
+  await expect(page.locator('.sample-wave').first()).toContainText('Builder, leads cache and storage work');
   await page.locator('#wave-synthesis').fill('');
   await page.locator('#close-sample-wave').click();
-  await expect(page.locator('#wave-outcome')).toContainText('non-empty synthesis is required');
-  await page.locator('#wave-synthesis').fill('Synthetic synthesis: keep authoritative state and snapshot freshness distinct; retain the sample dissent.');
+  await expect(page.locator('#wave-outcome')).toContainText('needs a written synthesis');
+  await page.locator('#wave-synthesis').fill('Synthetic synthesis: keep authoritative state and snapshot freshness distinct; carry the stale-count concern into the design.');
   await page.locator('#close-sample-wave').click();
   await expect(page.locator('.sample-wave summary').last()).toContainText('closed + synthesized');
   await page.locator('.council-note summary').click();
-  await expect(page.locator('.council-note')).toContainText('author and prior vessels cannot host');
-  await expect(page.locator('.council-note')).toContainText('different coordinator worker');
+  await expect(page.locator('.council-note')).toContainText("don't host it");
+  await expect(page.locator('.council-note')).toContainText('separate coordinator worker');
   await page.locator('[data-research-panel="decision"]').click();
   await page.locator('#ratify-sample').click();
   await page.locator('#main-content').evaluate(element => { element.scrollTop = 0; });
-  await expect(page.locator('#decision-outcome')).toContainText('Sample ratified via wave_quorum');
-  await expect(page.locator('#decision-outcome')).toContainText('Dissent and votes remain recorded');
+  await expect(page.locator('#decision-outcome')).toContainText('Approved as ready to build in this sample');
+  await expect(page.locator('#decision-outcome')).toContainText('including the objection, stays on the record');
   await page.locator('.legal-bases summary').click();
   await expect(page.locator('.legal-bases li')).toHaveCount(5);
   await page.locator('[data-research-panel="delivery"]').click();
-  await expect(page.locator('#research-content')).toContainText('A vote on a proposal does not approve an implementation');
+  await expect(page.locator('#research-content')).toContainText("Agreeing on a design doesn't approve the code");
   await page.getByRole('button', { name: 'Reset sample' }).click();
   await page.getByRole('tab', { name: 'Research / Decisions', exact: true }).click();
   expect(await page.evaluate(() => sample.governance.status)).toBe('in_round');
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.locator('[data-research-panel="decision"]').click();
-  await page.locator('#ratify-sample').click();
+  await page.locator('[data-research-panel="waves"]').click();
+  await page.locator('.sample-wave').first().evaluate(element => { element.open = true; });
   await page.locator('#main-content').evaluate(element => { element.scrollTop = 0; });
   fs.mkdirSync(assets, { recursive: true });
   await page.screenshot({ path: path.join(assets, 'dashboard-governance.png'), animations: 'disabled' });
@@ -176,7 +171,7 @@ test('system atlas exposes source-grounded aliases, filters, relationship inspec
   await routeProjectPrefix(page);
   await page.goto('/COHORT/systems/');
   await expect(page.locator('.system-card')).toHaveCount(37);
-  await expect(page.getByText('A task count looks current. It is not.', { exact: true })).toBeVisible();
+  await expect(page.getByText("A task count looks current. It's already stale.", { exact: true })).toBeVisible();
   await page.locator('#system-query').fill('Spyglass');
   await expect(page.locator('#spyglass')).toBeVisible();
   await page.locator('#spyglass summary').focus();
@@ -204,7 +199,7 @@ test('atlas remains an inspectable textual reference without JavaScript', async 
   await expect(page.locator('.atlas-controls')).toBeHidden();
   await page.locator('#rfc-governance summary').click();
   await expect(page.locator('#rfc-governance details')).toHaveAttribute('open', '');
-  await expect(page.locator('#rfc-governance')).toContainText('not a numeric ratification threshold');
+  await expect(page.locator('#rfc-governance')).toContainText("There's no head count");
   await page.locator('.text-map summary').click();
   await expect(page.locator('.text-map')).toContainText('Cairn owns the source revisions');
   await context.close();
@@ -294,7 +289,7 @@ for (const [width, height] of [[1280, 720], [1366, 768], [1440, 900]]) {
     measurements.push({ usablePanel: usable, viewport: { width, height } });
     await page.locator('[data-research-panel="decision"]').click();
     await measure('#research-content > p, .legal-bases p', 18, true);
-    await measure('#record-sample-vote, #ratify-sample, .legal-bases summary', 16);
+    await measure('#ratify-sample, .legal-bases summary', 16);
     await page.getByRole('tab', { name: 'Tasks', exact: true }).click();
     await measure('.kanban-col-title, .card-detail-button, .kanban-action-btn, .demo-filters label, .demo-filters input, .demo-filters select', 16);
     await page.getByRole('tab', { name: 'Review', exact: true }).click();

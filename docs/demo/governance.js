@@ -1,11 +1,11 @@
 var Governance = {
   panels: [
     ['research', '1 / Research'], ['proposal', '2 / Proposal'],
-    ['waves', '3 / Deliberation'], ['decision', '4 / Decision'], ['delivery', '5 / Work + delivery']
+    ['waves', '3 / Team input'], ['decision', '4 / Decision'], ['delivery', '5 / Work + delivery']
   ],
   render: function() {
     var state = sample.governance;
-    var content = Components.setupPanel('Research / decisions / sample workflow', 'No backend or real votes');
+    var content = Components.setupPanel('Research / decisions / sample workflow', 'Sample data, no backend');
     var previousSelection = content.querySelector('[data-research-panel].selected');
     var previousPanel = previousSelection ? previousSelection.dataset.researchPanel : null;
     var previousScroll = content.scrollTop;
@@ -14,7 +14,7 @@ var Governance = {
       + Governance.panels.map(function(panel) {
         return '<button class="demo-button' + (state.panel === panel[0] ? ' selected' : '') + '" data-research-panel="' + panel[0] + '" aria-pressed="' + (state.panel === panel[0]) + '">' + panel[1] + '</button>';
       }).join('') + '</div><div id="research-content"></div>'
-      + '<p class="view-note"><a href="../systems/#rfc-governance">Inspect the system atlas and exact evidence</a>. Votes, ratification, independent artifact review and delivery are different boundaries.</p>';
+      + '<p class="view-note"><a href="../systems/#rfc-governance">Inspect the system atlas and exact evidence</a>. Team input, the design decision, code review and delivery are separate steps.</p>';
     document.querySelectorAll('[data-research-panel]').forEach(function(button) {
       button.addEventListener('click', function() { state.panel = button.dataset.researchPanel; Governance.render(); });
     });
@@ -64,65 +64,52 @@ var Governance = {
     var state = sample.governance;
     var latest = state.waves[state.waves.length - 1];
     var element = document.getElementById('research-content');
-    element.innerHTML = '<h3>Waves preserve the argument.</h3><p>A wave is a deliberation round, not a delivery batch. Responses, reactions, votes and PM synthesis are separate records. Dissent is retained rather than rewritten into agreement.</p>'
+    element.innerHTML = '<h3>Each node weighs in from its own specialty.</h3><p>A wave is a round of input on the proposal. Each node responds from its role and the work it usually leads, and can react to what the others said. Objections stay on the record and shape the design. The PM closes the round with a written summary of where the team landed.</p>'
       + '<p class="wave-display">Original Superdash wave badge: ' + Cairn.renderWaveBadge(state.waves.length) + '</p>'
       + state.waves.map(function(wave) {
         return '<details class="sample-wave"' + (!wave.closed ? ' open' : '') + '><summary>Wave ' + wave.number + ' / ' + (wave.closed ? 'closed + synthesized' : 'open sample round') + '</summary>'
-          + wave.responses.map(function(response) { return '<p><strong>' + escaped(response.node + ' / ' + response.stance) + '</strong> ' + escaped(response.text) + '</p>'; }).join('')
-          + '<p><strong>Synthesis:</strong> ' + escaped(wave.synthesis || 'Not recorded. An open round is not wave_quorum.') + '</p></details>';
+          + wave.responses.map(function(response) { return '<p><strong>' + escaped(response.node + ' / ' + response.stance) + '</strong> <span class="response-frame">' + escaped(response.frame) + '</span><br>' + escaped(response.text) + '</p>'; }).join('')
+          + '<p><strong>Synthesis:</strong> ' + escaped(wave.synthesis || 'Not written yet. The round is still open.') + '</p></details>';
       }).join('')
-      + '<details class="council-note"><summary>Inspect independent perspectives and recusal</summary><p>The RFC vessel-host Council uses five context-stripped lenses. The author and prior vessels cannot host; the vessel captures verbatim output and must not add a stance.</p>'
-      + '<p>Sample author: ' + state.author + '. Prior vessel: ' + state.priorVessel + '. Illustrative remaining candidates: '
+      + '<details class="council-note"><summary>Inspect the fresh-eyes council</summary><p>For an outside view, a council looks at the proposal through five lenses with the background stripped away. The author and the nodes that hosted earlier councils don\'t host it. The host passes the lenses\' output along word for word and adds no opinion of its own.</p>'
+      + '<p>Sample author: ' + state.author + '. Earlier host: ' + state.priorVessel + '. Nodes that could host: '
       + sample.nodes.filter(function(node) { return node.node_id !== state.author && node.node_id !== state.priorVessel; }).map(function(node) { return node.node_id; }).join(', ')
-      + '.</p><p>The response-level LSG council is a different coordinator worker with three annotation lenses. Independent work-review recusal is also lane-specific; this example does not invent a blanket author-vote ban.</p></details>'
+      + '.</p><p>A separate coordinator worker can also annotate individual responses through three lenses. Who may review finished code is decided per task, apart from the design discussion.</p></details>'
       + (latest.closed ? '<p class="view-note">Latest sample synthesis is write-once. Reset starts a new invented example.</p>'
-        : '<label class="dialog-field">Sample PM synthesis<textarea id="wave-synthesis" rows="3">Keep authoritative counts distinct from cached display age. Preserve an explicit unavailable state and the recorded dissent; validate the implementation separately.</textarea></label><button class="demo-button" id="close-sample-wave">Simulate PM closure with synthesis</button><p id="wave-outcome" role="status"></p>');
+        : '<label class="dialog-field">Sample PM synthesis<textarea id="wave-synthesis" rows="3">Keep authoritative counts distinct from cached display age. Show an explicit unavailable state, as CEDAR asked, and review the implementation separately.</textarea></label><button class="demo-button" id="close-sample-wave">Close the round with this synthesis</button><p id="wave-outcome" role="status"></p>');
     if (!latest.closed) document.getElementById('close-sample-wave').addEventListener('click', function() {
       var synthesis = document.getElementById('wave-synthesis').value.trim();
       if (!synthesis) {
-        document.getElementById('wave-outcome').textContent = 'Not closed: a non-empty synthesis is required. No sample state changed.';
+        document.getElementById('wave-outcome').textContent = 'Not closed: the round needs a written synthesis. No sample state changed.';
         return;
       }
       latest.synthesis = synthesis;
       latest.closed = true;
-      localActivity('Sample PM synthesis recorded. No backend wave was closed.');
+      localActivity('Sample PM synthesis recorded. No real round was closed.');
       Governance.render();
     });
   },
   decision: function() {
     var state = sample.governance;
-    var tally = { approve: 0, reject: 0, abstain: 0 };
-    Object.values(state.votes).forEach(function(vote) { tally[vote]++; });
-    document.getElementById('research-content').innerHTML = '<h3>A vote is evidence. It is not the gate.</h3>'
-      + '<p>One vote per node per RFC records approve, reject or abstain. The reference has no numeric vote threshold for ratification. The latest closed, synthesized wave is one legal basis; authority and other checks remain backend responsibilities.</p>'
-      + '<p class="vote-tally" id="sample-vote-tally">' + tally.approve + ' approve / ' + tally.reject + ' reject / ' + tally.abstain + ' abstain (invented audit evidence)</p>'
-      + '<div class="research-controls"><label>Sample voter<select id="sample-voter">' + sample.nodes.map(function(node) { return '<option>' + node.node_id + '</option>'; }).join('')
-      + '</select></label><label>Recorded verdict<select id="sample-vote"><option>approve</option><option>reject</option><option>abstain</option></select></label><button class="demo-button" id="record-sample-vote">Record local sample vote</button></div>'
-      + '<button class="demo-button" id="ratify-sample">Inspect sample wave_quorum ratification</button>'
-      + '<p id="decision-outcome" class="decision-outcome" role="status">' + escaped(state.outcome || 'No sample ratification illustrated yet.') + '</p>'
-      + '<details class="legal-bases"><summary>Inspect all five documented legal bases</summary><ol>'
-      + '<li><strong>wave_quorum:</strong> latest wave closed, with non-empty synthesis; not a head count.</li>'
-      + '<li><strong>blanket_citation:</strong> blanket-authority citation in the header.</li>'
-      + '<li><strong>opa_provenance_citation:</strong> cited OPA grant provenance.</li>'
-      + '<li><strong>family_child_citation:</strong> a valid citation to a ratified parent, directive and legal basis.</li>'
-      + '<li><strong>operator_authored_call:</strong> operator override by the OPERATOR actor.</li></ol>'
-      + '<p>The non-override path also requires a non-empty body and attached SOLIDPLAN. Operator override records warnings for those body/plan checks. The local example models only wave_quorum, not server authentication, citations, body floors or full enforcement.</p></details>';
-    document.getElementById('record-sample-vote').addEventListener('click', function() {
-      var voter = document.getElementById('sample-voter').value;
-      var vote = document.getElementById('sample-vote').value;
-      if (!sample.nodes.some(function(node) { return node.node_id === voter; }) || !Object.hasOwn(tally, vote)) throw new Error('Invalid sample vote');
-      state.votes[voter] = vote;
-      localActivity('Recorded an invented ' + vote + ' vote for ' + voter + '; no ratification implied.');
-      Governance.render();
-    });
+    document.getElementById('research-content').innerHTML = '<h3>Approved once there\'s enough input.</h3>'
+      + '<p>There\'s no head count. The PM sums up each round, and that summary carries the most weight. The operator always has the final say, approving the design as ready to build once the comments and considerations cover enough ground. If most of the team argues against building something, that weighs heavily. Every response is kept word for word, so the summary can always be checked against what the team actually said.</p>'
+      + '<button class="demo-button" id="ratify-sample">Approve the sample design as ready to build</button>'
+      + '<p id="decision-outcome" class="decision-outcome" role="status">' + escaped(state.outcome || 'No sample decision made yet.') + '</p>'
+      + '<details class="legal-bases"><summary>Other ways a design can move forward</summary><ol>'
+      + '<li><strong>Team input:</strong> the latest round is closed with the PM\'s written summary, and the operator approves. This is the usual route.</li>'
+      + '<li><strong>Standing approval:</strong> the proposal cites an approval the operator already gave for this kind of work.</li>'
+      + '<li><strong>Policy grant:</strong> the proposal cites a permission in the operator\'s policy rules.</li>'
+      + '<li><strong>Follow-on work:</strong> the proposal builds on a design that was already accepted.</li>'
+      + '<li><strong>Operator call:</strong> the operator decides directly.</li></ol>'
+      + '<p>Outside an operator call, a design also needs a written proposal and an adoption plan. This sample only walks through the team-input route.</p></details>';
     document.getElementById('ratify-sample').addEventListener('click', function() {
       var latest = state.waves[state.waves.length - 1];
       if (!latest.closed || !latest.synthesis.trim()) {
-        state.outcome = 'Not ratified in this sample: the latest wave is not closed with synthesis. Approve votes alone do not establish wave_quorum.';
+        state.outcome = 'Not ready yet: the latest round of team input still needs the PM\'s written summary.';
       } else {
         state.status = 'ratified';
-        state.outcome = 'Sample ratified via wave_quorum. The decision references ' + state.bodyRevision + ', ' + state.planRevision + ' and wave ' + latest.number + ' synthesis. Dissent and votes remain recorded. No actual permission, cryptographic binding or backend transition was created.';
-        localActivity('Illustrated sample ratification; implementation review and shipping are still separate.');
+        state.outcome = 'Approved as ready to build in this sample. The approval points to ' + state.bodyRevision + ', ' + state.planRevision + ' and the wave ' + latest.number + ' summary. Every response, including the objection, stays on the record. Nothing real was approved or changed.';
+        localActivity('Sample design approved as ready to build; code review and delivery are still ahead.');
       }
       var outcome = document.getElementById('decision-outcome');
       outcome.textContent = state.outcome;
@@ -130,9 +117,9 @@ var Governance = {
     });
   },
   delivery: function() {
-    document.getElementById('research-content').innerHTML = '<h3>A decision is not a delivered change.</h3>'
-      + '<p>Ratification records a legitimate design. PM-routed tasks implement it; independent reviewers check the artifact and lineage. Completion belongs to the task or SWAT owner, and ship/delivery evidence is another boundary.</p>'
-      + '<ol class="governance-delivery"><li>Route scoped build work under an accepted design, or use the narrow-fix lane where appropriate.</li><li>Check reviewer eligibility and the exact artifact revision. A vote on a proposal does not approve an implementation.</li><li>Record accepted closure, then verify the operator actually receives the delivered interface.</li><li>Keep the decision, research pointers and evidenced lessons available for later work or a successor.</li></ol>'
+    document.getElementById('research-content').innerHTML = '<h3>An accepted design still has to be built and delivered.</h3>'
+      + '<p>The PM routes the build work. Independent reviewers check the actual code and where it came from. The task or SWAT owner closes the work, and delivery is checked on its own.</p>'
+      + '<ol class="governance-delivery"><li>Route scoped build work under an accepted design, or use the narrow-fix lane where appropriate.</li><li>Check who may review and which exact revision they reviewed. Agreeing on a design doesn\'t approve the code that implements it.</li><li>Record accepted closure, then verify the operator actually receives the delivered interface.</li><li>Keep the decision, research pointers and evidenced lessons available for later work or a successor.</li></ol>'
       + '<p class="view-note">No implementation is built, reviewed or shipped by this inspection surface. Larger model context does not itself grant authority or establish a reviewed revision.</p>';
   }
 };

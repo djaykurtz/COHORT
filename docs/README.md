@@ -48,11 +48,10 @@ Browser checks additionally verify that no API/external requests or persistent
 storage are used during interaction.
 
 The research inspector also reuses the original Cairn stage order, legacy-stage
-normalizer and wave badge. Its invented-record filter is not Spyglass FTS5. Its local
-vote/synthesis/decision illustration is not backend authorization, production substance
-floor validation, cryptographic ratification binding or a complete governance harness.
-Votes never substitute for the latest closed/synthesized wave in the demonstrated
-`wave_quorum` path; the other four legal bases are explained but not executed.
+normalizer and wave badge. Its invented-record filter is not Spyglass FTS5. Its
+local team-input and decision walkthrough runs entirely in the browser and checks
+nothing on a server. It shows only the usual route, where the operator approves the
+design once the team's input is in; the other routes are described but not run.
 
 The atlas is generated from `systems\catalog.json`, with semantic HTML disclosures
 and a textual diagram fallback that remain available without JavaScript.
